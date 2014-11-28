@@ -33,7 +33,7 @@ import java.util.List;
  * Implementation of {@link Stream}.
  * @param <T> Item type
  */
-public class StreamImpl<T> implements Stream<T> {
+public final class StreamImpl<T> implements Stream<T> {
 
   private final Iterable<T> iterable;
 
