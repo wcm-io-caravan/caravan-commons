@@ -1,7 +1,7 @@
-HAL Infrastructure
-==================
+wcm.io Dromas Commons HAL
+=========================
 
-This bundle contains:
+[Hypertext Application Language (HAL)](http://stateless.co/hal_specification.html) Support with HAL Builder and HAL Browser.
 
 * Wraps [HAL Builder](https://github.com/HalBuilder) JARs and exports them via OSGi
 * Registers HAL Builder JAX-RS Support

@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.dromas.commons.hal.infrastructure.impl;
+package io.wcm.dromas.commons.hal.impl;
 
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;

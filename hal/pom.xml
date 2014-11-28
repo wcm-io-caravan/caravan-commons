@@ -30,11 +30,12 @@
   </parent>
 
   <groupId>io.wcm.dromas</groupId>
-  <artifactId>io.wcm.dromas.commons.hal-infrastructure</artifactId>
+  <artifactId>io.wcm.dromas.commons.hal</artifactId>
   <version>0.2.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>HAL Infrastructure</name>
+  <name>Commons HAL</name>
+  <description>Hypertext Application Language (HAL) Support with HAL Builder and HAL Browser.</description>
   
   <properties>
     <halbuilder.api.version>4.0.1</halbuilder.api.version>
@@ -127,7 +128,7 @@
               com.google.common.io.*;version=17.0,
               *
             </Import-Package>
-            <Bundle-Activator>io.wcm.dromas.commons.hal.infrastructure.impl.BundleActivator</Bundle-Activator>
+            <Bundle-Activator>io.wcm.dromas.commons.hal.impl.BundleActivator</Bundle-Activator>
           </instructions>
         </configuration>
       </plugin>
