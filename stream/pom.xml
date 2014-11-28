@@ -35,7 +35,7 @@
   <packaging>bundle</packaging>
 
   <name>Commons Stream</name>
-  <description>Implementation of a subset of the Java 8 stream API to use the basic features in Java 7 as well.</description>
+  <description>Implements a tiny subset of the Java 8 stream API to use the basic features in Java 7 as well.</description>
 
   <scm>
     <connection>scm:git:git@github.com:wcm-io/wcm-io-dromas.git</connection>
