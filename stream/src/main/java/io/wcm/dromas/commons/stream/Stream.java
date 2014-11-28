@@ -23,8 +23,6 @@ import io.wcm.dromas.commons.stream.function.Consumer;
 import io.wcm.dromas.commons.stream.function.Function;
 
 import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 /**
  * This is a (very) simplified version of Java 8 Stream API to use until the project can migate to Java 8.
@@ -60,15 +58,10 @@ public interface Stream<T> {
   Iterator<T> iterator();
 
   /**
-   * Returns the stream items as list.
-   * @return List
+   * Collects stream items to a iterable like list or set.
+   * @param collector Collector
+   * @return Iterable
    */
-  List<T> toList();
-
-  /**
-   * Returns the stream items as set.
-   * @return Set
-   */
-  Set<T> toSet();
+  <R> R collect(Collector<? super T, R> collector);
 
 }

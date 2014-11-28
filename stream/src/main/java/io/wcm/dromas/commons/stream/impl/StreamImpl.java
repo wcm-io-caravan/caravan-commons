@@ -20,6 +20,7 @@
 package io.wcm.dromas.commons.stream.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import io.wcm.dromas.commons.stream.Collector;
 import io.wcm.dromas.commons.stream.Stream;
 import io.wcm.dromas.commons.stream.function.Consumer;
 import io.wcm.dromas.commons.stream.function.Function;
@@ -27,10 +28,6 @@ import io.wcm.dromas.commons.stream.function.Function;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * Implementation of {@link Stream}.
@@ -79,23 +76,8 @@ public class StreamImpl<T> implements Stream<T> {
   }
 
   @Override
-  public List<T> toList() {
-    if (iterable instanceof List) {
-      return (List<T>)iterable;
-    }
-    else {
-      return Lists.newArrayList(iterable);
-    }
-  }
-
-  @Override
-  public Set<T> toSet() {
-    if (iterable instanceof Set) {
-      return (Set<T>)iterable;
-    }
-    else {
-      return Sets.newHashSet(iterable);
-    }
+  public <R> R collect(Collector<? super T, R> collector) {
+    return collector.collect(this);
   }
 
   @Override

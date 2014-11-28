@@ -21,6 +21,7 @@ package io.wcm.dromas.commons.stream.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
+import io.wcm.dromas.commons.stream.Collectors;
 import io.wcm.dromas.commons.stream.Stream;
 import io.wcm.dromas.commons.stream.Streams;
 import io.wcm.dromas.commons.stream.function.Consumer;
@@ -53,23 +54,23 @@ public class StreamImplTest {
   @Test
   public void testMap() {
     Stream<Integer> stream = Streams.of(SAMPLE_LIST).map(item -> item.length());
-    assertEquals(ImmutableList.of(5, 5), stream.toList());
+    assertEquals(ImmutableList.of(5, 5), stream.collect(Collectors.toList()));
   }
 
   @Test
   public void testFilter() {
     Stream<String> stream = Streams.of(SAMPLE_LIST).filter(item -> "item1".equals(item));
-    assertEquals(ImmutableList.of("item1"), stream.toList());
+    assertEquals(ImmutableList.of("item1"), stream.collect(Collectors.toList()));
   }
 
   @Test
   public void testToList() {
-    assertEquals(SAMPLE_LIST, Streams.of(SAMPLE_LIST).toList());
+    assertEquals(SAMPLE_LIST, Streams.of(SAMPLE_LIST).collect(Collectors.toList()));
   }
 
   @Test
   public void testToSet() {
-    assertEquals(ImmutableSet.copyOf(SAMPLE_LIST), Streams.of(SAMPLE_LIST).toSet());
+    assertEquals(ImmutableSet.copyOf(SAMPLE_LIST), Streams.of(SAMPLE_LIST).collect(Collectors.toSet()));
   }
 
   @Test
