@@ -159,6 +159,10 @@
         </executions>
       </plugin>
 
+    </plugins>
+    <pluginManagement>
+      <plugins>
+      
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>license-maven-plugin</artifactId>
@@ -174,7 +178,8 @@
           </configuration>
         </plugin>
 
-    </plugins>
+      </plugins>
+    </pluginManagement>
   </build>
 
 </project>
