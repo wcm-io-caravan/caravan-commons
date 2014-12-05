@@ -23,14 +23,14 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.wcm.dromas</groupId>
-    <artifactId>io.wcm.dromas.parent_toplevel</artifactId>
+    <groupId>io.wcm.caravan</groupId>
+    <artifactId>io.wcm.caravan.parent_toplevel</artifactId>
     <version>0.2.0-SNAPSHOT</version>
     <relativePath>../../parent_toplevel/pom.xml</relativePath>
   </parent>
 
-  <groupId>io.wcm.dromas</groupId>
-  <artifactId>io.wcm.dromas.commons.hal</artifactId>
+  <groupId>io.wcm.caravan</groupId>
+  <artifactId>io.wcm.caravan.commons.hal</artifactId>
   <version>0.2.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
@@ -128,7 +128,7 @@
               com.google.common.io.*;version=17.0,
               *
             </Import-Package>
-            <Bundle-Activator>io.wcm.dromas.commons.hal.impl.BundleActivator</Bundle-Activator>
+            <Bundle-Activator>io.wcm.caravan.commons.hal.impl.BundleActivator</Bundle-Activator>
           </instructions>
         </configuration>
       </plugin>

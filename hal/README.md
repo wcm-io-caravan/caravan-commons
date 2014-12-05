@@ -1,4 +1,4 @@
-wcm.io Dromas Commons HAL
+wcm.io Caravan Commons HAL
 =========================
 
 [Hypertext Application Language (HAL)](http://stateless.co/hal_specification.html) Support with HAL Builder and HAL Browser.
