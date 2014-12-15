@@ -25,8 +25,8 @@ import io.wcm.caravan.commons.stream.function.Function;
 import java.util.Iterator;
 
 /**
- * This is a (very) simplified version of Java 8 Stream API to use until the project can migate to Java 8.
- * Use the static methods from {@link Streams} to create stream instances.
+ * This is a (very) simplified version of Java 8 Stream API to use until the project can migrate to Java 8.
+ * Use the static methods from {@link Streams} to create a stream instance.
  * @param <T> Item type
  */
 public interface Stream<T> {
