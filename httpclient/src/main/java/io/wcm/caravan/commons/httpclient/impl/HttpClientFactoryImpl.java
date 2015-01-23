@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,7 +21,6 @@ package io.wcm.caravan.commons.httpclient.impl;
 
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 import io.wcm.caravan.commons.httpclient.HttpClientFactory;
-import io.wcm.caravan.commons.stream.Streams;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -62,7 +61,9 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
 
   @Deactivate
   private void deactivate() {
-    Streams.of(factoryItems.values()).forEach(item -> item.close());
+    for (HttpClientItem item : factoryItems.values()) {
+      item.close();
+    }
     factoryItems.clear();
     defaultFactoryItem.close();
     defaultFactoryItem = null;

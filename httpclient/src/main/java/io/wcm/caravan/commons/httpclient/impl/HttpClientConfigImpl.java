@@ -20,9 +20,8 @@
 package io.wcm.caravan.commons.httpclient.impl;
 
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-import io.wcm.caravan.commons.stream.Collectors;
-import io.wcm.caravan.commons.stream.Streams;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -38,8 +37,6 @@ import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.osgi.framework.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.ImmutableSet;
 
 /**
  * Default implementation of {@link HttpClientConfig}.
@@ -157,23 +154,28 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
     proxyPort = PropertiesUtil.toInteger(config.get(PROXY_PORT_PROPERTY), 0);
     proxyUser = PropertiesUtil.toString(config.get(PROXY_USER_PROPERTY), null);
     proxyPassword = PropertiesUtil.toString(config.get(PROXY_PASSWORD_PROPERTY), null);
-    hostPatterns = Streams.of(ImmutableSet.copyOf(PropertiesUtil.toStringArray(config.get(HOST_PATTERNS_PROPERTY), new String[0])))
-        .filter(StringUtils::isNotBlank)
-        .map(
-            patternString -> {
-              try {
-                return Pattern.compile(patternString);
-              }
-              catch (PatternSyntaxException ex) {
-                log.warn("Invalid host name pattern '" + patternString + "': " + ex.getMessage(), ex);
-                this.enabled = false;
-                return null;
-              }
-            })
-            .collect(Collectors.toSet());
-    wsAddressingToUris = Streams.of(ImmutableSet.copyOf(PropertiesUtil.toStringArray(config.get(WS_ADDRESSINGTO_URIS_PROPERTY), new String[0])))
-        .filter(StringUtils::isNotBlank)
-        .collect(Collectors.toSet());
+
+    hostPatterns = new HashSet<Pattern>();
+    String[] hostPatternsArray = PropertiesUtil.toStringArray(config.get(HOST_PATTERNS_PROPERTY), new String[0]);
+    for (String hostPatternString : hostPatternsArray) {
+      if (StringUtils.isNotBlank(hostPatternString)) {
+        try {
+          hostPatterns.add(Pattern.compile(hostPatternString));
+        }
+        catch (PatternSyntaxException ex) {
+          log.warn("Invalid host name pattern '" + hostPatternString + "': " + ex.getMessage(), ex);
+          this.enabled = false;
+        }
+      }
+    }
+
+    wsAddressingToUris = new HashSet<String>();
+    String[] wsAddressingToUrisArray = PropertiesUtil.toStringArray(config.get(WS_ADDRESSINGTO_URIS_PROPERTY), new String[0]);
+    for (String wsAddressingToUriString : wsAddressingToUrisArray) {
+      if (StringUtils.isNotBlank(wsAddressingToUriString)) {
+        wsAddressingToUris.add(wsAddressingToUriString);
+      }
+    }
 
     sslContextType = PropertiesUtil.toString(config.get(SSL_CONTEXT_TYPE_PROPERTY), CertificateLoader.SSL_CONTEXT_TYPE_DEFAULT);
     keyManagerType = PropertiesUtil.toString(config.get(KEYMANAGER_TYPE_PROPERTY), CertificateLoader.KEY_MANAGER_TYPE_DEFAULT);
