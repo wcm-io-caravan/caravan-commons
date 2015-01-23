@@ -30,35 +30,46 @@
   </parent>
 
   <groupId>io.wcm.caravan</groupId>
-  <artifactId>io.wcm.caravan.commons.couchbase</artifactId>
+  <artifactId>io.wcm.caravan.commons.httpclient</artifactId>
   <version>0.2.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>Commons Couchbase Client</name>
-  <description>Couchbase client provider using Couchbase SDK 2.</description>
-  
-  <properties>
-    <couchbase.client.version>2.0.3</couchbase.client.version>
-  </properties>
+  <name>Commons HTTP Client</name>
+  <description>Provides preconfigured Apache HTTP Client instances.</description>
 
   <dependencies>
-
+  
     <dependency>
-      <groupId>com.couchbase.client</groupId>
-      <artifactId>java-client</artifactId>
-      <version>${couchbase.client.version}</version>
+      <groupId>io.wcm.caravan</groupId>
+      <artifactId>io.wcm.caravan.commons.stream</artifactId>
+      <version>0.2.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
 
+    <!-- OSGi -->
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.commons.osgi</artifactId>
       <scope>provided</scope>
     </dependency>
+
+    <!-- Commons -->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- Apache HTTP Client -->
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpasyncclient</artifactId>
+      <scope>compile</scope>
     </dependency>
 
   </dependencies>
@@ -69,34 +80,6 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
-        <configuration>
-          <instructions>
-            <!-- Do not inline jars, include as jar files -->
-            <Embed-Dependency>*;scope=compile|runtime;inline=false;groupId=com.couchbase.*</Embed-Dependency>
-            <Embed-Transitive>true</Embed-Transitive>
-            <!-- use _exportcontents instead of Export-Package to avoid conflict with Embed-Dependency an inline=true -->
-            <_exportcontents>
-              com.couchbase.client.java.*;version=${couchbase.client.version},
-              io.wcm.caravan.commons.couchbase;version=${project.version}
-            </_exportcontents>
-            <Import-Package>
-              com.barchart.udt.*;resolution:=optional,
-              com.google.protobuf.*;resolution:=optional,
-              com.jcraft.jzlib.*;resolution:=optional,
-              com.sun.*;resolution:=optional,
-              gnu.io.*;resolution:=optional,
-              javassist.*;resolution:=optional,
-              org.apache.tomcat.*;resolution:=optional,
-              org.bouncycastle.*;resolution:=optional,
-              org.eclipse.jetty.*;resolution:=optional,
-              org.jboss.*;resolution:=optional,
-              rx.internal.*;resolution:=optional,
-              sun.misc.*;resolution:=optional,
-              sun.security.*;resolution:=optional,
-              *
-            </Import-Package>
-          </instructions>
-        </configuration>
       </plugin>
 
       <plugin>
