@@ -38,7 +38,7 @@
   <description>Couchbase client provider using Couchbase SDK 2.</description>
   
   <properties>
-    <couchbase.client.version>2.0.1</couchbase.client.version>
+    <couchbase.client.version>2.0.3</couchbase.client.version>
   </properties>
 
   <dependencies>
