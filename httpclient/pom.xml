@@ -37,6 +37,13 @@
   <name>Commons HTTP Client</name>
   <description>Provides preconfigured Apache HTTP Client instances.</description>
 
+  <scm>
+    <connection>scm:git:git@github.com:wcm-io/wcm-io-caravan.git</connection>
+    <developerConnection>scm:git:git@github.com:wcm-io/wcm-io-caravan.git</developerConnection>
+    <url>https://github.com/wcm-io/wcm-io-caravan</url>
+    <tag>HEAD</tag>
+  </scm>
+
   <dependencies>
   
     <!-- OSGi -->

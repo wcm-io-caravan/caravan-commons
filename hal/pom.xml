@@ -37,6 +37,13 @@
   <name>Commons HAL</name>
   <description>Hypertext Application Language (HAL) Support with HAL Builder and HAL Browser.</description>
   
+  <scm>
+    <connection>scm:git:git@github.com:wcm-io/wcm-io-caravan.git</connection>
+    <developerConnection>scm:git:git@github.com:wcm-io/wcm-io-caravan.git</developerConnection>
+    <url>https://github.com/wcm-io/wcm-io-caravan</url>
+    <tag>HEAD</tag>
+  </scm>
+
   <properties>
     <halbuilder.api.version>4.0.1</halbuilder.api.version>
     <halbuilder.core.version>4.0.3</halbuilder.core.version>
