@@ -31,7 +31,7 @@
 
   <groupId>io.wcm.caravan</groupId>
   <artifactId>io.wcm.caravan.commons.httpclient</artifactId>
-  <version>0.2.0</version>
+  <version>0.2.1-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>Commons HTTP Client</name>
@@ -41,7 +41,7 @@
     <connection>scm:git:git@github.com:wcm-io/wcm-io-caravan.git</connection>
     <developerConnection>scm:git:git@github.com:wcm-io/wcm-io-caravan.git</developerConnection>
     <url>https://github.com/wcm-io/wcm-io-caravan</url>
-    <tag>io.wcm.caravan.commons.httpclient-0.2.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <dependencies>
