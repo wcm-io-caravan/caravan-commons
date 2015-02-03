@@ -29,8 +29,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 /**
  * Implementation of {@link Stream}.
  * @param <T> Item type
@@ -90,7 +88,7 @@ public final class StreamImpl<T> implements Stream<T> {
   @Override
   public <R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper) {
     checkNotNull(mapper);
-    List<R> result = Lists.newLinkedList();
+    List<R> result = new ArrayList<>();
     for (T item : iterable) {
       Stream<? extends R> tempStream = mapper.apply(item);
       if (tempStream != null) {
