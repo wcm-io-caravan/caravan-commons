@@ -78,4 +78,16 @@ public class StreamImplTest {
     assertEquals(SAMPLE_LIST, ImmutableList.copyOf(Streams.of(SAMPLE_LIST).iterator()));
   }
 
+  @Test
+  public void testFlatMap() throws Exception {
+    Stream<String> stream = Streams.of(SAMPLE_LIST).flatMap(e -> Streams.of(e, e + "-new"));
+    assertEquals(ImmutableList.of("item1", "item1-new", "item2", "item2-new"), stream.collect(Collectors.toList()));
+  }
+
+  @Test
+  public void testFlatMapNull() throws Exception {
+    Stream<String> stream = Streams.of(SAMPLE_LIST).flatMap(e -> "item1".equals(e) ? Streams.of(e) : null);
+    assertEquals(ImmutableList.of("item1"), stream.collect(Collectors.toList()));
+  }
+
 }

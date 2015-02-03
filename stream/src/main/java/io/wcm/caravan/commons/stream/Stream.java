@@ -64,4 +64,13 @@ public interface Stream<T> {
    */
   <R> R collect(Collector<? super T, R> collector);
 
+  /**
+   * Returns a stream consisting of the results of replacing each element of this stream with the contents of a mapped
+   * stream produced by applying the provided mapping function to each element. (If a mapped stream is {@code null} an
+   * empty stream is used, instead.)
+   * @param mapper A function to apply to each element
+   * @return the new stream
+   */
+  <R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper);
+
 }
