@@ -45,7 +45,7 @@
   </scm>
 
   <dependencies>
-  
+
     <!-- OSGi -->
     <dependency>
       <groupId>org.apache.sling</groupId>

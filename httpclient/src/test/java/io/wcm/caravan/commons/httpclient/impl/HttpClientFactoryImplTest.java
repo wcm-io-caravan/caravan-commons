@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -112,7 +112,7 @@ public class HttpClientFactoryImplTest {
 
   @Test
     public void testGetConfigForWebservice() {
-  
+
       context.registerInjectActivateService(new HttpClientConfigImpl(),
           ImmutableMap.<String, Object>builder()
           .put(CONNECT_TIMEOUT_PROPERTY, 55)
@@ -124,7 +124,7 @@ public class HttpClientFactoryImplTest {
           })
           .put(Constants.SERVICE_RANKING, 10)
           .build());
-  
+
       context.registerInjectActivateService(new HttpClientConfigImpl(),
           ImmutableMap.<String, Object>builder()
           .put(CONNECT_TIMEOUT_PROPERTY, 66)
@@ -133,27 +133,27 @@ public class HttpClientFactoryImplTest {
           })
           .put(Constants.SERVICE_RANKING, 20)
           .build());
-  
+
       HttpClientFactory underTest = context.registerInjectActivateService(new HttpClientFactoryImpl());
-  
+
       HttpClient client1a = underTest.getWs("http://host1/xyz", "http://uri1");
       assertEquals("client1a.timeout", 55, HttpClientTestUtils.getConnectTimeout(client1a));
-  
+
       HttpClient client1b = underTest.getWs("http://host1/xyz", "http://uri2");
       assertEquals("client1b.timeout", 15000, HttpClientTestUtils.getConnectTimeout(client1b));
-  
+
       HttpClient client1c = underTest.getWs("http://host1/xyz", null);
       assertEquals("client1c.timeout", 15000, HttpClientTestUtils.getConnectTimeout(client1c));
-  
+
       HttpClient client2a = underTest.getWs("http://host2/xyz", "http://uri1");
       assertEquals("client2a.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2a));
-  
+
       HttpClient client2b = underTest.getWs("http://host2/xyz", "http://uri2");
       assertEquals("client2b.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2b));
-  
+
       HttpClient client2c = underTest.getWs("http://host2/xyz", null);
       assertEquals("client2c.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2c));
-  
+
       MockOsgi.deactivate(underTest);
     }
 

@@ -36,7 +36,7 @@
 
   <name>Commons HAL</name>
   <description>Hypertext Application Language (HAL) Support with HAL Builder and HAL Browser.</description>
-  
+
   <scm>
     <connection>scm:git:git@github.com:wcm-io/wcm-io-caravan.git</connection>
     <developerConnection>scm:git:git@github.com:wcm-io/wcm-io-caravan.git</developerConnection>
@@ -169,7 +169,7 @@
     </plugins>
     <pluginManagement>
       <plugins>
-      
+
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>license-maven-plugin</artifactId>

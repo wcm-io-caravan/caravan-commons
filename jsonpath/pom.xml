@@ -37,7 +37,7 @@
 
   <name>Commons JsonPath</name>
   <description>Provide preconfigured JsonPath implementation.</description>
-  
+
   <scm>
     <connection>scm:git:git@github.com:wcm-io/wcm-io-caravan.git</connection>
     <developerConnection>scm:git:git@github.com:wcm-io/wcm-io-caravan.git</developerConnection>
