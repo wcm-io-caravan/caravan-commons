@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.hal.impl;
+package io.wcm.caravan.commons.halbrowser.impl;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
