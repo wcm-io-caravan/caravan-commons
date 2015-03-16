@@ -44,6 +44,11 @@
       <artifactId>javax.servlet-api</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>io.reactivex</groupId>
+      <artifactId>rxjava</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
     <!-- DropWizard Metrics -->
     <dependency>
