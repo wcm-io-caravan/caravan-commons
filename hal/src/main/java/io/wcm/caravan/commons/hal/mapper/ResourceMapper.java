@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.io.hal.mapper;
+package io.wcm.caravan.commons.hal.mapper;
 
 /**
  * Transforms the input data for a HAL resource into a full or embedded resource. Further generates the HREF for the

@@ -17,12 +17,12 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.io.hal;
+package io.wcm.caravan.commons.hal;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import io.wcm.caravan.io.hal.domain.EmbeddedResource;
-import io.wcm.caravan.io.hal.domain.HalResource;
+import io.wcm.caravan.commons.hal.domain.EmbeddedResource;
+import io.wcm.caravan.commons.hal.domain.HalResource;
 
 import java.io.IOException;
 

@@ -17,23 +17,23 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.io.hal;
+package io.wcm.caravan.commons.hal;
 
-import io.wcm.caravan.io.hal.domain.HalResource;
+import io.wcm.caravan.commons.hal.domain.HalResource;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
- * Reads a HAL {@link HalResource} from an input source.
+ * Serializes a HAL {@link HalResource} into a JSON string.
  */
-public interface HalResourceReader {
+public interface HalResourceWriter {
 
   /**
-   * @param input The input source
-   * @return The HAL resource
-   * @throws IOException Error reading JSON
+   * @param output The output stream
+   * @param resource Resource to serialize
+   * @throws IOException Error on writing JSON to stream
    */
-  HalResource read(final InputStream input) throws IOException;
+  void write(final OutputStream output, final HalResource resource) throws IOException;
 
 }

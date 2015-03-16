@@ -17,15 +17,15 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.io.hal;
+package io.wcm.caravan.commons.hal;
 
 import static org.junit.Assert.assertEquals;
-import io.wcm.caravan.io.hal.domain.CompactUri;
-import io.wcm.caravan.io.hal.domain.EmbeddedResource;
-import io.wcm.caravan.io.hal.domain.HalResource;
-import io.wcm.caravan.io.hal.domain.Link;
-import io.wcm.caravan.io.hal.mapper.JsonMapper;
-import io.wcm.caravan.io.hal.mapper.ResourceMapper;
+import io.wcm.caravan.commons.hal.domain.CompactUri;
+import io.wcm.caravan.commons.hal.domain.EmbeddedResource;
+import io.wcm.caravan.commons.hal.domain.HalResource;
+import io.wcm.caravan.commons.hal.domain.Link;
+import io.wcm.caravan.commons.hal.mapper.JsonMapper;
+import io.wcm.caravan.commons.hal.mapper.ResourceMapper;
 
 import java.io.IOException;
 import java.util.List;

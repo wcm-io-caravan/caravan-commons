@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.io.hal.domain;
+package io.wcm.caravan.commons.hal.domain;
 
 import java.util.Collection;
 import java.util.Collections;

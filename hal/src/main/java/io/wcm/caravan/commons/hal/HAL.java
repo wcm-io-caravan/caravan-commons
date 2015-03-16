@@ -1,10 +1,10 @@
 /* Copyright (c) pro!vision GmbH. All rights reserved. */
-package io.wcm.caravan.io.hal;
+package io.wcm.caravan.commons.hal;
 
-import io.wcm.caravan.io.hal.domain.EmbeddedResource;
-import io.wcm.caravan.io.hal.domain.HalResource;
-import io.wcm.caravan.io.hal.domain.Link;
-import io.wcm.caravan.io.hal.mapper.ResourceMapper;
+import io.wcm.caravan.commons.hal.domain.EmbeddedResource;
+import io.wcm.caravan.commons.hal.domain.HalResource;
+import io.wcm.caravan.commons.hal.domain.Link;
+import io.wcm.caravan.commons.hal.mapper.ResourceMapper;
 
 /**
  * Short named helper for HAL resources.
