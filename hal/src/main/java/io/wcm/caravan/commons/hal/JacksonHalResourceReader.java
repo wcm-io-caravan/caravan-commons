@@ -20,7 +20,6 @@
 package io.wcm.caravan.commons.hal;
 
 import io.wcm.caravan.commons.hal.domain.CompactUri;
-import io.wcm.caravan.commons.hal.domain.EmbeddedResource;
 import io.wcm.caravan.commons.hal.domain.HalResource;
 import io.wcm.caravan.commons.hal.domain.Link;
 import io.wcm.caravan.commons.stream.Collectors;
@@ -107,10 +106,10 @@ public class JacksonHalResourceReader implements HalResourceReader {
       JsonNode embedded = e.getValue();
       if (embedded.isArray()) {
         List<HalResource> resources = getStream(embedded.iterator()).map(f -> read(f)).collect(Collectors.toList());
-        resource.setEmbeddedResource(e.getKey(), new EmbeddedResource(resources));
+        resource.setEmbeddedResource(e.getKey(), resources);
       }
       else {
-        resource.setEmbeddedResource(e.getKey(), new EmbeddedResource(read(embedded)));
+        resource.setEmbeddedResource(e.getKey(), read(embedded));
       }
     });
   }

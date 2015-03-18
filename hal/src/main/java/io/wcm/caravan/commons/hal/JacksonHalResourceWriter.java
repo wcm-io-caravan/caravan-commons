@@ -20,7 +20,6 @@
 package io.wcm.caravan.commons.hal;
 
 import io.wcm.caravan.commons.hal.domain.CompactUri;
-import io.wcm.caravan.commons.hal.domain.EmbeddedResource;
 import io.wcm.caravan.commons.hal.domain.HalResource;
 import io.wcm.caravan.commons.hal.domain.Link;
 import io.wcm.caravan.commons.stream.Streams;
@@ -29,14 +28,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.ListMultimap;
 
 /**
  * Jackson based implementation for {@link HalResourceWriter}. Uses {@link ObjectMapper} to convert the generic state
@@ -76,7 +74,7 @@ public class JacksonHalResourceWriter implements HalResourceWriter {
     ObjectNode jsonResource = stateToObjectNode(resource.getState());
     setLinks(jsonResource, resource.getLinks());
     setCuries(jsonResource, resource.getCuries());
-    setEmbeddedResources(jsonResource, resource.getEmbeddedResources());
+    setEmbeddedResource(jsonResource, resource.getEmbeddedResources());
     return jsonResource;
   }
 
@@ -96,12 +94,11 @@ public class JacksonHalResourceWriter implements HalResourceWriter {
     return state instanceof ObjectNode ? ((ObjectNode)state) : objectMapper.convertValue(state, ObjectNode.class);
   }
 
-  private void setLinks(final ObjectNode jsonResource, final Map<String, List<Link>> linksMap) {
+  private void setLinks(final ObjectNode jsonResource, final ListMultimap<String, Link> linksMap) {
     if (!linksMap.isEmpty()) {
       ObjectNode jsonLinks = jsonResource.putObject("_links");
-      for (Entry<String, List<Link>> relatedLinks : linksMap.entrySet()) {
-        String relation = relatedLinks.getKey();
-        List<Link> links = relatedLinks.getValue();
+      for (String relation : linksMap.keySet()) {
+        List<Link> links = linksMap.get(relation);
         if (links.size() == 1) {
           jsonLinks.set(relation, createJsonLink(links.get(0)));
         }
@@ -128,19 +125,17 @@ public class JacksonHalResourceWriter implements HalResourceWriter {
     }
   }
 
-  private void setEmbeddedResources(final ObjectNode jsonResource, final Map<String, EmbeddedResource> embeddedResources) {
+  private void setEmbeddedResource(final ObjectNode jsonResource, final ListMultimap<String, HalResource> embeddedResources) {
     if (!embeddedResources.isEmpty()) {
       ObjectNode jsonEmbedded = jsonResource.putObject("_embedded");
-      for (Entry<String, EmbeddedResource> entry : embeddedResources.entrySet()) {
-        EmbeddedResource embeddedResource = entry.getValue();
-        if (embeddedResource.isSingle() && embeddedResource.getResources().size() == 1) {
-          jsonEmbedded.set(entry.getKey(), toObjectNode(embeddedResource.getResources().get(0)));
+      for (String name : embeddedResources.keySet()) {
+        List<HalResource> embeddedResource = embeddedResources.get(name);
+        if (embeddedResource.size() == 1) {
+          jsonEmbedded.set(name, toObjectNode(embeddedResource.get(0)));
         }
         else {
-          ArrayNode container = jsonEmbedded.putArray(entry.getKey());
-          for (HalResource resource : embeddedResource.getResources()) {
-            container.add(toObjectNode(resource));
-          }
+          ArrayNode container = jsonEmbedded.putArray(name);
+          Streams.of(embeddedResource).forEach(r -> container.add(toObjectNode(r)));
         }
       }
     }

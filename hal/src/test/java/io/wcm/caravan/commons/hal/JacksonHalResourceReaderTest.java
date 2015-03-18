@@ -20,11 +20,10 @@
 package io.wcm.caravan.commons.hal;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import io.wcm.caravan.commons.hal.domain.EmbeddedResource;
 import io.wcm.caravan.commons.hal.domain.HalResource;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -44,10 +43,10 @@ public class JacksonHalResourceReaderTest {
 
     assertEquals("value1", ((JsonNode)resource.getState()).get("att1").asText());
     assertEquals(2, resource.getLinks().size());
-    EmbeddedResource friend = resource.getEmbeddedResources().get("friend");
-    assertTrue(friend.isSingle());
-    assertEquals("value2", ((JsonNode)friend.getResources().get(0).getState()).get("att2").asText());
-    EmbeddedResource friends = resource.getEmbeddedResources().get("friends");
-    assertEquals(2, friends.getResources().size());
+    List<HalResource> friend = resource.getEmbeddedResources().get("friend");
+    assertEquals(1, friend.size());
+    assertEquals("value2", ((JsonNode)friend.get(0).getState()).get("att2").asText());
+    List<HalResource> friends = resource.getEmbeddedResources().get("friends");
+    assertEquals(2, friends.size());
   }
 }

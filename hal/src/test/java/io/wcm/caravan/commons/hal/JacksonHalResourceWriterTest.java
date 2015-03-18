@@ -21,7 +21,6 @@ package io.wcm.caravan.commons.hal;
 
 import static org.junit.Assert.assertEquals;
 import io.wcm.caravan.commons.hal.domain.CompactUri;
-import io.wcm.caravan.commons.hal.domain.EmbeddedResource;
 import io.wcm.caravan.commons.hal.domain.HalResource;
 import io.wcm.caravan.commons.hal.domain.Link;
 import io.wcm.caravan.commons.hal.mapper.JsonMapper;
@@ -61,7 +60,7 @@ public class JacksonHalResourceWriterTest {
     .setState(DUMMY)
     .setLink("self", new Link("/dummy-service/1"))
     .setLinks("others", ImmutableList.of(new Link("/others/1"), new Link("/others/2")))
-    .setEmbeddedResource("friend", new EmbeddedResource(new HalResource().setState(new Dummy(2, "dummy2")).setLink("self", new Link("/dummy-service/2"))))
+    .setEmbeddedResource("friend", new HalResource().setState(new Dummy(2, "dummy2")).setLink("self", new Link("/dummy-service/2")))
     .setEmbeddedResource("friends", HalResourceFactory.createEmbeddedResources(friends, new DummyMapper()))
     .addCuri(new CompactUri("documentation", "http://localhost/documentation"));
     return resource;

@@ -22,11 +22,12 @@ package io.wcm.caravan.commons.hal.domain;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * Bean representation of a HAL resource.
@@ -39,8 +40,8 @@ public class HalResource {
   public static final String CONTENT_TYPE = "application/hal+json";
 
   private Object state;
-  private final Map<String, List<Link>> allLinks = Maps.newHashMap();
-  private final Map<String, EmbeddedResource> embeddedResources = Maps.newHashMap();
+  private final ListMultimap<String, Link> allLinks = ArrayListMultimap.create();
+  private final ListMultimap<String, HalResource> embeddedResources = ArrayListMultimap.create();
   private final List<CompactUri> curies = Lists.newArrayList();
 
   /**
@@ -70,18 +71,29 @@ public class HalResource {
    * @return The HAL resource
    */
   public HalResource setLinks(final String relation, final List<Link> links) {
-    this.allLinks.put(relation, links);
+    allLinks.putAll(relation, links);
     return this;
   }
 
   /**
    * Adds an embedded resource to the HAL resource. Existing embedded resource(s) with same name get overwritten.
    * @param name The name of the embedded resource
-   * @param embeddedResource The embedded resource
+   * @param resource The embedded resource
    * @return The HAL resource
    */
-  public HalResource setEmbeddedResource(final String name, final EmbeddedResource embeddedResource) {
-    embeddedResources.put(name, embeddedResource);
+  public HalResource setEmbeddedResource(final String name, final HalResource resource) {
+    embeddedResources.put(name, resource);
+    return this;
+  }
+
+  /**
+   * Adds embedded resources to the HAL resource. Existing embedded resource(s) with same name get overwritten.
+   * @param name The name of the embedded resources
+   * @param resources The embedded resources
+   * @return The HAL resource
+   */
+  public HalResource setEmbeddedResource(String name, List<HalResource> resources) {
+    embeddedResources.putAll(name, resources);
     return this;
   }
 
@@ -98,15 +110,15 @@ public class HalResource {
   /**
    * @return the links
    */
-  public Map<String, List<Link>> getLinks() {
-    return Collections.unmodifiableMap(allLinks);
+  public ListMultimap<String, Link> getLinks() {
+    return ImmutableListMultimap.copyOf(allLinks);
   }
 
   /**
    * @return the embeddedResources
    */
-  public Map<String, EmbeddedResource> getEmbeddedResources() {
-    return Collections.unmodifiableMap(embeddedResources);
+  public ListMultimap<String, HalResource> getEmbeddedResources() {
+    return ImmutableListMultimap.copyOf(embeddedResources);
   }
 
   /**

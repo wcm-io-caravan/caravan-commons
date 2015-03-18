@@ -19,7 +19,6 @@
  */
 package io.wcm.caravan.commons.hal;
 
-import io.wcm.caravan.commons.hal.domain.EmbeddedResource;
 import io.wcm.caravan.commons.hal.domain.HalResource;
 import io.wcm.caravan.commons.hal.domain.Link;
 import io.wcm.caravan.commons.hal.mapper.ResourceMapper;
@@ -76,11 +75,10 @@ public final class HalResourceFactory {
    * @param mapper The resource mapper getting applied on the input object
    * @return New HAL resource
    */
-  public static EmbeddedResource createEmbeddedResource(final Object input, final ResourceMapper<?, ?> mapper) {
+  public static HalResource createEmbeddedResource(final Object input, final ResourceMapper<?, ?> mapper) {
     @SuppressWarnings("unchecked")
     ResourceMapper<Object, ?> castedMapper = (ResourceMapper<Object, ?>)mapper;
-    HalResource resource = createResource(castedMapper.getEmbeddedResource(input), castedMapper.getHref(input));
-    return new EmbeddedResource(resource);
+    return createResource(castedMapper.getEmbeddedResource(input), castedMapper.getHref(input));
   }
 
   /**
@@ -90,13 +88,12 @@ public final class HalResourceFactory {
    * @param mapper The resource mapper getting applied on the input objects
    * @return New HAL resources
    */
-  public static EmbeddedResource createEmbeddedResources(final Iterable<?> inputs, final ResourceMapper<?, ?> mapper) {
+  public static List<HalResource> createEmbeddedResources(final Iterable<?> inputs, final ResourceMapper<?, ?> mapper) {
     @SuppressWarnings("unchecked")
     ResourceMapper<Object, ?> castedMapper = (ResourceMapper<Object, ?>)mapper;
-    List<HalResource> embeddedResources = Streams.of(inputs)
+    return Streams.of(inputs)
         .map(e -> createResource(castedMapper.getEmbeddedResource(e), castedMapper.getHref(e)))
         .collect(Collectors.toList());
-    return new EmbeddedResource(embeddedResources);
   }
 
 }

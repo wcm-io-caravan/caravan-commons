@@ -1,10 +1,11 @@
 /* Copyright (c) pro!vision GmbH. All rights reserved. */
 package io.wcm.caravan.commons.hal;
 
-import io.wcm.caravan.commons.hal.domain.EmbeddedResource;
 import io.wcm.caravan.commons.hal.domain.HalResource;
 import io.wcm.caravan.commons.hal.domain.Link;
 import io.wcm.caravan.commons.hal.mapper.ResourceMapper;
+
+import java.util.List;
 
 /**
  * Short named helper for HAL resources.
@@ -41,28 +42,28 @@ public class HAL {
 
   /**
    * @see HalResourceFactory#createEmbeddedResource(Object, ResourceMapper)
-   * @see HalResource#setEmbeddedResource(String, EmbeddedResource)
+   * @see HalResource#setEmbeddedResource(String, HalResource)
    * @param name Embedded resource name
    * @param input Embedded resource pre-mapped state
    * @param mapper Embedded resource state mapper
    * @return Helper
    */
   public HAL embed(String name, Object input, ResourceMapper<?, ?> mapper) {
-    EmbeddedResource embeddedResource = HalResourceFactory.createEmbeddedResource(input, mapper);
+    HalResource embeddedResource = HalResourceFactory.createEmbeddedResource(input, mapper);
     instance.setEmbeddedResource(name, embeddedResource);
     return this;
   }
 
   /**
    * @see HalResourceFactory#createEmbeddedResources(Iterable, ResourceMapper)
-   * @see HalResource#setEmbeddedResource(String, EmbeddedResource)
+   * @see HalResource#setEmbeddedResource(String, List)
    * @param name Embedded resources name
    * @param inputs Embedded resources pre-mapped state
    * @param mapper Embedded resources state mapper
    * @return Helper
    */
   public HAL embedAll(String name, Iterable<?> inputs, ResourceMapper<?, ?> mapper) {
-    EmbeddedResource embeddedResource = HalResourceFactory.createEmbeddedResources(inputs, mapper);
+    List<HalResource> embeddedResource = HalResourceFactory.createEmbeddedResources(inputs, mapper);
     instance.setEmbeddedResource(name, embeddedResource);
     return this;
   }
