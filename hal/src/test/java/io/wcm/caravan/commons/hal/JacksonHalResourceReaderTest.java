@@ -21,6 +21,7 @@ package io.wcm.caravan.commons.hal;
 
 import static org.junit.Assert.assertEquals;
 import io.wcm.caravan.commons.hal.domain.HalResource;
+import io.wcm.caravan.commons.hal.domain.Link;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ListMultimap;
 
 
 public class JacksonHalResourceReaderTest {
@@ -49,4 +51,15 @@ public class JacksonHalResourceReaderTest {
     List<HalResource> friends = resource.getEmbeddedResources().get("friends");
     assertEquals(2, friends.size());
   }
+
+  @Test
+  public void test_multiple_links() throws JsonProcessingException, IOException {
+    String json = "{\"_links\":{\"many\":[{\"name\":\"first\",\"href\":\"/1\"},{\"name\":\"second\",\"href\":\"/2\"}]}}";
+    HalResource resource = underTest.read(new ObjectMapper().readTree(json));
+
+    ListMultimap<String, Link> links = resource.getLinks();
+    assertEquals(2, links.size());
+    assertEquals("second", links.get("many").get(1).getName());
+  }
+
 }

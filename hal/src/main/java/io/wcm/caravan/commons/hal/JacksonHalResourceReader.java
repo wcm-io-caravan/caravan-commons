@@ -33,6 +33,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 
@@ -92,7 +93,24 @@ public class JacksonHalResourceReader implements HalResourceReader {
     // filter curies
     .filter(e -> !"curies".equals(e.getKey()))
     // extract link and add
-    .forEach(e -> resource.setLink(e.getKey(), new Link(e.getValue().get("href").asText())));
+    .forEach(e -> {
+      if (e.getValue() instanceof ArrayNode) {
+        getStream(e.getValue().elements()).forEach(l -> resource.setLink(e.getKey(), parseLink(l)));
+      }
+      else {
+        resource.setLink(e.getKey(), parseLink(e.getValue()));
+      }
+    });
+  }
+
+  private Link parseLink(JsonNode json) {
+    return new Link(json.get("href").asText())
+    .setDeprecation(json.path("deprecation").asText())
+    .setHreflang(json.path("hreflang").asText())
+    .setName(json.path("name").asText())
+    .setProfile(json.path("profile").asText())
+    .setTitle(json.path("title").asText())
+    .setType(json.path("type").asText());
   }
 
   private void setCuries(final HalResource resource, final JsonNode input) {

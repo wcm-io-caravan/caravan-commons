@@ -64,9 +64,11 @@ public class Link {
 
   /**
    * @param type the type to set
+   * @return Link
    */
-  public void setType(String type) {
+  public Link setType(String type) {
     this.type = type;
+    return this;
   }
 
   /**
@@ -78,9 +80,11 @@ public class Link {
 
   /**
    * @param deprecation the deprecation to set
+   * @return Link
    */
-  public void setDeprecation(String deprecation) {
+  public Link setDeprecation(String deprecation) {
     this.deprecation = deprecation;
+    return this;
   }
 
   /**
@@ -92,9 +96,11 @@ public class Link {
 
   /**
    * @param name the name to set
+   * @return Link
    */
-  public void setName(String name) {
+  public Link setName(String name) {
     this.name = name;
+    return this;
   }
 
   /**
@@ -106,9 +112,11 @@ public class Link {
 
   /**
    * @param profile the profile to set
+   * @return Link
    */
-  public void setProfile(String profile) {
+  public Link setProfile(String profile) {
     this.profile = profile;
+    return this;
   }
 
   /**
@@ -120,9 +128,11 @@ public class Link {
 
   /**
    * @param title the title to set
+   * @return Link
    */
-  public void setTitle(String title) {
+  public Link setTitle(String title) {
     this.title = title;
+    return this;
   }
 
   /**
@@ -134,9 +144,11 @@ public class Link {
 
   /**
    * @param hreflang the hreflang to set
+   * @return Link
    */
-  public void setHreflang(String hreflang) {
+  public Link setHreflang(String hreflang) {
     this.hreflang = hreflang;
+    return this;
   }
 
   /**
