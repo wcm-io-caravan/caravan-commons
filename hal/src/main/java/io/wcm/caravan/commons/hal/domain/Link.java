@@ -21,6 +21,9 @@ package io.wcm.caravan.commons.hal.domain;
 
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * Bean representation of a link for a resource.
  */
@@ -157,5 +160,16 @@ public class Link {
   public String getHref() {
     return this.href;
   }
+
+  @Override
+  public int hashCode() {
+    return HashCodeBuilder.reflectionHashCode(this);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    return EqualsBuilder.reflectionEquals(this, obj);
+  }
+
 
 }

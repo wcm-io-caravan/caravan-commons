@@ -104,13 +104,13 @@ public class JacksonHalResourceReader implements HalResourceReader {
   }
 
   private Link parseLink(JsonNode json) {
-    return new Link(json.get("href").asText())
-    .setDeprecation(json.path("deprecation").asText())
-    .setHreflang(json.path("hreflang").asText())
-    .setName(json.path("name").asText())
-    .setProfile(json.path("profile").asText())
-    .setTitle(json.path("title").asText())
-    .setType(json.path("type").asText());
+    return new Link(json.get("href").asText(null))
+    .setDeprecation(json.path("deprecation").asText(null))
+    .setHreflang(json.path("hreflang").asText(null))
+    .setName(json.path("name").asText(null))
+    .setProfile(json.path("profile").asText(null))
+    .setTitle(json.path("title").asText(null))
+    .setType(json.path("type").asText(null));
   }
 
   private void setCuries(final HalResource resource, final JsonNode input) {
@@ -124,7 +124,7 @@ public class JacksonHalResourceReader implements HalResourceReader {
       JsonNode embedded = e.getValue();
       if (embedded.isArray()) {
         List<HalResource> resources = getStream(embedded.iterator()).map(f -> read(f)).collect(Collectors.toList());
-        resource.setEmbeddedResource(e.getKey(), resources);
+        resource.setEmbeddedResources(e.getKey(), resources);
       }
       else {
         resource.setEmbeddedResource(e.getKey(), read(embedded));

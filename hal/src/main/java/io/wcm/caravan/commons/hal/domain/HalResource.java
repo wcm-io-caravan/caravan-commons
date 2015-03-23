@@ -20,12 +20,10 @@
 package io.wcm.caravan.commons.hal.domain;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
 
@@ -92,7 +90,7 @@ public class HalResource {
    * @param resources The embedded resources
    * @return The HAL resource
    */
-  public HalResource setEmbeddedResource(String name, List<HalResource> resources) {
+  public HalResource setEmbeddedResources(String name, List<HalResource> resources) {
     embeddedResources.putAll(name, resources);
     return this;
   }
@@ -111,14 +109,14 @@ public class HalResource {
    * @return the links
    */
   public ListMultimap<String, Link> getLinks() {
-    return ImmutableListMultimap.copyOf(allLinks);
+    return allLinks;
   }
 
   /**
    * @return the embeddedResources
    */
   public ListMultimap<String, HalResource> getEmbeddedResources() {
-    return ImmutableListMultimap.copyOf(embeddedResources);
+    return embeddedResources;
   }
 
   /**
@@ -132,7 +130,7 @@ public class HalResource {
    * @return the curies
    */
   public Collection<CompactUri> getCuries() {
-    return Collections.unmodifiableList(curies);
+    return curies;
   }
 
   /**

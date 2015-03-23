@@ -20,6 +20,7 @@
 package io.wcm.caravan.commons.hal;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import io.wcm.caravan.commons.hal.domain.HalResource;
 import io.wcm.caravan.commons.hal.domain.Link;
 
@@ -44,10 +45,16 @@ public class JacksonHalResourceReaderTest {
     HalResource resource = underTest.read(new ObjectMapper().readTree(json));
 
     assertEquals("value1", ((JsonNode)resource.getState()).get("att1").asText());
+
     assertEquals(2, resource.getLinks().size());
+    Link selfLink = resource.getLinks().get("self").get(0);
+    assertEquals("/resource", selfLink.getHref());
+    assertNull(selfLink.getDeprecation());
+
     List<HalResource> friend = resource.getEmbeddedResources().get("friend");
     assertEquals(1, friend.size());
     assertEquals("value2", ((JsonNode)friend.get(0).getState()).get("att2").asText());
+
     List<HalResource> friends = resource.getEmbeddedResources().get("friends");
     assertEquals(2, friends.size());
   }

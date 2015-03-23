@@ -56,7 +56,7 @@ public class HAL {
 
   /**
    * @see HalResourceFactory#createEmbeddedResources(Iterable, ResourceMapper)
-   * @see HalResource#setEmbeddedResource(String, List)
+   * @see HalResource#setEmbeddedResources(String, List)
    * @param name Embedded resources name
    * @param inputs Embedded resources pre-mapped state
    * @param mapper Embedded resources state mapper
@@ -64,7 +64,7 @@ public class HAL {
    */
   public HAL embedAll(String name, Iterable<?> inputs, ResourceMapper<?, ?> mapper) {
     List<HalResource> embeddedResource = HalResourceFactory.createEmbeddedResources(inputs, mapper);
-    instance.setEmbeddedResource(name, embeddedResource);
+    instance.setEmbeddedResources(name, embeddedResource);
     return this;
   }
 

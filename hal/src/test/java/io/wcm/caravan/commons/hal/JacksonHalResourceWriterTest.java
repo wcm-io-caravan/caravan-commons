@@ -61,7 +61,7 @@ public class JacksonHalResourceWriterTest {
     .setLink("self", new Link("/dummy-service/1"))
     .setLinks("others", ImmutableList.of(new Link("/others/1"), new Link("/others/2")))
     .setEmbeddedResource("friend", new HalResource().setState(new Dummy(2, "dummy2")).setLink("self", new Link("/dummy-service/2")))
-    .setEmbeddedResource("friends", HalResourceFactory.createEmbeddedResources(friends, new DummyMapper()))
+    .setEmbeddedResources("friends", HalResourceFactory.createEmbeddedResources(friends, new DummyMapper()))
     .addCuri(new CompactUri("documentation", "http://localhost/documentation"));
     return resource;
   }
@@ -84,7 +84,7 @@ public class JacksonHalResourceWriterTest {
     HalResource jsonResource = HalResourceFactory.createResource(input, mapper)
         .setLinks("others", ImmutableList.of(new Link("/others/1"), new Link("/others/2")))
         .setEmbeddedResource("friend", HalResourceFactory.createEmbeddedResource(input.at("/_embedded/friend"), mapper))
-        .setEmbeddedResource("friends", HalResourceFactory.createEmbeddedResources(input.at("/_embedded/friends"), mapper));
+        .setEmbeddedResources("friends", HalResourceFactory.createEmbeddedResources(input.at("/_embedded/friends"), mapper));
     start = System.currentTimeMillis();
     for (int i = 0; i < runs; i++) {
       json = underTest.toString(jsonResource);
