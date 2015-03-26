@@ -19,50 +19,35 @@
  */
 package io.wcm.caravan.commons.hal.domain;
 
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 /**
- * Bean representation of a link for a resource.
+ * Bean representation of a HAL link.
  */
-public class Link {
+public class Link implements HalObject {
+
+  private final ObjectNode model;
 
   /**
-   * Pattern that will hit an RFC 6570 URI template.
+   * @param model
    */
-  private static final Pattern URI_TEMPLATE_PATTERN = Pattern.compile("\\{.+\\}");
-
-  private final String href;
-  private final boolean templated;
-  private String type;
-  private String deprecation;
-  private String name;
-  private String profile;
-  private String title;
-  private String hreflang;
-
-  /**
-   * @param href The URI to the resource
-   */
-  public Link(final String href) {
-    this.href = href;
-    this.templated = href != null && URI_TEMPLATE_PATTERN.matcher(href).find();
+  public Link(ObjectNode model) {
+    this.model = model;
   }
 
-  /**
-   * @return True if URI is templated
-   */
-  public boolean isTemplated() {
-    return this.templated;
+  @Override
+  public ObjectNode getModel() {
+    return model;
   }
 
   /**
    * @return the type
    */
   public String getType() {
-    return this.type;
+    return model.path("type").asText();
   }
 
   /**
@@ -70,7 +55,7 @@ public class Link {
    * @return Link
    */
   public Link setType(String type) {
-    this.type = type;
+    model.put("type", type);
     return this;
   }
 
@@ -78,7 +63,7 @@ public class Link {
    * @return the deprecation
    */
   public String getDeprecation() {
-    return this.deprecation;
+    return model.path("deprecation").asText();
   }
 
   /**
@@ -86,7 +71,7 @@ public class Link {
    * @return Link
    */
   public Link setDeprecation(String deprecation) {
-    this.deprecation = deprecation;
+    model.put("deprecation", deprecation);
     return this;
   }
 
@@ -94,7 +79,7 @@ public class Link {
    * @return the name
    */
   public String getName() {
-    return this.name;
+    return model.path("name").asText();
   }
 
   /**
@@ -102,7 +87,7 @@ public class Link {
    * @return Link
    */
   public Link setName(String name) {
-    this.name = name;
+    model.put("name", name);
     return this;
   }
 
@@ -110,7 +95,7 @@ public class Link {
    * @return the profile
    */
   public String getProfile() {
-    return this.profile;
+    return model.path("profile").asText();
   }
 
   /**
@@ -118,7 +103,7 @@ public class Link {
    * @return Link
    */
   public Link setProfile(String profile) {
-    this.profile = profile;
+    model.put("profile", profile);
     return this;
   }
 
@@ -126,7 +111,7 @@ public class Link {
    * @return the title
    */
   public String getTitle() {
-    return this.title;
+    return model.path("title").asText();
   }
 
   /**
@@ -134,7 +119,7 @@ public class Link {
    * @return Link
    */
   public Link setTitle(String title) {
-    this.title = title;
+    model.put("title", title);
     return this;
   }
 
@@ -142,7 +127,7 @@ public class Link {
    * @return the hreflang
    */
   public String getHreflang() {
-    return this.hreflang;
+    return model.path("hreflang").asText();
   }
 
   /**
@@ -150,7 +135,7 @@ public class Link {
    * @return Link
    */
   public Link setHreflang(String hreflang) {
-    this.hreflang = hreflang;
+    model.put("hreflang", hreflang);
     return this;
   }
 
@@ -158,18 +143,42 @@ public class Link {
    * @return the href
    */
   public String getHref() {
-    return this.href;
+    return model.path("href").asText();
+  }
+
+  /**
+   * @param href the href to set
+   * @return Link
+   */
+  public Link setHref(String href) {
+    model.put("href", href);
+    return this;
+  }
+
+  /**
+   * @return is templated
+   */
+  public boolean isTemplated() {
+    return model.path("templated").asBoolean();
+  }
+
+  /**
+   * @param templated the templated to set
+   * @return Link
+   */
+  public Link setTemplated(boolean templated) {
+    model.put("templated", templated);
+    return this;
   }
 
   @Override
   public int hashCode() {
-    return HashCodeBuilder.reflectionHashCode(this);
+    return HashCodeBuilder.reflectionHashCode(this, false);
   }
 
   @Override
   public boolean equals(Object obj) {
     return EqualsBuilder.reflectionEquals(this, obj);
   }
-
 
 }

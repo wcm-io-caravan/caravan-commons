@@ -27,32 +27,59 @@ import io.wcm.caravan.commons.stream.Streams;
 
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 /**
  * Factory for HAL {@link HalResource}s.
  */
 public final class HalResourceFactory {
+
+  /**
+   * JSON object mapper
+   */
+  public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   private HalResourceFactory() {
     // nothing to do
   }
 
   /**
-   * Creates a HAL resource without state but a self link. Mostly needed for index resources.
+   * Creates a HAL link with the given HREF.
+   * @param href Link HREF
+   * @return Link
+   */
+  public static Link createLink(String href) {
+    return new Link(OBJECT_MAPPER.createObjectNode()).setHref(href);
+  }
+
+  /**
+   * Creates a HAL resource with empty state but a self link. Mostly needed for index resources.
    * @param href The self HREF for the resource
    * @return New HAL resource
    */
-  public static HalResource createResource(final String href) {
-    return new HalResource().setLink("self", new Link(href));
+  public static HalResource createResource(String href) {
+    return new HalResource(OBJECT_MAPPER.createObjectNode()).addLinks("self", createLink(href));
   }
 
   /**
    * Creates a HAL resource with state and a self link.
-   * @param state The state of the resource
+   * @param model The state of the resource
    * @param href The self link for the resource
    * @return New HAL resource
    */
-  public static HalResource createResource(final Object state, final String href) {
-    return new HalResource().setState(state).setLink("self", new Link(href));
+  public static HalResource createResource(Object model, String href) {
+    return new HalResource(OBJECT_MAPPER.convertValue(model, ObjectNode.class)).addLinks("self", createLink(href));
+  }
+
+  /**
+   * Creates a HAL resource with state and a self link.
+   * @param model The state of the resource
+   * @param href The self link for the resource
+   * @return New HAL resource
+   */
+  public static HalResource createResource(ObjectNode model, String href) {
+    return new HalResource(model).addLinks("self", createLink(href));
   }
 
   /**
@@ -62,9 +89,9 @@ public final class HalResourceFactory {
    * @param mapper The resource mapper getting applied on the input object
    * @return New HAL resource
    */
-  public static HalResource createResource(final Object input, final ResourceMapper<?, ?> mapper) {
+  public static HalResource createResource(Object input, ResourceMapper<?> mapper) {
     @SuppressWarnings("unchecked")
-    ResourceMapper<Object, ?> castedMapper = (ResourceMapper<Object, ?>)mapper;
+    ResourceMapper<Object> castedMapper = (ResourceMapper<Object>)mapper;
     return createResource(castedMapper.getResource(input), castedMapper.getHref(input));
   }
 
@@ -75,9 +102,9 @@ public final class HalResourceFactory {
    * @param mapper The resource mapper getting applied on the input object
    * @return New HAL resource
    */
-  public static HalResource createEmbeddedResource(final Object input, final ResourceMapper<?, ?> mapper) {
+  public static HalResource createEmbeddedResource(Object input, ResourceMapper<?> mapper) {
     @SuppressWarnings("unchecked")
-    ResourceMapper<Object, ?> castedMapper = (ResourceMapper<Object, ?>)mapper;
+    ResourceMapper<Object> castedMapper = (ResourceMapper<Object>)mapper;
     return createResource(castedMapper.getEmbeddedResource(input), castedMapper.getHref(input));
   }
 
@@ -88,9 +115,9 @@ public final class HalResourceFactory {
    * @param mapper The resource mapper getting applied on the input objects
    * @return New HAL resources
    */
-  public static List<HalResource> createEmbeddedResources(final Iterable<?> inputs, final ResourceMapper<?, ?> mapper) {
+  public static List<HalResource> createEmbeddedResources(Iterable<?> inputs, ResourceMapper<?> mapper) {
     @SuppressWarnings("unchecked")
-    ResourceMapper<Object, ?> castedMapper = (ResourceMapper<Object, ?>)mapper;
+    ResourceMapper<Object> castedMapper = (ResourceMapper<Object>)mapper;
     return Streams.of(inputs)
         .map(e -> createResource(castedMapper.getEmbeddedResource(e), castedMapper.getHref(e)))
         .collect(Collectors.toList());

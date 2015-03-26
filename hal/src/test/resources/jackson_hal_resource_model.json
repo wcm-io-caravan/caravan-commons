@@ -1,0 +1,21 @@
+{
+  "_links": {
+    "self": {
+      "href": "/"
+    },
+    "children": [
+      {
+        "href": "/children1",
+        "name": "children 1"
+      },
+      {
+        "href": "/children2",
+        "name": "children 2"
+      }
+    ],
+    "parent": {
+      "href": "/parent",
+      "name": "parent"
+    }
+  }
+}

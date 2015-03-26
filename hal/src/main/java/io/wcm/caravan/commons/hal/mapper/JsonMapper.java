@@ -25,9 +25,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
- * Extracts resource relevant data from JSON to JSON.
+ * Extracts resource relevant data from JSON.
  */
-public class JsonMapper implements ResourceMapper<JsonNode, ObjectNode> {
+public class JsonMapper implements ResourceMapper<JsonNode> {
 
   private final ObjectMapper objectMapper;
   private final String hrefPattern;

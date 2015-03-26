@@ -17,23 +17,19 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.hal;
+package io.wcm.caravan.commons.hal.domain;
 
-import io.wcm.caravan.commons.hal.domain.HalResource;
-
-import java.io.IOException;
-import java.io.OutputStream;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * Serializes a HAL {@link HalResource} into a JSON string.
+ * Simple interface to get access to the model of an HAL object.
  */
-public interface HalResourceWriter {
+public interface HalObject {
 
   /**
-   * @param output The output stream
-   * @param resource Resource to serialize
-   * @throws IOException Error on writing JSON to stream
+   * Returns the JSON model.
+   * @return Model
    */
-  void write(final OutputStream output, final HalResource resource) throws IOException;
+  JsonNode getModel();
 
 }

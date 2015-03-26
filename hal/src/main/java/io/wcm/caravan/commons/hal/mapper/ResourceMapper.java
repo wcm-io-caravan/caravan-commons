@@ -19,13 +19,14 @@
  */
 package io.wcm.caravan.commons.hal.mapper;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 /**
  * Transforms the input data for a HAL resource into a full or embedded resource. Further generates the HREF for the
  * resource.
  * @param <R> Resource input type
- * @param <S> Resource output type
  */
-public interface ResourceMapper<R, S> {
+public interface ResourceMapper<R> {
 
   /**
    * @param resource The input resource
@@ -37,12 +38,12 @@ public interface ResourceMapper<R, S> {
    * @param resource The input resource
    * @return The embedded resource representation of the resource
    */
-  S getEmbeddedResource(final R resource);
+  ObjectNode getEmbeddedResource(final R resource);
 
   /**
    * @param resource The input resource
    * @return The full resource representation of the resource
    */
-  S getResource(final R resource);
+  ObjectNode getResource(final R resource);
 
 }
