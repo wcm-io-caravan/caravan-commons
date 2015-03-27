@@ -38,10 +38,19 @@ public final class HalResourceFactory {
   /**
    * JSON object mapper
    */
-  public static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   private HalResourceFactory() {
     // nothing to do
+  }
+
+  /**
+   * Converts any object into a JSON {@link ObjectNode}.
+   * @param input Any object
+   * @return JSON object node
+   */
+  public static ObjectNode convert(Object input) {
+    return OBJECT_MAPPER.convertValue(input, ObjectNode.class);
   }
 
   /**

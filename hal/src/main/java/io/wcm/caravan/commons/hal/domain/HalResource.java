@@ -19,7 +19,6 @@
  */
 package io.wcm.caravan.commons.hal.domain;
 
-import io.wcm.caravan.commons.hal.HalResourceFactory;
 import io.wcm.caravan.commons.stream.Streams;
 
 import java.lang.reflect.Constructor;
@@ -307,15 +306,6 @@ public class HalResource implements HalObject {
   private HalResource removeResources(Type type) {
     model.remove(type.toString());
     return this;
-  }
-
-  /**
-   * Adds state to the resource.
-   * @param state Resource state
-   * @return HAL resource
-   */
-  public HalResource addState(Object state) {
-    return addState(HalResourceFactory.OBJECT_MAPPER.convertValue(state, ObjectNode.class));
   }
 
   /**
