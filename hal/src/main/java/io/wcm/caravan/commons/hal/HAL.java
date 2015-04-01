@@ -29,6 +29,29 @@ public class HAL {
    */
   public HAL(String href) {
     instance = HalResourceFactory.createResource(href);
+    boolean templated = href != null && URI_TEMPLATE_PATTERN.matcher(href).find();
+    instance.getLinks("self").get(0).setTemplated(templated);
+  }
+
+  /**
+   * @see HalResourceFactory#createResource(String)
+   * @param href Link HREF
+   * @param title Link title
+   */
+  public HAL(String href, String title) {
+    this(href);
+    instance.getLinks("self").get(0).setTitle(title);
+  }
+
+  /**
+   * @see HalResourceFactory#createResource(String)
+   * @param href Link HREF
+   * @param title Link title
+   * @param name Link name
+   */
+  public HAL(String href, String title, String name) {
+    this(href, title);
+    instance.getLinks("self").get(0).setName(name);
   }
 
   /**
@@ -93,7 +116,8 @@ public class HAL {
    * @return Helper
    */
   public HAL link(String relation, String href) {
-    instance.addLinks(relation, HalResourceFactory.createLink(href));
+    boolean templated = href != null && URI_TEMPLATE_PATTERN.matcher(href).find();
+    instance.addLinks(relation, HalResourceFactory.createLink(href).setTemplated(templated));
     return this;
   }
 
@@ -101,12 +125,26 @@ public class HAL {
    * @see HalResource#addLinks(String, Link...)
    * @param relation Link relation
    * @param href Link HREF
+   * @param title Link title
+   * @return Helper
+   */
+  public HAL link(String relation, String href, String title) {
+    boolean templated = href != null && URI_TEMPLATE_PATTERN.matcher(href).find();
+    instance.addLinks(relation, HalResourceFactory.createLink(href).setTitle(title).setTemplated(templated));
+    return this;
+  }
+
+  /**
+   * @see HalResource#addLinks(String, Link...)
+   * @param relation Link relation
+   * @param href Link HREF
+   * @param title Link title
    * @param name Link name
    * @return Helper
    */
-  public HAL link(String relation, String href, String name) {
+  public HAL link(String relation, String href, String title, String name) {
     boolean templated = href != null && URI_TEMPLATE_PATTERN.matcher(href).find();
-    instance.addLinks(relation, HalResourceFactory.createLink(href).setName(name).setTemplated(templated));
+    instance.addLinks(relation, HalResourceFactory.createLink(href).setName(name).setTemplated(templated).setTitle(title));
     return this;
   }
 
@@ -117,7 +155,7 @@ public class HAL {
    * @return Helper
    */
   public HAL curi(String href, String name) {
-    return link("curies", href, name);
+    return link("curies", href, null, name);
   }
 
   /**
