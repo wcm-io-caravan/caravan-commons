@@ -24,9 +24,9 @@ import java.util.Set;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
-import com.jayway.jsonpath.internal.spi.json.JacksonJsonNodeJsonProvider;
-import com.jayway.jsonpath.internal.spi.mapper.JacksonMappingProvider;
+import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.json.JsonProvider;
+import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
 
 /**
