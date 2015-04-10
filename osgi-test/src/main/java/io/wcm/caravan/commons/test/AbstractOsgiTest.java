@@ -28,7 +28,7 @@ public abstract class AbstractOsgiTest {
    * The OSGI context.
    */
   @Rule
-  public OsgiContext context = new OsgiContext();
+  protected OsgiContext context = new OsgiContext();
 
   protected InMemoryCacheAdapter cacheAdapter;
   protected MockingCaravanHttpClient resilientHttp;
