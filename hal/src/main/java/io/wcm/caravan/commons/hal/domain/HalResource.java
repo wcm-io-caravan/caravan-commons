@@ -154,7 +154,9 @@ public class HalResource implements HalObject {
       else {
         ImmutableList.Builder<X> result = ImmutableList.builder();
         for (JsonNode resource : resources) {
-          result.add(constructor.newInstance(resource));
+          if (resource instanceof ObjectNode) {
+            result.add(constructor.newInstance(resource));
+          }
         }
         return result.build();
       }
