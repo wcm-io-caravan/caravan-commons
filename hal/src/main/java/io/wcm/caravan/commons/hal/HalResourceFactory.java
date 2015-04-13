@@ -26,6 +26,7 @@ import io.wcm.caravan.commons.stream.Collectors;
 import io.wcm.caravan.commons.stream.Streams;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -39,6 +40,11 @@ public final class HalResourceFactory {
    * JSON object mapper
    */
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+  /**
+   * Pattern that will hit an RFC 6570 URI template.
+   */
+  private static final Pattern URI_TEMPLATE_PATTERN = Pattern.compile("\\{.+\\}");
 
   private HalResourceFactory() {
     // nothing to do
@@ -59,7 +65,13 @@ public final class HalResourceFactory {
    * @return Link
    */
   public static Link createLink(String href) {
-    return new Link(OBJECT_MAPPER.createObjectNode()).setHref(href);
+    Link link = new Link(OBJECT_MAPPER.createObjectNode()).setHref(href);
+
+    if (href != null && URI_TEMPLATE_PATTERN.matcher(href).find()) {
+      link.setTemplated(true);
+    }
+
+    return link;
   }
 
   /**

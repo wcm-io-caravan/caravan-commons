@@ -6,7 +6,6 @@ import io.wcm.caravan.commons.hal.domain.Link;
 import io.wcm.caravan.commons.hal.mapper.ResourceMapper;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Iterables;
@@ -16,11 +15,6 @@ import com.google.common.collect.Iterables;
  */
 public class HAL {
 
-  /**
-   * Pattern that will hit an RFC 6570 URI template.
-   */
-  private static final Pattern URI_TEMPLATE_PATTERN = Pattern.compile("\\{.+\\}");
-
   private final HalResource instance;
 
   /**
@@ -29,8 +23,6 @@ public class HAL {
    */
   public HAL(String href) {
     instance = HalResourceFactory.createResource(href);
-    boolean templated = href != null && URI_TEMPLATE_PATTERN.matcher(href).find();
-    instance.getLinks("self").get(0).setTemplated(templated);
   }
 
   /**
@@ -116,8 +108,7 @@ public class HAL {
    * @return Helper
    */
   public HAL link(String relation, String href) {
-    boolean templated = href != null && URI_TEMPLATE_PATTERN.matcher(href).find();
-    instance.addLinks(relation, HalResourceFactory.createLink(href).setTemplated(templated));
+    instance.addLinks(relation, HalResourceFactory.createLink(href));
     return this;
   }
 
@@ -129,8 +120,7 @@ public class HAL {
    * @return Helper
    */
   public HAL link(String relation, String href, String title) {
-    boolean templated = href != null && URI_TEMPLATE_PATTERN.matcher(href).find();
-    instance.addLinks(relation, HalResourceFactory.createLink(href).setTitle(title).setTemplated(templated));
+    instance.addLinks(relation, HalResourceFactory.createLink(href).setTitle(title));
     return this;
   }
 
@@ -143,8 +133,7 @@ public class HAL {
    * @return Helper
    */
   public HAL link(String relation, String href, String title, String name) {
-    boolean templated = href != null && URI_TEMPLATE_PATTERN.matcher(href).find();
-    instance.addLinks(relation, HalResourceFactory.createLink(href).setName(name).setTemplated(templated).setTitle(title));
+    instance.addLinks(relation, HalResourceFactory.createLink(href).setName(name).setTitle(title));
     return this;
   }
 
