@@ -3,7 +3,7 @@ wcm.io Caravan HAL
 
 A JSON HAL (Hypertext Application Language) library to document JSON output. Further information is available on the [HAL specification](http://stateless.co/hal_specification.html).
 
-Central component is the HalResource class which wraps HAL operations around a Jackson ObjectNode. It offers methods to manipulate links and embedded resources. These work directly on the passed ObjectNode, hence no serializer is neccessary anymore.
+Central component is the HalResource class which wraps HAL operations around a Jackson ObjectNode. It offers methods to manipulate links and embedded resources. These work directly on the passed ObjectNode, hence no serializer is necessary anymore.
 
 Creating a HAL resource
 -----------------------
