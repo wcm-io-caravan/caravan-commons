@@ -79,6 +79,11 @@ public class MockingCaravanHttpClient implements CaravanHttpClient {
     }
   }
 
+  @Override
+  public boolean hasValidConfiguration(String serviceName) {
+    return true;
+  }
+
   /**
    * Registers a response for the given service and URL.
    * @param url The URL

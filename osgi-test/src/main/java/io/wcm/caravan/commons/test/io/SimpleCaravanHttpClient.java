@@ -57,6 +57,11 @@ public class SimpleCaravanHttpClient implements CaravanHttpClient {
     return execute(request);
   }
 
+  @Override
+  public boolean hasValidConfiguration(String serviceName) {
+    return true;
+  }
+
   /**
    * @return the host
    */

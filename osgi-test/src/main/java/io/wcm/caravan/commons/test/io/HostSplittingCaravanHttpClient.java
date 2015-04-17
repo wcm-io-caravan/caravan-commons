@@ -65,6 +65,11 @@ public class HostSplittingCaravanHttpClient implements CaravanHttpClient {
     return (isAllowed(request) ? delegateForHosts : delegateOthers).execute(request, fallback);
   }
 
+  @Override
+  public boolean hasValidConfiguration(String serviceName) {
+    return true;
+  }
+
   private boolean isAllowed(final CaravanHttpRequest request) {
     try {
       String requestHost = new URL(request.url()).getHost();
