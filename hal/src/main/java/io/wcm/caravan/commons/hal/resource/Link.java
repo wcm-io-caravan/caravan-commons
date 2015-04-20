@@ -17,17 +17,19 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.hal.domain;
+package io.wcm.caravan.commons.hal.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.osgi.annotation.versioning.ProviderType;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Bean representation of a HAL link.
  */
-public class Link implements HalObject {
+@ProviderType
+public final class Link implements HalObject {
 
   private final ObjectNode model;
 

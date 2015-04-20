@@ -19,6 +19,8 @@
  */
 package io.wcm.caravan.commons.hal.mapper;
 
+import org.osgi.annotation.versioning.ConsumerType;
+
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +29,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 /**
  * Extracts resource relevant data from JSON.
  */
-public class JsonMapper implements ResourceMapper<JsonNode> {
+@ConsumerType
+public class JsonNodeMapper implements ResourceMapper<JsonNode> {
 
   private final ObjectMapper objectMapper;
   private final String hrefPattern;
@@ -40,7 +43,7 @@ public class JsonMapper implements ResourceMapper<JsonNode> {
    * @param idPointer JSON path to the ID field
    * @param namePointer JSON path to the name field
    */
-  public JsonMapper(final ObjectMapper objectMapper, final String hrefPattern, final String idPointer, final String namePointer) {
+  public JsonNodeMapper(final ObjectMapper objectMapper, final String hrefPattern, final String idPointer, final String namePointer) {
     this.objectMapper = objectMapper;
     this.hrefPattern = hrefPattern;
     this.idPointer = JsonPointer.valueOf(idPointer);

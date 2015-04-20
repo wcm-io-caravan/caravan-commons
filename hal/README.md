@@ -1,5 +1,5 @@
-wcm.io Caravan HAL
-==================
+wcm.io Caravan Commons JSON HAL Resource Library
+================================================
 
 A JSON HAL (Hypertext Application Language) library to document JSON output. Further information is available on the [HAL specification](http://stateless.co/hal_specification.html).
 
@@ -29,16 +29,16 @@ ResourceMapper<A> mapper = ...
 List<HalResource> embeddedChildren = HalResourceFactory.createEmbeddedResources(children, mapper);
 ```
 
-HAL helper
+HalBuilder
 ----------
 
-The HAL class offers a short and easy way to create/manipulate HAL resources.
+The HalBuilder class offers a short and easy way to create/manipulate HAL resources.
 
 ```java
 Object state = ...
-HalResource resource = new HAL(state, uri)
+HalResource resource = new HalBuilder(state, uri)
   .link("more", moreUri)
   .embed("parent", parent, mapper)
-  .get();
+  .build();
 
 ```

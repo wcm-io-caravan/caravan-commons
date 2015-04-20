@@ -17,19 +17,8 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.hal.domain;
-
-import com.fasterxml.jackson.databind.JsonNode;
-
 /**
- * Simple interface to get access to the model of an HAL object.
+ * Object to HAL resource mapping.
  */
-public interface HalObject {
-
-  /**
-   * Returns the JSON model.
-   * @return Model
-   */
-  JsonNode getModel();
-
-}
+@org.osgi.annotation.versioning.Version("0.5.0")
+package io.wcm.caravan.commons.hal.mapper;

@@ -17,13 +17,15 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.hal.domain;
+package io.wcm.caravan.commons.hal.resource;
 
 import io.wcm.caravan.commons.stream.Streams;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map.Entry;
+
+import org.osgi.annotation.versioning.ProviderType;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -37,7 +39,8 @@ import com.google.common.collect.Lists;
 /**
  * Bean representation of a HAL resource.
  */
-public class HalResource implements HalObject {
+@ProviderType
+public final class HalResource implements HalObject {
 
   /**
    * The mime content type

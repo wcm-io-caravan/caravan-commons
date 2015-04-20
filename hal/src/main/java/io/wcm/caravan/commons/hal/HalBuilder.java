@@ -19,11 +19,14 @@
  */
 package io.wcm.caravan.commons.hal;
 
-import io.wcm.caravan.commons.hal.domain.HalResource;
-import io.wcm.caravan.commons.hal.domain.Link;
 import io.wcm.caravan.commons.hal.mapper.ResourceMapper;
+import io.wcm.caravan.commons.hal.resource.HalResource;
+import io.wcm.caravan.commons.hal.resource.HalResourceFactory;
+import io.wcm.caravan.commons.hal.resource.Link;
 
 import java.util.List;
+
+import org.osgi.annotation.versioning.ProviderType;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Iterables;
@@ -31,7 +34,8 @@ import com.google.common.collect.Iterables;
 /**
  * Short named helper for HAL resources.
  */
-public class HalBuilder {
+@ProviderType
+public final class HalBuilder {
 
   private final HalResource instance;
 

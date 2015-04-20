@@ -17,10 +17,8 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.hal;
+package io.wcm.caravan.commons.hal.resource;
 
-import io.wcm.caravan.commons.hal.domain.HalResource;
-import io.wcm.caravan.commons.hal.domain.Link;
 import io.wcm.caravan.commons.hal.mapper.ResourceMapper;
 import io.wcm.caravan.commons.stream.Collectors;
 import io.wcm.caravan.commons.stream.Streams;
@@ -28,12 +26,15 @@ import io.wcm.caravan.commons.stream.Streams;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.osgi.annotation.versioning.ProviderType;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * Factory for HAL {@link HalResource}s.
  */
+@ProviderType
 public final class HalResourceFactory {
 
   /**

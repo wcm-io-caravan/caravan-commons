@@ -19,6 +19,8 @@
  */
 package io.wcm.caravan.commons.hal.mapper;
 
+import org.osgi.annotation.versioning.ConsumerType;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
@@ -26,6 +28,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  * resource.
  * @param <R> Resource input type
  */
+@ConsumerType
 public interface ResourceMapper<R> {
 
   /**
