@@ -23,10 +23,12 @@ import java.net.URI;
 
 import org.apache.http.client.HttpClient;
 import org.apache.http.nio.client.HttpAsyncClient;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * Interface for getting a pre-configured {@link HttpClient} or {@link HttpAsyncClient} instance.
  */
+@ProviderType
 public interface HttpClientFactory {
 
   /**

@@ -50,19 +50,19 @@
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.commons.osgi</artifactId>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
 
     <!-- Commons -->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
 
     <!-- Apache HTTP Client -->

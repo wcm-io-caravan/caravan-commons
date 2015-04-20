@@ -21,6 +21,8 @@ package io.wcm.caravan.commons.metrics.rx;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.osgi.annotation.versioning.ProviderType;
+
 import rx.Observable.Operator;
 import rx.Subscriber;
 
@@ -31,7 +33,8 @@ import com.codahale.metrics.Counter;
  * every passed element the {@code hitsCounter} gets increased.
  * @param <R> Items type
  */
-public class HitsAndMissesCountingMetricsOperator<R> implements Operator<R, R> {
+@ProviderType
+public final class HitsAndMissesCountingMetricsOperator<R> implements Operator<R, R> {
 
   private final Counter hitsCounter;
   private final Counter missesCounter;

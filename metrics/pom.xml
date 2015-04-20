@@ -35,19 +35,19 @@
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.commons.osgi</artifactId>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
 
     <!-- Standard APIs -->
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.reactivex</groupId>
       <artifactId>rxjava</artifactId>
-      <scope>provided</scope>
+      <scope>compile</scope>
     </dependency>
 
     <!-- DropWizard Metrics -->

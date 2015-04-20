@@ -19,6 +19,8 @@
  */
 package io.wcm.caravan.commons.metrics.rx;
 
+import org.osgi.annotation.versioning.ProviderType;
+
 import rx.Observable.Operator;
 import rx.Subscriber;
 
@@ -30,7 +32,8 @@ import com.codahale.metrics.Timer.Context;
  * {@link Subscriber#onCompleted()} or {@link Subscriber#onError(Throwable)} method.
  * @param <R> Items type
  */
-public class TimerMetricsOperator<R> implements Operator<R, R> {
+@ProviderType
+public final class TimerMetricsOperator<R> implements Operator<R, R> {
 
   private final Timer timer;
 

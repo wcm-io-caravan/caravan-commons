@@ -19,11 +19,14 @@
  */
 package io.wcm.caravan.commons.couchbase;
 
+import org.osgi.annotation.versioning.ProviderType;
+
 import com.couchbase.client.java.AsyncBucket;
 
 /**
  * Provides access to a preconfigured couchbase client.
  */
+@ProviderType
 public interface CouchbaseClientProvider {
 
   /**

@@ -17,23 +17,8 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.stream;
-
-import org.osgi.annotation.versioning.ConsumerType;
-
 /**
- * Collects stream items into a iterable class like list or set.
- * @param <T> the type of input elements to the reduction operation
- * @param <R> the result type of the reduction operation
+ * Implementation of a tiny subset of Java 8 java.util.function for Java 7 compatibility.
  */
-@ConsumerType
-public interface Collector<T, R> {
-
-  /**
-   * Collect items
-   * @param stream stream
-   * @return Iterable class
-   */
-  R collect(Stream<? extends T> stream);
-
-}
+@org.osgi.annotation.versioning.Version("0.5.0")
+package io.wcm.caravan.commons.stream.function;

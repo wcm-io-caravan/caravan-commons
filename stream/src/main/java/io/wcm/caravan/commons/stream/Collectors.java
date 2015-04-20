@@ -22,12 +22,15 @@ package io.wcm.caravan.commons.stream;
 import java.util.List;
 import java.util.Set;
 
+import org.osgi.annotation.versioning.ProviderType;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
  * Implementations of {@link Collector} interface.
  */
+@ProviderType
 public final class Collectors {
 
   private Collectors() {

@@ -24,9 +24,12 @@ import io.wcm.caravan.commons.stream.impl.StreamImpl;
 
 import java.util.Arrays;
 
+import org.osgi.annotation.versioning.ProviderType;
+
 /**
  * Helper methods for creating stream.
  */
+@ProviderType
 public final class Streams {
 
   private Streams() {

@@ -19,10 +19,13 @@
  */
 package io.wcm.caravan.commons.stream.function;
 
+import org.osgi.annotation.versioning.ConsumerType;
+
 /**
  * Represents an operation that accepts a single input argument and returns no result.
  * @param <T> the type of the input to the operation
  */
+@ConsumerType
 public interface Consumer<T> {
 
   /**

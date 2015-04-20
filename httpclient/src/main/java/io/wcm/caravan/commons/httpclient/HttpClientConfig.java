@@ -19,9 +19,12 @@
  */
 package io.wcm.caravan.commons.httpclient;
 
+import org.osgi.annotation.versioning.ConsumerType;
+
 /**
  * HTTP Client configuration.
  */
+@ConsumerType
 public interface HttpClientConfig {
 
   /**

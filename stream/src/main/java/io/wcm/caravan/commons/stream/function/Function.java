@@ -19,11 +19,14 @@
  */
 package io.wcm.caravan.commons.stream.function;
 
+import org.osgi.annotation.versioning.ConsumerType;
+
 /**
  * Represents a function that accepts one argument and produces a result.
  * @param <T> the type of the input to the function
  * @param <R> the type of the result of the function
  */
+@ConsumerType
 public interface Function<T, R> {
 
   /**
