@@ -80,7 +80,7 @@ public final class HalResourceFactory {
    * @return New HAL resource
    */
   public static HalResource createResource(String href) {
-    return new HalResource(OBJECT_MAPPER.createObjectNode()).addLinks("self", createLink(href));
+    return new HalResource(OBJECT_MAPPER.createObjectNode()).setLink("self", createLink(href));
   }
 
   /**
@@ -90,7 +90,7 @@ public final class HalResourceFactory {
    * @return New HAL resource
    */
   public static HalResource createResource(Object model, String href) {
-    return new HalResource(OBJECT_MAPPER.convertValue(model, ObjectNode.class)).addLinks("self", createLink(href));
+    return new HalResource(OBJECT_MAPPER.convertValue(model, ObjectNode.class)).setLink("self", createLink(href));
   }
 
   /**
@@ -100,7 +100,7 @@ public final class HalResourceFactory {
    * @return New HAL resource
    */
   public static HalResource createResource(ObjectNode model, String href) {
-    return new HalResource(model).addLinks("self", createLink(href));
+    return new HalResource(model).setLink("self", createLink(href));
   }
 
   /**

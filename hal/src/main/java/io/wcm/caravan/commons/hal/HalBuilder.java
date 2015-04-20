@@ -120,30 +120,30 @@ public class HalBuilder {
   }
 
   /**
-   * @see HalResource#addLinks(String, Link...)
+   * @see HalResource#setLink(String, Link)
    * @param relation Link relation
    * @param href Link HREF
    * @return Helper
    */
   public HalBuilder link(String relation, String href) {
-    instance.addLinks(relation, HalResourceFactory.createLink(href));
+    instance.setLink(relation, HalResourceFactory.createLink(href));
     return this;
   }
 
   /**
-   * @see HalResource#addLinks(String, Link...)
+   * @see HalResource#setLink(String, Link)
    * @param relation Link relation
    * @param href Link HREF
    * @param title Link title
    * @return Helper
    */
   public HalBuilder link(String relation, String href, String title) {
-    instance.addLinks(relation, HalResourceFactory.createLink(href).setTitle(title));
+    instance.setLink(relation, HalResourceFactory.createLink(href).setTitle(title));
     return this;
   }
 
   /**
-   * @see HalResource#addLinks(String, Link...)
+   * @see HalResource#setLink(String, Link)
    * @param relation Link relation
    * @param href Link HREF
    * @param title Link title
@@ -151,7 +151,7 @@ public class HalBuilder {
    * @return Helper
    */
   public HalBuilder link(String relation, String href, String title, String name) {
-    instance.addLinks(relation, HalResourceFactory.createLink(href).setName(name).setTitle(title));
+    instance.setLink(relation, HalResourceFactory.createLink(href).setName(name).setTitle(title));
     return this;
   }
 

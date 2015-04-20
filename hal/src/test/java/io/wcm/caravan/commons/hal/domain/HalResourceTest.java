@@ -80,10 +80,30 @@ public class HalResourceTest {
   }
 
   @Test
+  public void test_setLink() throws Exception {
+    Link link = new Link(mapper.createObjectNode()).setHref("/new");
+    hal.setLink("new", link);
+    List<Link> links = hal.getLinks("new");
+    assertEquals(link, links.get(0));
+    assertEquals(ObjectNode.class, model.at("/_links/new").getClass());
+  }
+
+  @Test
+  public void test_setLink_override() throws Exception {
+    Link link = new Link(mapper.createObjectNode()).setHref("/new");
+    hal.setLink("children", link);
+    List<Link> links = hal.getLinks("children");
+    assertEquals(link, links.get(0));
+    assertEquals(ObjectNode.class, model.at("/_links/children").getClass());
+  }
+
+  @Test
   public void test_addLinks_new() throws Exception {
     Link link1 = new Link(mapper.createObjectNode()).setHref("/new1");
     Link link2 = new Link(mapper.createObjectNode()).setHref("/new2");
-    hal.addLinks("new", link1, link2);
+    hal.addLinks("new", new Link[] {
+        link1, link2
+    });
     link1.setName("new 1");
     List<Link> links = hal.getLinks("new");
     assertEquals(link1, links.get(0));
@@ -92,20 +112,13 @@ public class HalResourceTest {
   }
 
   @Test
-  public void test_addLinks_newOnlyOne() throws Exception {
-    Link link = new Link(mapper.createObjectNode()).setHref("/new");
-    hal.addLinks("new", link);
-    List<Link> links = hal.getLinks("new");
-    assertEquals(link, links.get(0));
-    assertEquals(ObjectNode.class, model.at("/_links/new").getClass());
-  }
-
-  @Test
   public void test_addLinks_existing() {
     Link children3 = new Link(mapper.createObjectNode()).setHref("/children3");
     Link children4 = new Link(mapper.createObjectNode()).setHref("/children4");
     List<Link> children = hal
-        .addLinks("children", children3, children4)
+        .addLinks("children", new Link[] {
+            children3, children4
+        })
         .getLinks("children");
     assertEquals(4, children.size());
     assertEquals(children3, children.get(2));
@@ -133,7 +146,7 @@ public class HalResourceTest {
   @Test
   public void test_removeLink_relationIndex() throws Exception {
     assertTrue(hal.removeLink("children", 0).hasLink("children"));
-    assertEquals(ObjectNode.class, model.at("/_links/children").getClass());
+    assertEquals(ArrayNode.class, model.at("/_links/children").getClass());
     assertFalse(hal.removeLink("children", 0).hasLink("children"));
     assertEquals(MissingNode.class, model.at("/_links/children").getClass());
   }
@@ -144,4 +157,5 @@ public class HalResourceTest {
     assertFalse(model.has("_links"));
     hal.removeLinks();
   }
+
 }

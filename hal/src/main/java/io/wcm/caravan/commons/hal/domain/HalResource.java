@@ -119,10 +119,10 @@ public class HalResource implements HalObject {
     if (!model.has(type.toString())) {
       return ImmutableListMultimap.of();
     }
-    Builder<String, X> links = ImmutableListMultimap.builder();
+    Builder<String, X> resources = ImmutableListMultimap.builder();
     Iterable<String> iterable = Lists.newArrayList(model.get(type.toString()).fieldNames());
-    Streams.of(iterable).forEach(field -> links.putAll(field, getResources(clazz, type, field)));
-    return links.build();
+    Streams.of(iterable).forEach(field -> resources.putAll(field, getResources(clazz, type, field)));
+    return resources.build();
   }
 
   /**
@@ -167,13 +167,25 @@ public class HalResource implements HalObject {
   }
 
   /**
+   * Sets link for the given relation. Overwrites existing one.
+   * @param relation Link relation
+   * @param link Link to add
+   * @return HAL resource
+   */
+  public HalResource setLink(String relation, Link link) {
+    return addResources(Type.LINKS, relation, false, new Link[] {
+        link
+    });
+  }
+
+  /**
    * Adds links for the given relation
    * @param relation Link relation
    * @param links Links to add
    * @return HAL resource
    */
   public HalResource addLinks(String relation, Link... links) {
-    return addResources(Type.LINKS, relation, links);
+    return addResources(Type.LINKS, relation, true, links);
   }
 
   /**
@@ -187,13 +199,25 @@ public class HalResource implements HalObject {
   }
 
   /**
+   * Embed resource for the given relation. Overwrites existing one.
+   * @param relation Embedded resource relation
+   * @param resource Resource to embed
+   * @return HAL resource
+   */
+  public HalResource setEmbedded(String relation, HalResource resource) {
+    return addResources(Type.EMBEDDED, relation, false, new HalResource[] {
+        resource
+    });
+  }
+
+  /**
    * Embed resources for the given relation
    * @param relation Embedded resource relation
    * @param resources Resources to embed
    * @return HAL resource
    */
   public HalResource addEmbedded(String relation, HalResource... resources) {
-    return addResources(Type.EMBEDDED, relation, resources);
+    return addResources(Type.EMBEDDED, relation, true, resources);
   }
 
   /**
@@ -206,26 +230,35 @@ public class HalResource implements HalObject {
     return addEmbedded(relation, Iterables.toArray(resources, HalResource.class));
   }
 
-  private <X extends HalObject> HalResource addResources(Type type, String relation, X[] newResources) {
+  private <X extends HalObject> HalResource addResources(Type type, String relation, boolean asArray, X[] newResources) {
     if (newResources.length == 0) {
       return this;
     }
     ObjectNode resources = model.has(type.toString()) ? (ObjectNode)model.get(type.toString()) : model.putObject(type.toString());
-    if (!hasResource(type, relation)) {
-      if (!resources.has(relation) && newResources.length == 1) {
-        resources.set(relation, newResources[0].getModel());
+
+    if (asArray) {
+      ArrayNode container = getArrayNodeContainer(type, relation, resources);
+      Streams.of(newResources).forEach(link -> container.add(link.getModel()));
+    }
+    else {
+      resources.set(relation, newResources[0].getModel());
+    }
+    return this;
+  }
+
+  private ArrayNode getArrayNodeContainer(Type type, String relation, ObjectNode resources) {
+    if (hasResource(type, relation)) {
+      if (resources.get(relation).isArray()) {
+        return (ArrayNode)resources.get(relation);
       }
-      else if (!resources.has(relation) && newResources.length > 1) {
-        ArrayNode container = resources.putArray(relation);
-        Streams.of(newResources).forEach(link -> container.add(link.getModel()));
+      else {
+        JsonNode temp = resources.get(relation);
+        return resources.putArray(relation).add(temp);
       }
     }
     else {
-      JsonNode relationLinks = resources.get(relation);
-      ArrayNode container = relationLinks instanceof ArrayNode ? (ArrayNode)relationLinks : resources.putArray(relation).add(relationLinks);
-      Streams.of(newResources).forEach(link -> container.add(link.getModel()));
+      return resources.putArray(relation);
     }
-    return this;
   }
 
   /**
@@ -281,9 +314,6 @@ public class HalResource implements HalObject {
       }
       else {
         ((ArrayNode)resources).remove(index);
-        if (resources.size() == 1) {
-          ((ObjectNode)model.get(type.toString())).set(relation, resources.get(0));
-        }
       }
     }
     return this;
