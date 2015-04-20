@@ -31,7 +31,7 @@ import com.google.common.collect.Iterables;
 /**
  * Short named helper for HAL resources.
  */
-public class HAL {
+public class HalBuilder {
 
   private final HalResource instance;
 
@@ -39,7 +39,7 @@ public class HAL {
    * @see HalResourceFactory#createResource(String)
    * @param href Link HREF
    */
-  public HAL(String href) {
+  public HalBuilder(String href) {
     instance = HalResourceFactory.createResource(href);
   }
 
@@ -48,7 +48,7 @@ public class HAL {
    * @param href Link HREF
    * @param title Link title
    */
-  public HAL(String href, String title) {
+  public HalBuilder(String href, String title) {
     this(href);
     instance.getLinks("self").get(0).setTitle(title);
   }
@@ -59,7 +59,7 @@ public class HAL {
    * @param title Link title
    * @param name Link name
    */
-  public HAL(String href, String title, String name) {
+  public HalBuilder(String href, String title, String name) {
     this(href, title);
     instance.getLinks("self").get(0).setName(name);
   }
@@ -69,7 +69,7 @@ public class HAL {
    * @param state Resource state
    * @param href Link HREF
    */
-  public HAL(Object state, String href) {
+  public HalBuilder(Object state, String href) {
     instance = HalResourceFactory.createResource(state, href);
   }
 
@@ -78,7 +78,7 @@ public class HAL {
    * @param state Resource state
    * @param href Link HREF
    */
-  public HAL(ObjectNode state, String href) {
+  public HalBuilder(ObjectNode state, String href) {
     instance = HalResourceFactory.createResource(state, href);
   }
 
@@ -87,7 +87,7 @@ public class HAL {
    * @param input Resource pre-mapped state
    * @param mapper Resource state mapper
    */
-  public HAL(Object input, ResourceMapper<?> mapper) {
+  public HalBuilder(Object input, ResourceMapper<?> mapper) {
     instance = HalResourceFactory.createResource(input, mapper);
   }
 
@@ -99,7 +99,7 @@ public class HAL {
    * @param mapper Embedded resource state mapper
    * @return Helper
    */
-  public HAL embed(String name, Object input, ResourceMapper<?> mapper) {
+  public HalBuilder embed(String name, Object input, ResourceMapper<?> mapper) {
     HalResource embeddedResource = HalResourceFactory.createEmbeddedResource(input, mapper);
     instance.addEmbedded(name, embeddedResource);
     return this;
@@ -113,7 +113,7 @@ public class HAL {
    * @param mapper Embedded resources state mapper
    * @return Helper
    */
-  public HAL embedAll(String name, Iterable<?> inputs, ResourceMapper<?> mapper) {
+  public HalBuilder embedAll(String name, Iterable<?> inputs, ResourceMapper<?> mapper) {
     List<HalResource> embeddedResource = HalResourceFactory.createEmbeddedResources(inputs, mapper);
     instance.addEmbedded(name, Iterables.toArray(embeddedResource, HalResource.class));
     return this;
@@ -125,7 +125,7 @@ public class HAL {
    * @param href Link HREF
    * @return Helper
    */
-  public HAL link(String relation, String href) {
+  public HalBuilder link(String relation, String href) {
     instance.addLinks(relation, HalResourceFactory.createLink(href));
     return this;
   }
@@ -137,7 +137,7 @@ public class HAL {
    * @param title Link title
    * @return Helper
    */
-  public HAL link(String relation, String href, String title) {
+  public HalBuilder link(String relation, String href, String title) {
     instance.addLinks(relation, HalResourceFactory.createLink(href).setTitle(title));
     return this;
   }
@@ -150,7 +150,7 @@ public class HAL {
    * @param name Link name
    * @return Helper
    */
-  public HAL link(String relation, String href, String title, String name) {
+  public HalBuilder link(String relation, String href, String title, String name) {
     instance.addLinks(relation, HalResourceFactory.createLink(href).setName(name).setTitle(title));
     return this;
   }
@@ -161,14 +161,14 @@ public class HAL {
    * @param name Link name
    * @return Helper
    */
-  public HAL curi(String href, String name) {
+  public HalBuilder curi(String href, String name) {
     return link("curies", href, null, name);
   }
 
   /**
    * @return The HAL resource
    */
-  public HalResource get() {
+  public HalResource build() {
     return instance;
   }
 
