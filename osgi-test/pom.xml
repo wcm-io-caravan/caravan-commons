@@ -28,10 +28,6 @@
     <relativePath>../../parent_toplevel/pom.xml</relativePath>
   </parent>
 
-  <properties>
-    <io-wcm-caravan.version>0.2.0-SNAPSHOT</io-wcm-caravan.version>
-  </properties>
-
   <groupId>io.wcm.caravan</groupId>
   <artifactId>io.wcm.caravan.commons.osgi-test</artifactId>
   <version>0.2.0-SNAPSHOT</version>
@@ -53,31 +49,31 @@
     <dependency>
       <groupId>io.wcm.caravan</groupId>
       <artifactId>io.wcm.caravan.commons.jsonpath</artifactId>
-      <version>${io-wcm-caravan.version}</version>
+      <version>0.2.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.wcm.caravan</groupId>
       <artifactId>io.wcm.caravan.io.http</artifactId>
-      <version>${io-wcm-caravan.version}</version>
+      <version>0.2.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.wcm.caravan</groupId>
       <artifactId>io.wcm.caravan.pipeline.api</artifactId>
-      <version>${io-wcm-caravan.version}</version>
+      <version>0.2.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.wcm.caravan</groupId>
       <artifactId>io.wcm.caravan.pipeline.impl</artifactId>
-      <version>${io-wcm-caravan.version}</version>
+      <version>0.2.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.wcm.caravan</groupId>
       <artifactId>io.wcm.caravan.commons.metrics</artifactId>
-      <version>${io-wcm-caravan.version}</version>
+      <version>0.2.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
 
