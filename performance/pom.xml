@@ -43,9 +43,6 @@
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
-          <instructions>
-            <Bundle-Activator>io.wcm.caravan.commons.metrics.impl.BundleActivator</Bundle-Activator>
-          </instructions>
         </configuration>
       </plugin>
 
