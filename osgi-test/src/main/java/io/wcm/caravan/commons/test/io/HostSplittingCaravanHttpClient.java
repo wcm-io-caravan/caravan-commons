@@ -72,11 +72,11 @@ public class HostSplittingCaravanHttpClient implements CaravanHttpClient {
 
   private boolean isAllowed(final CaravanHttpRequest request) {
     try {
-      String requestHost = new URL(request.url()).getHost();
+      String requestHost = new URL(request.getUrl()).getHost();
       return hosts.contains(requestHost);
     }
     catch (MalformedURLException ex) {
-      LOG.error("Can't extract host from request URL: " + request.url(), ex);
+      LOG.error("Can't extract host from request URL: " + request.getUrl(), ex);
     }
     return false;
   }

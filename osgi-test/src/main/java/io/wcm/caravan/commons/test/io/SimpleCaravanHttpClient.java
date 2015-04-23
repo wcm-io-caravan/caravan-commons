@@ -42,7 +42,7 @@ public class SimpleCaravanHttpClient implements CaravanHttpClient {
 
   @Override
   public Observable<CaravanHttpResponse> execute(CaravanHttpRequest request) {
-    String url = host + request.url();
+    String url = host + request.getUrl();
     try {
       byte[] data = IOUtils.toByteArray(new URL(url));
       return Observable.just(CaravanHttpResponse.create(200, "OK", ImmutableMultimap.of(), data));

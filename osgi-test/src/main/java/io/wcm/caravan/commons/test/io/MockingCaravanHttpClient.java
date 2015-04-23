@@ -55,7 +55,7 @@ public class MockingCaravanHttpClient implements CaravanHttpClient {
 
   @Override
   public Observable<CaravanHttpResponse> execute(final CaravanHttpRequest request, final Observable<CaravanHttpResponse> fallback) {
-    String url = request.url();
+    String url = request.getUrl();
     // search for equal URL
     if (store.containsKey(url)) {
       return Observable.just(store.get(url));
