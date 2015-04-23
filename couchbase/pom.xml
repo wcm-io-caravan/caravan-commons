@@ -45,7 +45,7 @@
   </scm>
 
   <properties>
-    <couchbase.client.version>2.0.3</couchbase.client.version>
+    <couchbase.client.version>2.1.2</couchbase.client.version>
   </properties>
 
   <dependencies>
