@@ -22,6 +22,7 @@ package io.wcm.caravan.commons.test.io;
 import io.wcm.caravan.io.http.CaravanHttpClient;
 import io.wcm.caravan.io.http.request.CaravanHttpRequest;
 import io.wcm.caravan.io.http.response.CaravanHttpResponse;
+import io.wcm.caravan.io.http.response.CaravanHttpResponseBuilder;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -32,19 +33,20 @@ import org.slf4j.LoggerFactory;
 
 import rx.Observable;
 
-import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Maps;
 
 /**
- * Mocking implementation of {@link CaravanHttpClient} for tests. Use
- * mockRequest methods to register a response. Returns a 404 NOT FOUND
- * response if there is no response registered for the request.
+ * Mocking implementation of {@link CaravanHttpClient} for tests. Use mockRequest methods to register a response. Returns a 404 NOT FOUND response if there is
+ * no response registered for the request.
  */
 public class MockingCaravanHttpClient implements CaravanHttpClient {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MockingCaravanHttpClient.class);
 
-  private static final CaravanHttpResponse NOT_FOUND = CaravanHttpResponse.create(HttpStatus.SC_NOT_FOUND, "Not Found", ImmutableMultimap.of(), new byte[0]);
+  private static final CaravanHttpResponse NOT_FOUND = new CaravanHttpResponseBuilder()
+      .status(HttpStatus.SC_NOT_FOUND)
+      .reason("Not Found")
+      .build();
   private final Map<String, CaravanHttpResponse> store = Maps.newConcurrentMap();
   private CaravanHttpResponse matchesAll;
 

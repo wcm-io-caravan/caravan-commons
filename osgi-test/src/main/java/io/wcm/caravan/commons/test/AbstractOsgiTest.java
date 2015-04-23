@@ -24,18 +24,17 @@ import io.wcm.caravan.commons.test.io.MockingCaravanHttpClient;
 import io.wcm.caravan.commons.test.pipeline.InMemoryCacheAdapter;
 import io.wcm.caravan.io.http.CaravanHttpClient;
 import io.wcm.caravan.io.http.response.CaravanHttpResponse;
+import io.wcm.caravan.io.http.response.CaravanHttpResponseBuilder;
 import io.wcm.caravan.pipeline.JsonPipelineFactory;
 import io.wcm.caravan.pipeline.cache.spi.CacheAdapter;
 import io.wcm.caravan.pipeline.impl.JsonPipelineFactoryImpl;
-
-import java.nio.charset.Charset;
 
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
 import org.junit.Before;
 import org.junit.Rule;
 
 import com.codahale.metrics.MetricRegistry;
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.base.Charsets;
 
 /**
  * The abstract starting class for OSGI mocking tests. Registers Cache adapter and resilient HTTP client.
@@ -45,10 +44,10 @@ public abstract class AbstractOsgiTest {
   /**
    * The OSGI context.
    */
-  //CHECKSTYLE:OFF
+  // CHECKSTYLE:OFF
   @Rule
   public OsgiContext context = new OsgiContext();
-  //CHECKSTYLE:ON
+  // CHECKSTYLE:ON
 
   protected InMemoryCacheAdapter cacheAdapter;
   protected MockingCaravanHttpClient resilientHttp;
@@ -75,7 +74,11 @@ public abstract class AbstractOsgiTest {
   }
 
   protected void mockAnyRequest(final Object payload) {
-    CaravanHttpResponse response = CaravanHttpResponse.create(200, "Ok", ImmutableMultimap.of(), payload.toString(), Charset.forName("UTF-8"));
+    CaravanHttpResponse response = new CaravanHttpResponseBuilder()
+        .status(200)
+        .reason("OK")
+        .body(payload.toString(), Charsets.UTF_8)
+        .build();
     resilientHttp.mockAnyRequest(response);
   }
 
