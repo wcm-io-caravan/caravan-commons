@@ -36,11 +36,6 @@ public class InMemoryCacheAdapter implements CacheAdapter {
   private final Map<String, String> store = Maps.newConcurrentMap();
 
   @Override
-  public String getCacheKey(String servicePrefix, String descriptor) {
-    return servicePrefix + "-" + descriptor;
-  }
-
-  @Override
   public Observable<String> get(String cacheKey, CachePersistencyOptions options) {
     return store.containsKey(cacheKey) ? Observable.just(store.get(cacheKey)) : Observable.empty();
   }
