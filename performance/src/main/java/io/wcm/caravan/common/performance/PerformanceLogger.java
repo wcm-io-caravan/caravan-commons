@@ -21,6 +21,7 @@ package io.wcm.caravan.common.performance;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
 
 /**
  * Performance logger aids to create and log lines about results of performance measurements.
@@ -31,6 +32,16 @@ public final class PerformanceLogger {
 
   private PerformanceLogger() {
     // default empty constructor
+  }
+
+
+  /**
+   * Log line of measured performance of single operation specifying by performance metrics parameter.
+   * @param marker log marker
+   * @param metrics PerformanceMetrics a result of measurement
+   */
+  public static void log(Marker marker, PerformanceMetrics metrics) {
+    log.debug(marker, getEndMetrics(metrics));
   }
 
   /**

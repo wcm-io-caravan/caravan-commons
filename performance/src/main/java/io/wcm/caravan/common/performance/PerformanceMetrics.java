@@ -143,6 +143,10 @@ public final class PerformanceMetrics {
     return previous != null && previous.isCharged();
   }
 
+  public PerformanceMetrics getPrevious() {
+    return this.previous;
+  }
+
 
   public Integer getKey() {
     return this.key;
