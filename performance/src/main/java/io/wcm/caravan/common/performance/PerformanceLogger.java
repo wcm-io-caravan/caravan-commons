@@ -22,6 +22,7 @@ package io.wcm.caravan.common.performance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 /**
  * Performance logger aids to create and log lines about results of performance measurements.
@@ -29,11 +30,17 @@ import org.slf4j.Marker;
 public final class PerformanceLogger {
 
   private static final Logger log = LoggerFactory.getLogger(PerformanceLogger.class);
-
   private PerformanceLogger() {
     // default empty constructor
   }
 
+  /**
+   * Log line of measured performance of single operation specifying by performance metrics parameter.
+   * @param metrics PerformanceMetrics a result of measurement
+   */
+  public static void log(PerformanceMetrics metrics) {
+    log(MarkerFactory.getMarker("metrics"), metrics);
+  }
 
   /**
    * Log line of measured performance of single operation specifying by performance metrics parameter.
@@ -43,15 +50,6 @@ public final class PerformanceLogger {
   public static void log(Marker marker, PerformanceMetrics metrics) {
     log.debug(marker, getEndMetrics(metrics));
   }
-
-  /**
-   * Log line of measured performance of single operation specifying by performance metrics parameter.
-   * @param metrics PerformanceMetrics a result of measurement
-   */
-  public static void log(PerformanceMetrics metrics) {
-    log.debug(getEndMetrics(metrics));
-  }
-
 
   private static String getTakenTimeByStepStartMessage(PerformanceMetrics metrics) {
     if (metrics.getTakenTimeByStepStart() != null) {

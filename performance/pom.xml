@@ -15,7 +15,8 @@
   <version>0.2.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>Commons Performance</name>
+  <name>Commons Performance Metrics</name>
+  <description>Performance Metrics Framework</description>
 
   <scm>
     <connection>scm:git:git@github.com:wcm-io/wcm-io-caravan.git</connection>
