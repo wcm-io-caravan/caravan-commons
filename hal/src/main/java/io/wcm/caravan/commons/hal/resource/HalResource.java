@@ -23,6 +23,7 @@ import io.wcm.caravan.commons.stream.Streams;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -358,6 +359,18 @@ public final class HalResource implements HalObject {
    */
   public HalResource removeEmbedded() {
     return removeResources(Type.EMBEDDED);
+  }
+
+  /**
+   * Changes the rel of embedded resources
+   * @param relToRename the rel that you want to change
+   * @param newRel the new rel for all embedded items
+   */
+  public void renameEmbedded(String relToRename, String newRel) {
+    List<HalResource> resourcesToRename = new ArrayList<>();
+    resourcesToRename.addAll(getEmbedded(relToRename));
+    removeEmbedded(relToRename);
+    addEmbedded(newRel, resourcesToRename);
   }
 
   private HalResource removeResources(Type type) {
