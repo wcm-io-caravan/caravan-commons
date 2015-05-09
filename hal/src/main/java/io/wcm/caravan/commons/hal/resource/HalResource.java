@@ -23,6 +23,8 @@ import io.wcm.caravan.commons.stream.Streams;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.osgi.annotation.versioning.ProviderType;
@@ -134,6 +136,26 @@ public final class HalResource implements HalObject {
    */
   public ImmutableList<Link> getLinks(String relation) {
     return getResources(Link.class, Type.LINKS, relation);
+  }
+
+  /**
+   * recursively collects links within this resource and all embedded resources
+   * @param rel the relation your interested in
+   * @return a list of all links
+   */
+  public List<Link> collectLinks(String rel) {
+
+    List<Link> links = new LinkedList<>();
+
+    links.addAll(getLinks(rel));
+
+    for (String embeddedRel : getEmbedded().keySet()) {
+      for (HalResource embedded : getEmbedded(embeddedRel)) {
+        links.addAll(embedded.collectLinks(rel));
+      }
+    }
+
+    return links;
   }
 
   /**
