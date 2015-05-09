@@ -63,6 +63,7 @@ public class CouchbaseClientProviderImpl implements CouchbaseClientProvider {
   private static final Logger log = LoggerFactory.getLogger(CouchbaseClientProviderImpl.class);
 
   private boolean enabled;
+  private String cacheBucketName;
   private Cluster cluster;
   private AsyncBucket cacheBucket;
 
@@ -80,7 +81,7 @@ public class CouchbaseClientProviderImpl implements CouchbaseClientProvider {
       return;
     }
 
-    String cacheBucketName = PropertiesUtil.toString(config.get(CACHE_BUCKET_NAME_PROPERTY), null);
+    cacheBucketName = PropertiesUtil.toString(config.get(CACHE_BUCKET_NAME_PROPERTY), null);
     String cacheBucketPassword = PropertiesUtil.toString(config.get(CACHE_BUCKET_PASSWORD_PROPERTY), null);
     if (StringUtils.isEmpty(cacheBucketName)) {
       log.warn("No couchbase bucket name configured, caching is disabled.");
@@ -114,8 +115,14 @@ public class CouchbaseClientProviderImpl implements CouchbaseClientProvider {
   }
 
   @Override
+  public String getCacheBucketName() {
+    return cacheBucketName;
+  }
+
+  @Override
   public AsyncBucket getCacheBucket() {
     return cacheBucket;
   }
+
 
 }

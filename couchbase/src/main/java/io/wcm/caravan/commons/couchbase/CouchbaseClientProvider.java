@@ -35,6 +35,11 @@ public interface CouchbaseClientProvider {
   boolean isEnabled();
 
   /**
+   * @return the name of the couchbase bucket to use for caching
+   */
+  String getCacheBucketName();
+
+  /**
    * @return Default bucket as configured for the couchbase client provider.
    */
   AsyncBucket getCacheBucket();
