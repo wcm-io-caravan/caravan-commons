@@ -166,4 +166,12 @@ public class HalResourceTest {
     assertTrue(fieldNames.contains("property2"));
   }
 
+  @Test
+  public void testRemoveState() throws Exception {
+    hal.removeState();
+    assertFalse(hal.getModel().has("property1"));
+    assertFalse(hal.getModel().has("property2"));
+    assertEquals(4, hal.getLinks().size());
+  }
+
 }

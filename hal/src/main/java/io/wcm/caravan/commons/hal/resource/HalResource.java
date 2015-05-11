@@ -84,20 +84,6 @@ public final class HalResource implements HalObject {
   }
 
   /**
-   * @return JSON field names for the state object
-   */
-  public List<String> getStateFieldNames() {
-    UnmodifiableIterator<String> filtered = Iterators.filter(model.fieldNames(), new Predicate<String>() {
-
-      @Override
-      public boolean apply(String input) {
-        return !"_links".equals(input) && !"_embedded".equals(input);
-      }
-    });
-    return Lists.newArrayList(filtered);
-  }
-
-  /**
    * @param relation Link relation
    * @return True if has link for the given relation
    */
@@ -403,6 +389,29 @@ public final class HalResource implements HalObject {
   public HalResource addState(ObjectNode state) {
     Iterable<Entry<String, JsonNode>> iterable = Lists.newArrayList(state.fields());
     Streams.of(iterable).forEach(entry -> model.set(entry.getKey(), entry.getValue()));
+    return this;
+  }
+
+  /**
+   * @return JSON field names for the state object
+   */
+  public List<String> getStateFieldNames() {
+    UnmodifiableIterator<String> filtered = Iterators.filter(model.fieldNames(), new Predicate<String>() {
+
+      @Override
+      public boolean apply(String input) {
+        return !"_links".equals(input) && !"_embedded".equals(input);
+      }
+    });
+    return Lists.newArrayList(filtered);
+  }
+
+  /**
+   * Removes all state attributes
+   * @return HAL resource
+   */
+  public HalResource removeState() {
+    Streams.of(getStateFieldNames()).forEach(field -> model.remove(field));
     return this;
   }
 
