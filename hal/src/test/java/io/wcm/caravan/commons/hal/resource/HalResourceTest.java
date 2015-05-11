@@ -158,4 +158,12 @@ public class HalResourceTest {
     hal.removeLinks();
   }
 
+  @Test
+  public void testGetStateFieldNames() throws Exception {
+    List<String> fieldNames = hal.getStateFieldNames();
+    assertEquals(2, fieldNames.size());
+    assertTrue(fieldNames.contains("property1"));
+    assertTrue(fieldNames.contains("property2"));
+  }
+
 }

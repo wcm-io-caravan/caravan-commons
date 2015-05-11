@@ -1,4 +1,6 @@
 {
+  "property1": "value1",
+  "property2": "value2",
   "_links": {
     "self": {
       "href": "/"

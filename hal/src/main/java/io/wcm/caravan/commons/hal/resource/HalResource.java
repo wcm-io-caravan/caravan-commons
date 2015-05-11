@@ -33,11 +33,14 @@ import org.osgi.annotation.versioning.ProviderType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableListMultimap.Builder;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
+import com.google.common.collect.UnmodifiableIterator;
 
 /**
  * Bean representation of a HAL resource.
@@ -78,6 +81,20 @@ public final class HalResource implements HalObject {
   @Override
   public ObjectNode getModel() {
     return model;
+  }
+
+  /**
+   * @return JSON field names for the state object
+   */
+  public List<String> getStateFieldNames() {
+    UnmodifiableIterator<String> filtered = Iterators.filter(model.fieldNames(), new Predicate<String>() {
+
+      @Override
+      public boolean apply(String input) {
+        return !"_links".equals(input) && !"_embedded".equals(input);
+      }
+    });
+    return Lists.newArrayList(filtered);
   }
 
   /**
