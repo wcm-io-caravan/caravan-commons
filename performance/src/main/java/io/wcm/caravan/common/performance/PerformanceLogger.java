@@ -51,36 +51,12 @@ public final class PerformanceLogger {
     log.debug(marker, getEndMetrics(metrics));
   }
 
-  private static String getTakenTimeByStepStartMessage(PerformanceMetrics metrics) {
-    if (metrics.getTakenTimeByStepStart() != null) {
-      return metrics.getTakenTimeByStepStart() >= 0
-          ? " - taken time by step start : " + metrics.getTakenTimeByStepStart() + " ms" : " - incorrect step start time";
-    }
-
-    return "";
-
-  }
-
-
-  private static String getTakenTimeByStepEndMessage(PerformanceMetrics metrics) {
-    if (metrics.getTakenTimeByStepEnd() != null) {
-      return metrics.getTakenTimeByStepEnd() >= 0
-          ? " - " + "taken time by step end : " + metrics.getTakenTimeByStepEnd() + " ms" : " - incorrect step end time";
-    }
-
-    return "";
-
-  }
-
   private static String getEndMetrics(PerformanceMetrics metrics) {
     return "Key : " + metrics.getKey()
         + " - " + "level : " + metrics.getLevel()
         + " - " + "action : " + metrics.getAction()
+        + (metrics.getActionClass() != null ? " : " + metrics.getActionClass().getName() : "")
         + " - " + "taken time by step : " + metrics.getTakenTimeByStep() + " ms"
-        + getTakenTimeByStepStartMessage(metrics)
-        + getTakenTimeByStepEndMessage(metrics)
-        + " - " + "start time : " + metrics.getStartTime() + " ms"
-        + " - " + "end time : " + metrics.getEndTime() + " ms"
         + " - " + "description : " + metrics.getDescriptor()
         + " - " + "correlation id : " + metrics.getCorrelationId();
   }

@@ -40,6 +40,7 @@ public final class PerformanceMetrics {
   private Integer key;
   private Integer level;
   private String action;
+  private Class actionClass;
   private String descriptor;
   private String correlationId;
   private Long startTime;
@@ -49,10 +50,11 @@ public final class PerformanceMetrics {
   private Long takenTimeByStepEnd;
   private PerformanceMetrics previous;
 
-  private PerformanceMetrics(Integer key, Integer level, String action, String descriptor, String correlationId) {
+  private PerformanceMetrics(Integer key, Integer level, String action, Class actionClass, String descriptor, String correlationId) {
     this.key = key;
     this.level = level;
     this.action = action;
+    this.actionClass = actionClass;
     this.descriptor = descriptor;
     this.correlationId = correlationId;
   }
@@ -65,7 +67,7 @@ public final class PerformanceMetrics {
    * @return PerformanceMetrics a new instance of performance metrics
    */
   public static PerformanceMetrics createNew(String action, String descriptor, String correlationId) {
-    return new PerformanceMetrics(KEY_GEN.getAndIncrement(), 0, action, descriptor, correlationId);
+    return new PerformanceMetrics(KEY_GEN.getAndIncrement(), 0, action, null, descriptor, correlationId);
   }
 
   /**
@@ -77,7 +79,20 @@ public final class PerformanceMetrics {
    *         metrics and assigned next level
    */
   public PerformanceMetrics createNext(String nextAction, String nextDescriptor) {
-    PerformanceMetrics next = new PerformanceMetrics(key, level + 1, nextAction, nextDescriptor, correlationId);
+    return createNext(nextAction, nextDescriptor, null);
+  }
+
+  /**
+   * Creates new instance of performance metrics. Stores the key and correlation id of the parent metrics instance.
+   * Assigns next level.
+   * @param nextAction a short name of measured operation, typically a first prefix of descriptor
+   * @param actionClass a class which implements the action
+   * @param nextDescriptor a full description of measured operation
+   * @return PerformanceMetrics a new instance of performance metrics with stored key and correlationId from the parent
+   *         metrics and assigned next level
+   */
+  public PerformanceMetrics createNext(String nextAction, String nextDescriptor, Class actionClass) {
+    PerformanceMetrics next = new PerformanceMetrics(key, level + 1, nextAction, actionClass, nextDescriptor, correlationId);
     next.previous = this;
     return next;
   }
@@ -162,6 +177,10 @@ public final class PerformanceMetrics {
     return this.action;
   }
 
+  public Class getActionClass() {
+    return this.actionClass;
+  }
+
   public String getDescriptor() {
     return this.descriptor;
   }
@@ -208,12 +227,19 @@ public final class PerformanceMetrics {
     return this.takenTimeByStepEnd;
   }
 
-  @Override
-  public String toString() {
-    return "PerformanceMetrics [key=" + this.key + ", level=" + this.level + ", action=" + this.action + ", descriptor=" + this.descriptor + ", correlationId="
-        + this.correlationId + ", startTime=" + this.startTime + ", endTime=" + this.endTime + ", totalTakenTimeByStep=" + this.totalTakenTimeByStep
-        + ", takenTimeByStepStart=" + this.takenTimeByStepStart + ", takenTimeByStepEnd=" + this.takenTimeByStepEnd + ", previous=" + this.previous + "]";
+  /**
+   * @return integer a count of metric entities from the first till the last one in the whole story
+   */
+  public int size() {
+    return isPreviousCharged() ? previous.size() + 1 : 1;
   }
 
+  @Override
+  public String toString() {
+    return "PerformanceMetrics [key=" + this.key + ", level=" + this.level + ", action=" + this.action + ", actionClass=" + this.actionClass + ", descriptor="
+        + this.descriptor + ", correlationId=" + this.correlationId + ", startTime=" + this.startTime + ", endTime=" + this.endTime + ", totalTakenTimeByStep="
+        + this.totalTakenTimeByStep + ", takenTimeByStepStart=" + this.takenTimeByStepStart + ", takenTimeByStepEnd=" + this.takenTimeByStepEnd + ", previous="
+        + this.previous + "]";
+  }
 
 }
