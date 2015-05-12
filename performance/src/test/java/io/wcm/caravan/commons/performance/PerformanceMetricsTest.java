@@ -74,6 +74,7 @@ public class PerformanceMetricsTest {
     assertNotLaunched(metrics);
     metrics.setStartTimestamp();
     assertStartOnly(metrics);
+    metrics.setOperationTimestamp();
     metrics.setEndTimestamp();
     assertStartAndEnd(metrics);
   }
@@ -89,7 +90,8 @@ public class PerformanceMetricsTest {
 
     assertStartOnly(metrics);
     assertStartOnly(next);
-
+    metrics.setOperationTimestamp();
+    next.setOperationTimestamp();
     metrics.setEndTimestamp();
     next.setEndTimestamp();
 
@@ -123,7 +125,7 @@ public class PerformanceMetricsTest {
   private void assertStartAndEndWithPrevious(PerformanceMetrics metricsToTest) {
     assertCharged(metricsToTest);
     assertTrue(metricsToTest.isPreviousCharged());
-    assertTrue(metricsToTest.getTakenTimeByStepEnd() >= 0);
+    assertTrue(metricsToTest.getTakenTimeByStepOperation() >= 0);
     assertTrue(metricsToTest.getTakenTimeByStepStart() >= 0);
   }
 
@@ -135,14 +137,14 @@ public class PerformanceMetricsTest {
 
   private void assertPreviousEmpty(PerformanceMetrics metricsToTest) {
     assertFalse(metricsToTest.isPreviousCharged());
-    assertNull(metricsToTest.getTakenTimeByStepEnd());
+    assertNull(metricsToTest.getTakenTimeByStepOperation());
     assertNull(metricsToTest.getTakenTimeByStepStart());
   }
 
   private void assertCharged(PerformanceMetrics metricsToTest) {
     assertTrue(metricsToTest.isCharged());
-    assertTrue(metricsToTest.getStartTime() > 0);
-    assertTrue(metricsToTest.getEndTime() > 0);
+    assertTrue(metricsToTest.getStartTime() >= 0);
+    assertTrue(metricsToTest.getEndTime() >= 0);
     assertTrue(metricsToTest.getTakenTimeByStep() >= 0);
   }
 

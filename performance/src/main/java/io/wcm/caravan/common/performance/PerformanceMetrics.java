@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import rx.functions.Action0;
+import rx.functions.Action1;
 
 /**
  * Performance metrics aid to collect time spent for execution of operation, including any sub operations, which results
@@ -44,10 +45,11 @@ public final class PerformanceMetrics {
   private String descriptor;
   private String correlationId;
   private Long startTime;
+  private Long operationTime;
   private Long endTime;
   private Long totalTakenTimeByStep;
   private Long takenTimeByStepStart;
-  private Long takenTimeByStepEnd;
+  private Long takenTimeByStepOperation;
   private PerformanceMetrics previous;
 
   private PerformanceMetrics(Integer key, Integer level, String action, Class actionClass, String descriptor, String correlationId) {
@@ -86,13 +88,13 @@ public final class PerformanceMetrics {
    * Creates new instance of performance metrics. Stores the key and correlation id of the parent metrics instance.
    * Assigns next level.
    * @param nextAction a short name of measured operation, typically a first prefix of descriptor
-   * @param actionClass a class which implements the action
+   * @param nextActionClass a class which implements the action
    * @param nextDescriptor a full description of measured operation
    * @return PerformanceMetrics a new instance of performance metrics with stored key and correlationId from the parent
    *         metrics and assigned next level
    */
-  public PerformanceMetrics createNext(String nextAction, String nextDescriptor, Class actionClass) {
-    PerformanceMetrics next = new PerformanceMetrics(key, level + 1, nextAction, actionClass, nextDescriptor, correlationId);
+  public PerformanceMetrics createNext(String nextAction, String nextDescriptor, Class nextActionClass) {
+    PerformanceMetrics next = new PerformanceMetrics(key, level + 1, nextAction, nextActionClass, nextDescriptor, correlationId);
     next.previous = this;
     return next;
   }
@@ -131,10 +133,33 @@ public final class PerformanceMetrics {
   }
 
   /**
+   * When called, end action sets time stamp to identify end time of operation and logs the metrics.
+   * @return Action0
+   */
+  public Action1 getOnNextAction() {
+    return new Action1() {
+
+      @Override
+      public void call(Object t) {
+        if (operationTime == null) {
+          operationTime = new Date().getTime();
+        }
+      }
+    };
+  }
+
+  /**
    * Set time stamp of operation start.
    */
   public void setStartTimestamp() {
     startTime = new Date().getTime();
+  }
+
+  /**
+   * Set time stamp of operation delegation.
+   */
+  public void setOperationTimestamp() {
+    operationTime = new Date().getTime();
   }
 
   /**
@@ -148,7 +173,7 @@ public final class PerformanceMetrics {
    * @return true if start and end time of measured operation are set
    */
   public boolean isCharged() {
-    return endTime != null && startTime != null;
+    return endTime != null && operationTime != null && startTime != null;
   }
 
   /**
@@ -193,6 +218,10 @@ public final class PerformanceMetrics {
     return this.startTime;
   }
 
+  public Long getOperationTime() {
+    return this.operationTime;
+  }
+
   public Long getEndTime() {
     return this.endTime;
   }
@@ -202,7 +231,8 @@ public final class PerformanceMetrics {
    */
   public Long getTakenTimeByStep() {
     if (this.isCharged() && this.totalTakenTimeByStep == null) {
-      this.totalTakenTimeByStep = isPreviousCharged() ? getTakenTimeByStepStart() + getTakenTimeByStepEnd() : this.endTime - this.startTime;
+      this.totalTakenTimeByStep = isPreviousCharged() ? getTakenTimeByStepStart() + getTakenTimeByStepOperation() : this.endTime
+          - this.startTime;
     }
     return this.totalTakenTimeByStep;
   }
@@ -211,7 +241,7 @@ public final class PerformanceMetrics {
    * @return time in milliseconds spent by operation before sub operation was called
    */
   public Long getTakenTimeByStepStart() {
-    if (this.isCharged() && this.isPreviousCharged() && this.takenTimeByStepStart == null) {
+    if (this.takenTimeByStepStart == null && this.isCharged() && this.isPreviousCharged()) {
       this.takenTimeByStepStart = this.previous.startTime - this.startTime;
     }
     return this.takenTimeByStepStart;
@@ -220,11 +250,11 @@ public final class PerformanceMetrics {
   /**
    * @return time in milliseconds spent by operation after sub operation was released
    */
-  public Long getTakenTimeByStepEnd() {
-    if (this.isCharged() && this.isPreviousCharged() && this.takenTimeByStepEnd == null) {
-      this.takenTimeByStepEnd = this.endTime - this.previous.endTime;
+  public Long getTakenTimeByStepOperation() {
+    if (this.takenTimeByStepOperation == null && this.isCharged() && this.isPreviousCharged()) {
+      this.takenTimeByStepOperation = this.operationTime - this.previous.operationTime;
     }
-    return this.takenTimeByStepEnd;
+    return this.takenTimeByStepOperation;
   }
 
   /**
@@ -237,9 +267,9 @@ public final class PerformanceMetrics {
   @Override
   public String toString() {
     return "PerformanceMetrics [key=" + this.key + ", level=" + this.level + ", action=" + this.action + ", actionClass=" + this.actionClass + ", descriptor="
-        + this.descriptor + ", correlationId=" + this.correlationId + ", startTime=" + this.startTime + ", endTime=" + this.endTime + ", totalTakenTimeByStep="
-        + this.totalTakenTimeByStep + ", takenTimeByStepStart=" + this.takenTimeByStepStart + ", takenTimeByStepEnd=" + this.takenTimeByStepEnd + ", previous="
-        + this.previous + "]";
+        + this.descriptor + ", correlationId=" + this.correlationId + ", startTime=" + this.startTime + ", operationTime=" + this.operationTime + ", endTime="
+        + this.endTime + ", totalTakenTimeByStep=" + this.totalTakenTimeByStep + ", takenTimeByStepStart=" + this.takenTimeByStepStart
+        + ", takenTimeByStepOperation=" + this.takenTimeByStepOperation + ", previous=" + this.previous + "]";
   }
 
 }
