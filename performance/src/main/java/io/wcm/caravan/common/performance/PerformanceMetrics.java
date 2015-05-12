@@ -33,7 +33,7 @@ import rx.functions.Action0;
 public final class PerformanceMetrics {
 
   /**
-   *
+   * Provides unique identifier per metrics story
    */
   private static final AtomicInteger KEY_GEN = new AtomicInteger(0);
 
