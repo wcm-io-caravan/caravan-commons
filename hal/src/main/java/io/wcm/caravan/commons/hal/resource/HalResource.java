@@ -19,12 +19,12 @@
  */
 package io.wcm.caravan.commons.hal.resource;
 
+import io.wcm.caravan.commons.stream.Collectors;
 import io.wcm.caravan.commons.stream.Streams;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -107,7 +107,7 @@ public final class HalResource implements HalObject {
    * @return Self link for the resource. Can be null
    */
   public Link getLink() {
-    return hasLink("self") ? getLinks("self").get(0) : null;
+    return getLink("self");
   }
 
   /**
@@ -136,6 +136,14 @@ public final class HalResource implements HalObject {
 
   /**
    * @param relation Link relation
+   * @return Link for the given relation
+   */
+  public Link getLink(String relation) {
+    return hasLink(relation) ? getLinks(relation).get(0) : null;
+  }
+
+  /**
+   * @param relation Link relation
    * @return All links for the given relation
    */
   public ImmutableList<Link> getLinks(String relation) {
@@ -149,17 +157,21 @@ public final class HalResource implements HalObject {
    */
   public List<Link> collectLinks(String rel) {
 
-    List<Link> links = new LinkedList<>();
-
-    links.addAll(getLinks(rel));
-
-    for (String embeddedRel : getEmbedded().keySet()) {
-      for (HalResource embedded : getEmbedded(embeddedRel)) {
-        links.addAll(embedded.collectLinks(rel));
-      }
-    }
-
+    List<Link> links = Lists.newArrayList(getLinks(rel));
+    List<Link> embeddedLinks = Streams.of(getEmbedded().values())
+        .flatMap(embedded -> Streams.of(embedded.collectLinks(rel)))
+        .collect(Collectors.toList());
+    links.addAll(embeddedLinks);
     return links;
+
+  }
+
+  /**
+   * @param relation Embedded resource relation
+   * @return Embedded resources for the given relation
+   */
+  public HalResource getEmbeddedResource(String relation) {
+    return hasEmbedded(relation) ? getEmbedded(relation).get(0) : null;
   }
 
   /**
@@ -193,6 +205,15 @@ public final class HalResource implements HalObject {
     catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
       throw new RuntimeException(ex);
     }
+  }
+
+  /**
+   * Sets link for the {@code self} relation. Overwrites existing one.
+   * @param link Link to set
+   * @return HAL resource
+   */
+  public HalResource setLink(Link link) {
+    return setLink("self", link);
   }
 
   /**

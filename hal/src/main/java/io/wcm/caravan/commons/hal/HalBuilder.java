@@ -19,17 +19,13 @@
  */
 package io.wcm.caravan.commons.hal;
 
-import io.wcm.caravan.commons.hal.mapper.ResourceMapper;
 import io.wcm.caravan.commons.hal.resource.HalResource;
 import io.wcm.caravan.commons.hal.resource.HalResourceFactory;
 import io.wcm.caravan.commons.hal.resource.Link;
 
-import java.util.List;
-
 import org.osgi.annotation.versioning.ProviderType;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Iterables;
 
 /**
  * Short named helper for HAL resources.
@@ -87,43 +83,6 @@ public final class HalBuilder {
   }
 
   /**
-   * @see HalResourceFactory#createResource(Object, ResourceMapper)
-   * @param input Resource pre-mapped state
-   * @param mapper Resource state mapper
-   */
-  public HalBuilder(Object input, ResourceMapper<?> mapper) {
-    instance = HalResourceFactory.createResource(input, mapper);
-  }
-
-  /**
-   * @see HalResourceFactory#createEmbeddedResource(Object, ResourceMapper)
-   * @see HalResource#addEmbedded(String, HalResource...)
-   * @param name Embedded resource name
-   * @param input Embedded resource pre-mapped state
-   * @param mapper Embedded resource state mapper
-   * @return Helper
-   */
-  public HalBuilder embed(String name, Object input, ResourceMapper<?> mapper) {
-    HalResource embeddedResource = HalResourceFactory.createEmbeddedResource(input, mapper);
-    instance.addEmbedded(name, embeddedResource);
-    return this;
-  }
-
-  /**
-   * @see HalResourceFactory#createEmbeddedResources(Iterable, ResourceMapper)
-   * @see HalResource#addEmbedded(String, HalResource...)
-   * @param name Embedded resources name
-   * @param inputs Embedded resources pre-mapped state
-   * @param mapper Embedded resources state mapper
-   * @return Helper
-   */
-  public HalBuilder embedAll(String name, Iterable<?> inputs, ResourceMapper<?> mapper) {
-    List<HalResource> embeddedResource = HalResourceFactory.createEmbeddedResources(inputs, mapper);
-    instance.addEmbedded(name, Iterables.toArray(embeddedResource, HalResource.class));
-    return this;
-  }
-
-  /**
    * @see HalResource#setLink(String, Link)
    * @param relation Link relation
    * @param href Link HREF
@@ -166,7 +125,8 @@ public final class HalBuilder {
    * @return Helper
    */
   public HalBuilder curi(String href, String name) {
-    return link("curies", href, null, name);
+    instance.addLinks("curies", HalResourceFactory.createLink(href).setName(name));
+    return this;
   }
 
   /**

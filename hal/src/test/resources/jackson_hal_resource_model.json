@@ -19,5 +19,33 @@
       "href": "/parent",
       "name": "parent"
     }
+  },
+  "_embedded": {
+    "one": {
+      "_links": {
+        "self": {
+          "href": "/one"
+        }
+      },
+      "att": "value"
+    },
+    "multiple": [
+      {
+        "_links": {
+          "self": {
+            "href": "/multiple1"
+          }
+        },
+        "number": 42
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/multiple2"
+          }
+        },
+        "number": 2
+      }
+    ]
   }
 }
