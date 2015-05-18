@@ -43,6 +43,7 @@ public interface Stream<T> {
   /**
    * Returns a stream consisting of the results of applying the given function to the elements of this stream.
    * @param mapper A function to apply to each element
+   * @param <R> Output type
    * @return the new stream
    */
   <R> Stream<R> map(Function<? super T, ? extends R> mapper);
@@ -63,6 +64,7 @@ public interface Stream<T> {
   /**
    * Collects stream items to a iterable like list or set.
    * @param collector Collector
+   * @param <R> Output type
    * @return Iterable
    */
   <R> R collect(Collector<? super T, R> collector);
@@ -72,6 +74,7 @@ public interface Stream<T> {
    * stream produced by applying the provided mapping function to each element. (If a mapped stream is {@code null} an
    * empty stream is used, instead.)
    * @param mapper A function to apply to each element
+   * @param <R> Output type
    * @return the new stream
    */
   <R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper);

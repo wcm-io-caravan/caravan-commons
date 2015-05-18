@@ -151,6 +151,7 @@ public final class HalResourceFactory {
    * Converts the JSON model to an object of the given type.
    * @param halResource HAL resource with model to convert
    * @param type Type of the requested object
+   * @param <T> Output type
    * @return State as object
    */
   public static <T> T getStateAsObject(HalResource halResource, Class<T> type) {

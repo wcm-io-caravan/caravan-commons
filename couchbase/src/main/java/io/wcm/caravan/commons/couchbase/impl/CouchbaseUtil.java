@@ -41,9 +41,10 @@ final class CouchbaseUtil {
 
   /**
    * Create new couchbase cluster.
+   * @param hostNames Multiple hosts
    * @return Couchbase cluster
    */
-  public static Cluster createCluster(String[] hostNames) {
+  public static Cluster createCluster(String... hostNames) {
     return CouchbaseCluster.create(COUCHBASE_ENVIRONMENT, hostNames);
   }
 

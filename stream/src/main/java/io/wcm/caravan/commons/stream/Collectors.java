@@ -39,6 +39,7 @@ public final class Collectors {
 
   /**
    * Collect to array list.
+   * @param <T> Streaming type
    * @return Array list
    */
   public static <T> Collector<T, List<T>> toList() {
@@ -52,6 +53,7 @@ public final class Collectors {
 
   /**
    * Collect to hash set
+   * @param <T> Streaming type
    * @return Hash set
    */
   public static <T> Collector<T, Set<T>> toSet() {

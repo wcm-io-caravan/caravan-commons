@@ -34,7 +34,7 @@ public final class Link implements HalObject {
   private final ObjectNode model;
 
   /**
-   * @param model
+   * @param model JSON model
    */
   public Link(ObjectNode model) {
     this.model = model;

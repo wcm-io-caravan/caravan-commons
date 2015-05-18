@@ -115,12 +115,14 @@ public interface HttpClientConfig {
 
   /**
    * Check if this configuration should be applied to a given host name.
+   * @param host Host name
    * @return true if configuration matches.
    */
   boolean matchesHost(String host);
 
   /**
    * Check if this configuration should be applied for a given WS addressing to URI.
+   * @param addressingToUri Web service address
    * @return true if configuration matches.
    */
   boolean matchesWsAddressingToUri(String addressingToUri);

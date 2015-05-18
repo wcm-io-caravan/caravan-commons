@@ -39,6 +39,7 @@ public final class Streams {
   /**
    * Creates a stream from an iterable.
    * @param iterable Iterable
+   * @param <T> Type to stream
    * @return Stream
    */
   public static <T> Stream<T> of(Iterable<T> iterable) {
@@ -49,6 +50,7 @@ public final class Streams {
   /**
    * Creates a stream from items.
    * @param items Stream items or array
+   * @param <T> Type to stream
    * @return Stream
    */
   @SafeVarargs
