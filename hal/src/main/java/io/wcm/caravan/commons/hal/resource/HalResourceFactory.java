@@ -98,7 +98,13 @@ public final class HalResourceFactory {
    * @return New HAL resource
    */
   public static HalResource createResource(ObjectNode model, String href) {
-    return new HalResource(model).setLink(createLink(href));
+    HalResource resource = new HalResource(model);
+
+    if (href != null) {
+      resource.setLink(createLink(href));
+    }
+
+    return resource;
   }
 
   /**

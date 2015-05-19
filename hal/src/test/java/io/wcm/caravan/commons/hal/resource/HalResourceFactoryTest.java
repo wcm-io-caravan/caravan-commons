@@ -52,6 +52,12 @@ public class HalResourceFactoryTest {
   }
 
   @Test
+  public void createResourceString_shouldSetNoSelfLinkIfHrefIsNull() {
+    HalResource hal = HalResourceFactory.createResource(null);
+    assertFalse(hal.getModel().has("_link"));
+  }
+
+  @Test
   public void createResourceObjectString_shouldSetStateAndHrefForSelfLink() {
     TestObject model = new TestObject();
     model.property1 = "value1";
