@@ -25,9 +25,20 @@ import com.couchbase.client.java.AsyncBucket;
 
 /**
  * Provides access to a preconfigured couchbase client.
+ * Multiple can be registered for different buckets, the can be filterd by the 'clientId' OSGi property.
  */
 @ProviderType
-public interface CouchbaseClientProvider {
+public interface CouchbaseClient {
+
+  /**
+   * OSGi property for filtering the configured couchbase clients.
+   */
+  String CLIENT_ID_PROPERTY = "clientId";
+
+  /**
+   * @return ID to uniquely identify the couchbase client if multiple are defined.
+   */
+  String getClientId();
 
   /**
    * @return true if Couchbase caching is enabled and configured properly.
@@ -37,11 +48,11 @@ public interface CouchbaseClientProvider {
   /**
    * @return the name of the couchbase bucket to use for caching
    */
-  String getCacheBucketName();
+  String getBucketName();
 
   /**
    * @return Default bucket as configured for the couchbase client provider.
    */
-  AsyncBucket getCacheBucket();
+  AsyncBucket getBucket();
 
 }

@@ -19,13 +19,14 @@
  */
 package io.wcm.caravan.commons.couchbase.impl;
 
-import io.wcm.caravan.commons.couchbase.CouchbaseClientProvider;
+import io.wcm.caravan.commons.couchbase.CouchbaseClient;
 
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
+import org.apache.felix.scr.annotations.ConfigurationPolicy;
 import org.apache.felix.scr.annotations.Deactivate;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
@@ -37,16 +38,21 @@ import com.couchbase.client.java.AsyncBucket;
 import com.couchbase.client.java.Cluster;
 
 /**
- * Default implementation of {@link CouchbaseClientProvider}.
+ * Default implementation of {@link CouchbaseClient}.
  */
 @Component(immediate = true, metatype = true,
 label = "wcm.io Caravan Couchbase Client Provider",
-description = "Provides access to a preconfigured couchbase client.")
-@Service(CouchbaseClientProvider.class)
-public class CouchbaseClientProviderImpl implements CouchbaseClientProvider {
+description = "Provides access to a preconfigured couchbase client.",
+configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
+@Service(CouchbaseClient.class)
+@Property(name = "webconsole.configurationFactory.nameHint", value = "{clientId}: {cacheBucketName}")
+public class CouchbaseClientImpl implements CouchbaseClient {
+
+  @Property(label = "Client ID", description = "ID to uniquely identify the couchbase client if multiple are defined.")
+  private static final String CLIENT_ID_PROPERTY = CouchbaseClient.CLIENT_ID_PROPERTY;
 
   @Property(label = "Enabled", description = "Enable or disable couchbase caching.",
-      boolValue = CouchbaseClientProviderImpl.ENABLED_PROPERTY_DEFAULT)
+      boolValue = CouchbaseClientImpl.ENABLED_PROPERTY_DEFAULT)
   private static final String ENABLED_PROPERTY = "enabled";
   private static final boolean ENABLED_PROPERTY_DEFAULT = true;
 
@@ -54,54 +60,59 @@ public class CouchbaseClientProviderImpl implements CouchbaseClientProvider {
       cardinality = Integer.MAX_VALUE)
   private static final String COUCHBASE_HOSTS_PROPERTY = "couchbaseHosts";
 
-  @Property(label = "Cache Bucket Name", description = "Couchbase bucket name for caching data")
-  private static final String CACHE_BUCKET_NAME_PROPERTY = "cacheBucketName";
+  @Property(label = "Bucket Name", description = "Couchbase bucket name")
+  private static final String CACHE_BUCKET_NAME_PROPERTY = "bucketName";
 
-  @Property(label = "Cache Bucket Password", description = "Couchbase bucket password for caching data")
-  private static final String CACHE_BUCKET_PASSWORD_PROPERTY = "cacheBucketPassword";
+  @Property(label = "Bucket Password", description = "Couchbase bucket password")
+  private static final String CACHE_BUCKET_PASSWORD_PROPERTY = "bucketPassword";
 
-  private static final Logger log = LoggerFactory.getLogger(CouchbaseClientProviderImpl.class);
+  private static final Logger log = LoggerFactory.getLogger(CouchbaseClientImpl.class);
 
+  private String clientId;
   private boolean enabled;
-  private String cacheBucketName;
+  private String bucketName;
   private Cluster cluster;
-  private AsyncBucket cacheBucket;
+  private AsyncBucket bucket;
 
   @Activate
   private void activate(Map<String, Object> config) {
+    clientId = PropertiesUtil.toString(config.get(CLIENT_ID_PROPERTY), null);
     enabled = PropertiesUtil.toBoolean(config.get(ENABLED_PROPERTY), ENABLED_PROPERTY_DEFAULT);
     if (!enabled) {
-      log.info("Couchbase caching is disabled by configuration.");
+      log.info("Couchbase caching for client '{}' is disabled by configuration.", clientId);
       return;
     }
 
     String[] couchbaseHosts = PropertiesUtil.toStringArray(config.get(COUCHBASE_HOSTS_PROPERTY));
     if (couchbaseHosts == null || couchbaseHosts.length == 0) {
-      log.warn("No couchbase host configured, caching is disabled.");
+      enabled = false;
+      log.warn("No couchbase host configured, client '{}' is disabled.", clientId);
       return;
     }
 
-    cacheBucketName = PropertiesUtil.toString(config.get(CACHE_BUCKET_NAME_PROPERTY), null);
-    String cacheBucketPassword = PropertiesUtil.toString(config.get(CACHE_BUCKET_PASSWORD_PROPERTY), null);
-    if (StringUtils.isEmpty(cacheBucketName)) {
-      log.warn("No couchbase bucket name configured, caching is disabled.");
+    bucketName = PropertiesUtil.toString(config.get(CACHE_BUCKET_NAME_PROPERTY), null);
+    String bucketPassword = PropertiesUtil.toString(config.get(CACHE_BUCKET_PASSWORD_PROPERTY), null);
+    if (StringUtils.isEmpty(bucketName)) {
+      enabled = false;
+      log.warn("No couchbase bucket name configured, client '{}' is disabled.", clientId);
       return;
     }
 
     try {
       cluster = CouchbaseUtil.createCluster(couchbaseHosts);
-      cacheBucket = CouchbaseUtil.openBucket(cluster, cacheBucketName, cacheBucketPassword);
+      bucket = CouchbaseUtil.openBucket(cluster, bucketName, bucketPassword);
     }
     catch (Throwable ex) {
-      log.warn("Unable to connect to couchbase cluster or open couchbase bucket, caching is disabled.", ex);
+      enabled = false;
+      log.warn("Unable to connect to couchbase cluster or open couchbase bucket, client '" + clientId + "' is disabled.", ex);
     }
   }
 
   @Deactivate
   private void deactivate() {
-    if (cacheBucket != null) {
-      cacheBucket.close();
-      cacheBucket = null;
+    if (bucket != null) {
+      bucket.close();
+      bucket = null;
     }
     if (cluster != null) {
       cluster.disconnect();
@@ -110,19 +121,23 @@ public class CouchbaseClientProviderImpl implements CouchbaseClientProvider {
   }
 
   @Override
+  public String getClientId() {
+    return clientId;
+  }
+
+  @Override
   public boolean isEnabled() {
-    return enabled && cacheBucket != null;
+    return enabled;
   }
 
   @Override
-  public String getCacheBucketName() {
-    return cacheBucketName;
+  public String getBucketName() {
+    return bucketName;
   }
 
   @Override
-  public AsyncBucket getCacheBucket() {
-    return cacheBucket;
+  public AsyncBucket getBucket() {
+    return bucket;
   }
-
 
 }
