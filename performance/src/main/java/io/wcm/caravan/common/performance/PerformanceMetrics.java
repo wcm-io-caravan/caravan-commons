@@ -135,12 +135,12 @@ public final class PerformanceMetrics {
   /**
    * When called, end action sets time stamp to identify end time of operation and logs the metrics.
    * @return Action0
+   * @param <T> Any type
    */
-  public Action1 getOnNextAction() {
-    return new Action1() {
-
+  public <T> Action1<T> getOnNextAction() {
+    return new Action1<T>() {
       @Override
-      public void call(Object t) {
+      public void call(T objectt) {
         if (operationTime == null) {
           operationTime = new Date().getTime();
         }
