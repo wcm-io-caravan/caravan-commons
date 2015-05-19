@@ -21,7 +21,7 @@ package io.wcm.caravan.commons.couchbase.impl;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.couchbase.client.java.AsyncBucket;
+import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
 import com.couchbase.client.java.CouchbaseCluster;
 import com.couchbase.client.java.env.CouchbaseEnvironment;
@@ -55,12 +55,12 @@ final class CouchbaseUtil {
    * @param bucketPassword Bucker password (optional)
    * @return Couchbase bucket
    */
-  public static AsyncBucket openBucket(Cluster cluster, String bucketName, String bucketPassword) {
+  public static Bucket openBucket(Cluster cluster, String bucketName, String bucketPassword) {
     if (StringUtils.isNotEmpty(bucketPassword)) {
-      return cluster.openBucket(bucketName, bucketPassword).async();
+      return cluster.openBucket(bucketName, bucketPassword);
     }
     else {
-      return cluster.openBucket(bucketName).async();
+      return cluster.openBucket(bucketName);
     }
   }
 

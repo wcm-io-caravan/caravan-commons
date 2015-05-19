@@ -35,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.couchbase.client.java.AsyncBucket;
+import com.couchbase.client.java.Bucket;
 import com.couchbase.client.java.Cluster;
 
 /**
@@ -73,7 +74,7 @@ public class CouchbaseClientImpl implements CouchbaseClient {
   private boolean enabled;
   private String bucketName;
   private Cluster cluster;
-  private AsyncBucket bucket;
+  private Bucket bucket;
 
   @Activate
   private void activate(Map<String, Object> config) {
@@ -137,8 +138,13 @@ public class CouchbaseClientImpl implements CouchbaseClient {
   }
 
   @Override
-  public AsyncBucket getBucket() {
+  public Bucket getBucket() {
     return bucket;
+  }
+
+  @Override
+  public AsyncBucket getAsyncBucket() {
+    return bucket.async();
   }
 
 }
