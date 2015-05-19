@@ -90,7 +90,7 @@ public class HalResourceTest {
   }
 
   @Test
-  public void setLink_shouldStoreLinkInJson() throws Exception {
+  public void setLinkStringLink_shouldStoreLinkInJson() throws Exception {
     Link link = new Link(mapper.createObjectNode()).setHref("/new");
     hal.setLink("new", link);
     List<Link> links = hal.getLinks("new");
@@ -99,12 +99,18 @@ public class HalResourceTest {
   }
 
   @Test
-  public void setLink_shouldOverrideExistingLink() throws Exception {
+  public void setLinkStringLink_shouldOverrideExistingLink() throws Exception {
     Link link = new Link(mapper.createObjectNode()).setHref("/new");
     hal.setLink("children", link);
     List<Link> links = hal.getLinks("children");
     assertEquals(link, links.get(0));
     assertEquals(ObjectNode.class, model.at("/_links/children").getClass());
+  }
+
+  @Test
+  public void setLinkStringLink_shouldIgnoreNullInput() {
+    hal.setLink("new", null);
+    assertFalse(hal.getModel().get("_links").has("new"));
   }
 
   @Test
@@ -253,6 +259,12 @@ public class HalResourceTest {
   public void setEmbedded_shouldSetOneEmbeddedResource() {
     hal.setEmbedded("new", new HalResource(OBJECT_MAPPER.createObjectNode()).setLink("self", new Link(OBJECT_MAPPER.createObjectNode()).setHref("/new")));
     assertEquals("/new", hal.getModel().get("_embedded").get("new").get("_links").get("self").get("href").asText());
+  }
+
+  @Test
+  public void setEmbedded_shouldIgnoreNullInput() {
+    hal.setEmbedded("new", null);
+    assertFalse(hal.getModel().get("_embedded").has("new"));
   }
 
   @Test

@@ -217,12 +217,15 @@ public final class HalResource implements HalObject {
   }
 
   /**
-   * Sets link for the given relation. Overwrites existing one.
+   * Sets link for the given relation. Overwrites existing one. If {@code link} is {@code null} it gets ignored.
    * @param relation Link relation
    * @param link Link to add
    * @return HAL resource
    */
   public HalResource setLink(String relation, Link link) {
+    if (link == null) {
+      return this;
+    }
     return addResources(Type.LINKS, relation, false, new Link[] {
         link
     });
@@ -255,6 +258,9 @@ public final class HalResource implements HalObject {
    * @return HAL resource
    */
   public HalResource setEmbedded(String relation, HalResource resource) {
+    if (resource == null) {
+      return this;
+    }
     return addResources(Type.EMBEDDED, relation, false, new HalResource[] {
         resource
     });
