@@ -39,6 +39,7 @@ import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableListMultimap.Builder;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.UnmodifiableIterator;
 
@@ -52,22 +53,6 @@ public final class HalResource implements HalObject {
    * The mime content type
    */
   public static final String CONTENT_TYPE = "application/hal+json";
-
-  private enum Type {
-    LINKS("_links"), EMBEDDED("_embedded");
-
-
-    private final String value;
-
-    Type(String value) {
-      this.value = value;
-    }
-
-    @Override
-    public String toString() {
-      return value;
-    }
-  }
 
   private final ObjectNode model;
 
@@ -88,7 +73,7 @@ public final class HalResource implements HalObject {
    * @return True if has link for the given relation
    */
   public boolean hasLink(String relation) {
-    return hasResource(Type.LINKS, relation);
+    return hasResource(HalResourceType.LINKS, relation);
   }
 
   /**
@@ -96,10 +81,10 @@ public final class HalResource implements HalObject {
    * @return True if has embedded resource for the given relation
    */
   public boolean hasEmbedded(String relation) {
-    return hasResource(Type.EMBEDDED, relation);
+    return hasResource(HalResourceType.EMBEDDED, relation);
   }
 
-  private boolean hasResource(Type type, String relation) {
+  private boolean hasResource(HalResourceType type, String relation) {
     return !model.at("/" + type + "/" + relation).isMissingNode();
   }
 
@@ -113,18 +98,18 @@ public final class HalResource implements HalObject {
   /**
    * @return All links
    */
-  public ImmutableListMultimap<String, Link> getLinks() {
-    return getResources(Link.class, Type.LINKS);
+  public ListMultimap<String, Link> getLinks() {
+    return getResources(Link.class, HalResourceType.LINKS);
   }
 
   /**
    * @return All embedded resources
    */
-  public ImmutableListMultimap<String, HalResource> getEmbedded() {
-    return getResources(HalResource.class, Type.EMBEDDED);
+  public ListMultimap<String, HalResource> getEmbedded() {
+    return getResources(HalResource.class, HalResourceType.EMBEDDED);
   }
 
-  private <X extends HalObject> ImmutableListMultimap<String, X> getResources(Class<X> clazz, Type type) {
+  private <X extends HalObject> ListMultimap<String, X> getResources(Class<X> clazz, HalResourceType type) {
     if (!model.has(type.toString())) {
       return ImmutableListMultimap.of();
     }
@@ -146,8 +131,8 @@ public final class HalResource implements HalObject {
    * @param relation Link relation
    * @return All links for the given relation
    */
-  public ImmutableList<Link> getLinks(String relation) {
-    return getResources(Link.class, Type.LINKS, relation);
+  public List<Link> getLinks(String relation) {
+    return getResources(Link.class, HalResourceType.LINKS, relation);
   }
 
   /**
@@ -156,14 +141,12 @@ public final class HalResource implements HalObject {
    * @return a list of all links
    */
   public List<Link> collectLinks(String rel) {
-
     List<Link> links = Lists.newArrayList(getLinks(rel));
     List<Link> embeddedLinks = Streams.of(getEmbedded().values())
         .flatMap(embedded -> Streams.of(embedded.collectLinks(rel)))
         .collect(Collectors.toList());
     links.addAll(embeddedLinks);
-    return links;
-
+    return ImmutableList.copyOf(links);
   }
 
   /**
@@ -178,11 +161,11 @@ public final class HalResource implements HalObject {
    * @param relation Embedded resource relation
    * @return All embedded resources for the given relation
    */
-  public ImmutableList<HalResource> getEmbedded(String relation) {
-    return getResources(HalResource.class, Type.EMBEDDED, relation);
+  public List<HalResource> getEmbedded(String relation) {
+    return getResources(HalResource.class, HalResourceType.EMBEDDED, relation);
   }
 
-  private <X extends HalObject> ImmutableList<X> getResources(Class<X> clazz, Type type, String relation) {
+  private <X extends HalObject> List<X> getResources(Class<X> clazz, HalResourceType type, String relation) {
     if (!hasResource(type, relation)) {
       return ImmutableList.of();
     }
@@ -226,7 +209,7 @@ public final class HalResource implements HalObject {
     if (link == null) {
       return this;
     }
-    return addResources(Type.LINKS, relation, false, new Link[] {
+    return addResources(HalResourceType.LINKS, relation, false, new Link[] {
         link
     });
   }
@@ -238,7 +221,7 @@ public final class HalResource implements HalObject {
    * @return HAL resource
    */
   public HalResource addLinks(String relation, Link... links) {
-    return addResources(Type.LINKS, relation, true, links);
+    return addResources(HalResourceType.LINKS, relation, true, links);
   }
 
   /**
@@ -261,7 +244,7 @@ public final class HalResource implements HalObject {
     if (resource == null) {
       return this;
     }
-    return addResources(Type.EMBEDDED, relation, false, new HalResource[] {
+    return addResources(HalResourceType.EMBEDDED, relation, false, new HalResource[] {
         resource
     });
   }
@@ -273,7 +256,7 @@ public final class HalResource implements HalObject {
    * @return HAL resource
    */
   public HalResource addEmbedded(String relation, HalResource... resources) {
-    return addResources(Type.EMBEDDED, relation, true, resources);
+    return addResources(HalResourceType.EMBEDDED, relation, true, resources);
   }
 
   /**
@@ -286,7 +269,7 @@ public final class HalResource implements HalObject {
     return addEmbedded(relation, Iterables.toArray(resources, HalResource.class));
   }
 
-  private <X extends HalObject> HalResource addResources(Type type, String relation, boolean asArray, X[] newResources) {
+  private <X extends HalObject> HalResource addResources(HalResourceType type, String relation, boolean asArray, X[] newResources) {
     if (newResources.length == 0) {
       return this;
     }
@@ -302,7 +285,7 @@ public final class HalResource implements HalObject {
     return this;
   }
 
-  private ArrayNode getArrayNodeContainer(Type type, String relation, ObjectNode resources) {
+  private ArrayNode getArrayNodeContainer(HalResourceType type, String relation, ObjectNode resources) {
     if (hasResource(type, relation)) {
       if (resources.get(relation).isArray()) {
         return (ArrayNode)resources.get(relation);
@@ -323,7 +306,7 @@ public final class HalResource implements HalObject {
    * @return HAL resource
    */
   public HalResource removeLinks(String relation) {
-    return removeResource(Type.LINKS, relation);
+    return removeResource(HalResourceType.LINKS, relation);
   }
 
   /**
@@ -332,10 +315,10 @@ public final class HalResource implements HalObject {
    * @return HAL resource
    */
   public HalResource removeEmbedded(String relation) {
-    return removeResource(Type.EMBEDDED, relation);
+    return removeResource(HalResourceType.EMBEDDED, relation);
   }
 
-  private HalResource removeResource(Type type, String relation) {
+  private HalResource removeResource(HalResourceType type, String relation) {
     if (hasResource(type, relation)) {
       ((ObjectNode)model.get(type.toString())).remove(relation);
     }
@@ -349,7 +332,7 @@ public final class HalResource implements HalObject {
    * @return HAL resource
    */
   public HalResource removeLink(String relation, int index) {
-    return removeResource(Type.LINKS, relation, index);
+    return removeResource(HalResourceType.LINKS, relation, index);
   }
 
   /**
@@ -359,10 +342,10 @@ public final class HalResource implements HalObject {
    * @return HAL resource
    */
   public HalResource removeEmbedded(String relation, int index) {
-    return removeResource(Type.EMBEDDED, relation, index);
+    return removeResource(HalResourceType.EMBEDDED, relation, index);
   }
 
-  private HalResource removeResource(Type type, String relation, int index) {
+  private HalResource removeResource(HalResourceType type, String relation, int index) {
     if (hasResource(type, relation)) {
       JsonNode resources = model.at("/" + type + "/" + relation);
       if (resources instanceof ObjectNode || resources.size() <= 1) {
@@ -380,7 +363,7 @@ public final class HalResource implements HalObject {
    * @return HAL resource
    */
   public HalResource removeLinks() {
-    return removeResources(Type.LINKS);
+    return removeResources(HalResourceType.LINKS);
   }
 
   /**
@@ -388,7 +371,7 @@ public final class HalResource implements HalObject {
    * @return HAL resource
    */
   public HalResource removeEmbedded() {
-    return removeResources(Type.EMBEDDED);
+    return removeResources(HalResourceType.EMBEDDED);
   }
 
   /**
@@ -403,7 +386,7 @@ public final class HalResource implements HalObject {
     addEmbedded(newRel, resourcesToRename);
   }
 
-  private HalResource removeResources(Type type) {
+  private HalResource removeResources(HalResourceType type) {
     model.remove(type.toString());
     return this;
   }

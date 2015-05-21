@@ -38,8 +38,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.MissingNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
 
@@ -77,7 +75,7 @@ public class HalResourceTest {
 
   @Test
   public void getLinksString_shouldReturnEmptyListForUnkwnownRelation() {
-    ImmutableList<Link> links = hal.getLinks("self2");
+    List<Link> links = hal.getLinks("self2");
     assertTrue(links.isEmpty());
   }
 
@@ -202,7 +200,7 @@ public class HalResourceTest {
 
   @Test
   public void getEmbedded_shouldReturnEmbeddedResourcesMap() {
-    ImmutableListMultimap<String, HalResource> resources = hal.getEmbedded();
+    ListMultimap<String, HalResource> resources = hal.getEmbedded();
     assertEquals(3, resources.size());
     assertEquals(1, resources.get("one").size());
     assertEquals("value", resources.get("one").get(0).getModel().get("att").asText());
@@ -240,7 +238,7 @@ public class HalResourceTest {
 
   @Test
   public void getEmbedded_shouldReturnEmbeddedResourcesList() {
-    ImmutableList<HalResource> embedded = hal.getEmbedded("multiple");
+    List<HalResource> embedded = hal.getEmbedded("multiple");
     assertEquals(2, embedded.size());
     assertEquals("/multiple1", embedded.get(0).getLink().getHref());
   }
