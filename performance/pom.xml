@@ -32,7 +32,7 @@
       <artifactId>rxjava</artifactId>
       <scope>compile</scope>
     </dependency>
-    
+
   </dependencies>
 
   <build>

@@ -17,7 +17,7 @@ HalResource resource = new HalResource(json)
   .addLinks("self", HalResourceFactory.createLink(uri))
   .addEmbedded("children", new HalResource(childJson));
 ```
-	  
+
 HalResourceFactory and ResourceMapper
 -------------------------------------
 
