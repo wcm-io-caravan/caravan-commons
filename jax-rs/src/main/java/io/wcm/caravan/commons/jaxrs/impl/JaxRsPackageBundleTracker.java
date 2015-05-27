@@ -89,20 +89,19 @@ public class JaxRsPackageBundleTracker implements BundleTrackerCustomizer<Compon
   }
 
   @Override
-  public void modifiedBundle(Bundle bundle, BundleEvent event, ComponentInstance object) {
+  public void modifiedBundle(Bundle bundle, BundleEvent event, ComponentInstance componentInstance) {
     // nothing to do
   }
 
   @Override
-  public void removedBundle(Bundle bundle, BundleEvent event, ComponentInstance object) {
-    if (object == null) {
+  public void removedBundle(Bundle bundle, BundleEvent event, ComponentInstance componentInstance) {
+    if (componentInstance == null) {
       return;
     }
     if (log.isInfoEnabled()) {
       String applicationPath = getApplicationPath(bundle);
       log.info("Unregister JAX-RS application {} from {}", bundle.getSymbolicName(), applicationPath);
     }
-    ComponentInstance componentInstance = object;
     componentInstance.dispose();
   }
 

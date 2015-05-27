@@ -76,7 +76,7 @@ public class ServletContainerBridge extends HttpServlet {
   private BundleContext bundleContext;
   private Bundle bundle;
   private JaxRsApplication application;
-  private ServletContainer serlvetContainer;
+  private ServletContainer servletContainer;
   private volatile boolean isDirty;
   private Set<Object> localComponents;
   private ServiceTracker localComponentTracker;
@@ -109,7 +109,7 @@ public class ServletContainerBridge extends HttpServlet {
 
     // initialize JAX-RS application and Jersey Servlet container
     application = new JaxRsApplication(localComponents, globalJaxRsComponents.values());
-    serlvetContainer = new ServletContainer(ResourceConfig.forApplication(application));
+    servletContainer = new ServletContainer(ResourceConfig.forApplication(application));
   }
 
   @Deactivate
@@ -123,22 +123,22 @@ public class ServletContainerBridge extends HttpServlet {
   public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
     reloadIfDirty();
     // delegate all calls to jersey servlet container
-    serlvetContainer.service(request, response);
+    servletContainer.service(request, response);
   }
 
   @Override
   public void init() throws ServletException {
-    serlvetContainer.init();
+    servletContainer.init();
   }
 
   @Override
   public void init(ServletConfig config) throws ServletException {
-    serlvetContainer.init(config);
+    servletContainer.init(config);
   }
 
   @Override
   public void destroy() {
-    serlvetContainer.destroy();
+    servletContainer.destroy();
   }
 
   /**
@@ -152,7 +152,7 @@ public class ServletContainerBridge extends HttpServlet {
         if (isDirty) {
           // reload configuration if any service requests have changed
           log.debug("Reload JAX-RS servlet container of {}", bundle.getSymbolicName());
-          serlvetContainer.reload(ResourceConfig.forApplication(application));
+          servletContainer.reload(ResourceConfig.forApplication(application));
           isDirty = false;
         }
       }
