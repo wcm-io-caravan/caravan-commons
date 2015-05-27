@@ -33,6 +33,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServlet;
 import javax.ws.rs.Path;
+import javax.ws.rs.container.PreMatching;
 import javax.ws.rs.ext.Provider;
 
 import org.apache.felix.scr.annotations.Activate;
@@ -232,7 +233,8 @@ public class ServletContainerBridge extends HttpServlet {
 
     private boolean hasAnyJaxRsAnnotation(Class<?> clazz) {
       return clazz.isAnnotationPresent(Path.class)
-          || clazz.isAnnotationPresent(Provider.class);
+          || clazz.isAnnotationPresent(Provider.class)
+          || clazz.isAnnotationPresent(PreMatching.class);
     }
 
     private boolean isGlobalComponentFactory(ServiceReference serviceReference) {
