@@ -53,7 +53,7 @@ The application path must not to be added to the `@Path` annotation, it is added
 Register global JAX-RS components
 ---------------------------------
 
-If you want to register a JAX-RS component for all JAX-RS application in the OSGi instance and not only for the current bundle you can define a OSGi factory service and set the special property `caravan.jaxrs.global.factory` to true. Example:
+If you want to register a JAX-RS component for all JAX-RS application in the OSGi instance and not only for the current bundle you can define a OSGi factory service with the factory name `caravan.jaxrs.global.factory`. Example:
 
 ```java
 @Component(factory = JaxRsComponent.GLOBAL_COMPONENT_FACTORY)
