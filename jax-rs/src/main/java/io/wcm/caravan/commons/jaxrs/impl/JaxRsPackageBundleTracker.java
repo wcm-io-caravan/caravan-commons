@@ -19,6 +19,8 @@
  */
 package io.wcm.caravan.commons.jaxrs.impl;
 
+import io.wcm.caravan.commons.jaxrs.JaxRsComponent;
+
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -46,8 +48,6 @@ import org.slf4j.LoggerFactory;
  */
 @Component(immediate = true)
 public class JaxRsPackageBundleTracker implements BundleTrackerCustomizer<ComponentInstance> {
-
-  static final String OSGI_HEADER_PATH = "Caravan-JaxRs-ApplicationPath";
 
   private static final Logger log = LoggerFactory.getLogger(JaxRsPackageBundleTracker.class);
 
@@ -106,7 +106,7 @@ public class JaxRsPackageBundleTracker implements BundleTrackerCustomizer<Compon
   }
 
   private String getApplicationPath(Bundle bundle) {
-    return PropertiesUtil.toString(bundle.getHeaders().get(OSGI_HEADER_PATH), null);
+    return PropertiesUtil.toString(bundle.getHeaders().get(JaxRsComponent.HEADER_APPLICATON_PATH), null);
   }
 
 }

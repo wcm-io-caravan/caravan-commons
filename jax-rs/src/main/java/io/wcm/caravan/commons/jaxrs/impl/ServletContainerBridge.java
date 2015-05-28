@@ -22,6 +22,8 @@ package io.wcm.caravan.commons.jaxrs.impl;
 import io.wcm.caravan.commons.jaxrs.JaxRsComponent;
 
 import java.io.IOException;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -71,7 +73,8 @@ public class ServletContainerBridge extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   static final String SERVLETCONTAINER_BRIDGE_FACTORY = "caravan.jaxrs.servlertcontainer.bridge.factory";
-  static final String PROPERTY_BUNDLE = "relatedBundle";
+  static final String PROPERTY_BUNDLE = "caravan.jaxrs.relatedBundle";
+  static final String PROPERTY_GLOBAL_COMPONENT = "caravan.jaxrs.globalComponent";
 
   private BundleContext bundleContext;
   private Bundle bundle;
@@ -164,8 +167,12 @@ public class ServletContainerBridge extends HttpServlet {
       serviceReferencesDuringStartup.add(serviceReference);
       return;
     }
+
+    // create new JAX-RS component from OSGi factory service for each global component
     ComponentFactory componentFactory = bundleContext.getService(serviceReference);
-    ComponentInstance componentInstance = componentFactory.newInstance(null);
+    Dictionary<String, Object> props = new Hashtable<>();
+    props.put(PROPERTY_GLOBAL_COMPONENT, true);
+    ComponentInstance componentInstance = componentFactory.newInstance(props);
     Object component = componentInstance.getInstance();
     globalJaxRsComponentInstances.put(serviceReference, componentInstance);
     globalJaxRsComponents.put(serviceReference, componentInstance.getInstance());
@@ -203,7 +210,7 @@ public class ServletContainerBridge extends HttpServlet {
     @Override
     public Object addingService(ServiceReference<JaxRsComponent> reference) {
       if (reference.getBundle() == bundle && !isGlobalComponentFactory(reference)) {
-        Object serviceInstance = bundle.getBundleContext().getService(reference);
+        JaxRsComponent serviceInstance = bundle.getBundleContext().getService(reference);
         if (isJaxRsComponent(serviceInstance)) {
           localComponents.add(serviceInstance);
           log.debug("Registered component {} for {}", serviceInstance.getClass().getName(), bundle.getSymbolicName());
@@ -216,7 +223,7 @@ public class ServletContainerBridge extends HttpServlet {
     @Override
     public void removedService(ServiceReference<JaxRsComponent> reference, Object service) {
       if (reference.getBundle() == bundle && !isGlobalComponentFactory(reference)) {
-        Object serviceInstance = bundle.getBundleContext().getService(reference);
+        JaxRsComponent serviceInstance = bundle.getBundleContext().getService(reference);
         if (isJaxRsComponent(serviceInstance)) {
           localComponents.remove(serviceInstance);
           bundleContext.ungetService(reference);
@@ -238,7 +245,7 @@ public class ServletContainerBridge extends HttpServlet {
     }
 
     private boolean isGlobalComponentFactory(ServiceReference serviceReference) {
-      return PropertiesUtil.toBoolean(serviceReference.getProperty(JaxRsComponent.GLOBAL_COMPONENT_FACTORY), false);
+      return PropertiesUtil.toBoolean(serviceReference.getProperty(PROPERTY_GLOBAL_COMPONENT), false);
     }
 
   }
