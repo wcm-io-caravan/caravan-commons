@@ -16,6 +16,7 @@
   <packaging>bundle</packaging>
 
   <name>Commons Metrics</name>
+  <description>Metrics integration</description>
 
   <scm>
     <connection>scm:git:git@github.com:wcm-io/wcm-io-caravan.git</connection>
