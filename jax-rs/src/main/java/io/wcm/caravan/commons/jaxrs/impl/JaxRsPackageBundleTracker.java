@@ -19,7 +19,7 @@
  */
 package io.wcm.caravan.commons.jaxrs.impl;
 
-import io.wcm.caravan.commons.jaxrs.JaxRsComponent;
+import io.wcm.caravan.commons.jaxrs.ApplicationPath;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -29,7 +29,6 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.Deactivate;
 import org.apache.felix.scr.annotations.Reference;
-import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -71,7 +70,7 @@ public class JaxRsPackageBundleTracker implements BundleTrackerCustomizer<Compon
 
   @Override
   public ComponentInstance addingBundle(Bundle bundle, BundleEvent event) {
-    String applicationPath = getApplicationPath(bundle);
+    String applicationPath = ApplicationPath.get(bundle);
     if (StringUtils.isNotBlank(applicationPath)) {
 
       if (log.isInfoEnabled()) {
@@ -99,14 +98,10 @@ public class JaxRsPackageBundleTracker implements BundleTrackerCustomizer<Compon
       return;
     }
     if (log.isInfoEnabled()) {
-      String applicationPath = getApplicationPath(bundle);
+      String applicationPath = ApplicationPath.get(bundle);
       log.info("Unmount JAX-RS application {} from {}", bundle.getSymbolicName(), applicationPath);
     }
     componentInstance.dispose();
-  }
-
-  private String getApplicationPath(Bundle bundle) {
-    return PropertiesUtil.toString(bundle.getHeaders().get(JaxRsComponent.HEADER_APPLICATON_PATH), null);
   }
 
 }

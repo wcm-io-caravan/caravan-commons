@@ -28,11 +28,6 @@ public interface JaxRsComponent {
   //CHECKSTYLE:ON
 
   /**
-   * OSGi bundle header name that defines the "application path" (URI prefix) for all JAX-RS services in the bundle.
-   */
-  String HEADER_APPLICATON_PATH = "Caravan-JaxRs-ApplicationPath";
-
-  /**
    * OSGi factory name that marks a JaxRS component that is registered globally to all JAX-RS applications.
    * It has to be implemented as OSGi component factory to ensure a new instance is provided for each context.
    */
