@@ -1,3 +1,5 @@
+html, body, #browser, .hal-browser { height: 100%; }
+
 #browser #location-bar { margin: 10px 0; }
 
 #browser #location-bar .address {
@@ -41,11 +43,6 @@
   padding: 2px 5px 2px;
   font-size: 12px;
   line-height: 14px;
-}
-
-.links td {
-  max-width: 25em;
-  word-wrap: break-word;
 }
 
 body table.table {
