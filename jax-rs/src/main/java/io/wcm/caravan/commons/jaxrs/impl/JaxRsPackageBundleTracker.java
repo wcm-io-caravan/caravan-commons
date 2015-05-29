@@ -75,7 +75,7 @@ public class JaxRsPackageBundleTracker implements BundleTrackerCustomizer<Compon
     if (StringUtils.isNotBlank(applicationPath)) {
 
       if (log.isInfoEnabled()) {
-        log.info("Register JAX-RS application {} to {}", bundle.getSymbolicName(), applicationPath);
+        log.info("Mount JAX-RS application {} to {}", bundle.getSymbolicName(), applicationPath);
       }
 
       // register JAX-RS application as servlet on HTTP whiteboard
@@ -100,7 +100,7 @@ public class JaxRsPackageBundleTracker implements BundleTrackerCustomizer<Compon
     }
     if (log.isInfoEnabled()) {
       String applicationPath = getApplicationPath(bundle);
-      log.info("Unregister JAX-RS application {} from {}", bundle.getSymbolicName(), applicationPath);
+      log.info("Unmount JAX-RS application {} from {}", bundle.getSymbolicName(), applicationPath);
     }
     componentInstance.dispose();
   }
