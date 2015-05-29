@@ -38,8 +38,8 @@
   <description>Implements a tiny subset of the Java 8 stream API to use the basic features in Java 7 as well.</description>
 
   <scm>
-    <connection>scm:git:git@github.com:wcm-io/wcm-io-caravan.git</connection>
-    <developerConnection>scm:git:git@github.com:wcm-io/wcm-io-caravan.git</developerConnection>
+    <connection>scm:git:https://github.com/wcm-io/wcm-io-caravan.git</connection>
+    <developerConnection>scm:git:https://github.com/wcm-io/wcm-io-caravan.git</developerConnection>
     <url>https://github.com/wcm-io/wcm-io-caravan</url>
     <tag>HEAD</tag>
   </scm>

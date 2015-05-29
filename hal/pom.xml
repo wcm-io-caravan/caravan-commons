@@ -39,8 +39,8 @@
   <description>A building and reading library for JSON HAL resources.</description>
 
   <scm>
-    <connection>scm:git:git@github.com:wcm-io/wcm-io-caravan.git</connection>
-    <developerConnection>scm:git:git@github.com:wcm-io/wcm-io-caravan.git</developerConnection>
+    <connection>scm:git:https://github.com/wcm-io/wcm-io-caravan.git</connection>
+    <developerConnection>scm:git:https://github.com/wcm-io/wcm-io-caravan.git</developerConnection>
     <url>https://github.com/wcm-io/wcm-io-caravan</url>
     <tag>HEAD</tag>
   </scm>
