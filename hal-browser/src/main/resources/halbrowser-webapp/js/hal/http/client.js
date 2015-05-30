@@ -9,9 +9,6 @@ HAL.Http.Client.prototype.get = function(url) {
   var jqxhr = $.ajax({
     url: url,
     dataType: 'json',
-    xhrFields: {
-      withCredentials: true
-    },
     headers: this.defaultHeaders,
     success: function(resource, textStatus, jqXHR) {
       self.vent.trigger('response', {
@@ -28,8 +25,6 @@ HAL.Http.Client.prototype.get = function(url) {
 HAL.Http.Client.prototype.request = function(opts) {
   var self = this;
   opts.dataType = 'json';
-  opts.xhrFields = opts.xhrFields || {};
-  opts.xhrFields.withCredentials = opts.xhrFields.withCredentials || true;
   self.vent.trigger('location-change', { url: opts.url });
   return jqxhr = $.ajax(opts);
 };
