@@ -44,7 +44,7 @@ import org.osgi.framework.Constants;
 @Service(Filter.class)
 @Properties({
   @Property(name = Constants.SERVICE_RANKING, intValue = 10000),
-  @Property(name = "pattern", value = ".*")
+  @Property(name = "pattern", value = "/.*")
 })
 public class CorsServletFilter implements Filter {
 
