@@ -69,6 +69,14 @@ public final class HalResource implements HalObject {
   }
 
   /**
+   * @param type a class that matches the structure of this resource's model
+   * @return a new instance of the given class, populated with the properties of this resource's model
+   */
+  public <T> T adaptTo(Class<T> type) {
+    return HalResourceFactory.getStateAsObject(this, type);
+  }
+
+  /**
    * @param relation Link relation
    * @return True if has link for the given relation
    */
