@@ -57,9 +57,11 @@ public class HalBrowserHttpServiceMounterTest {
 
     context.registerInjectActivateService(underTest);
     verify(httpService).registerResources(eq(HalBrowserHttpServiceMounter.HALBROWSER_URI_PREFIX), anyString(), any(HttpContext.class));
+    verify(httpService).registerResources(eq(HalBrowserHttpServiceMounter.HALBROWSER_URI_PREFIX_LEGACY), anyString(), any(HttpContext.class));
 
     MockOsgi.deactivate(underTest, context.bundleContext(), ImmutableMap.<String, Object>of());
     verify(httpService).unregister(eq(HalBrowserHttpServiceMounter.HALBROWSER_URI_PREFIX));
+    verify(httpService).unregister(eq(HalBrowserHttpServiceMounter.HALBROWSER_URI_PREFIX_LEGACY));
   }
 
 }

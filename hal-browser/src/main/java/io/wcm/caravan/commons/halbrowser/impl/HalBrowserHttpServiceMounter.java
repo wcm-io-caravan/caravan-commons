@@ -32,7 +32,8 @@ import org.osgi.service.http.NamespaceException;
 @Component
 public class HalBrowserHttpServiceMounter {
 
-  static final String HALBROWSER_URI_PREFIX = "/system/halbrowser";
+  static final String HALBROWSER_URI_PREFIX = "/halbrowser";
+  static final String HALBROWSER_URI_PREFIX_LEGACY = "/system/halbrowser";
 
   @Reference
   private HttpService httpService;
@@ -40,11 +41,13 @@ public class HalBrowserHttpServiceMounter {
   @Activate
   protected void activate() throws NamespaceException {
     httpService.registerResources(HALBROWSER_URI_PREFIX, "/halbrowser-webapp", null);
+    httpService.registerResources(HALBROWSER_URI_PREFIX_LEGACY, "/halbrowser-legacy-redirect", null);
   }
 
   @Deactivate
   protected void deactivate() {
     httpService.unregister(HALBROWSER_URI_PREFIX);
+    httpService.unregister(HALBROWSER_URI_PREFIX_LEGACY);
   }
 
 }
