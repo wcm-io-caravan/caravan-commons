@@ -32,7 +32,7 @@ import org.osgi.service.http.NamespaceException;
 @Component
 public class HalBrowserHttpServiceMounter {
 
-  static final String HALBROWSER_URI_PREFIX = "/halbrowser";
+  static final String HALBROWSER_URI_PREFIX = "/hal";
   static final String HALBROWSER_URI_PREFIX_LEGACY = "/system/halbrowser";
 
   @Reference
