@@ -173,6 +173,20 @@ public final class HalResource implements HalObject {
     return getResources(HalResource.class, HalResourceType.EMBEDDED, relation);
   }
 
+  /**
+   * recursively collects embedded resources of a specific rel
+   * @param rel the relation your interested in
+   * @return a list of all embedded resources
+   */
+  public List<HalResource> collectEmbedded(String rel) {
+    List<HalResource> embeddedHere = Lists.newArrayList(getEmbedded(rel));
+    List<HalResource> embeddedWithinOtherEmbedded = Streams.of(getEmbedded().values())
+        .flatMap(embedded -> Streams.of(embedded.collectEmbedded(rel)))
+        .collect(Collectors.toList());
+    embeddedHere.addAll(embeddedWithinOtherEmbedded);
+    return ImmutableList.copyOf(embeddedHere);
+  }
+
   private <X extends HalObject> List<X> getResources(Class<X> clazz, HalResourceType type, String relation) {
     if (!hasResource(type, relation)) {
       return ImmutableList.of();
