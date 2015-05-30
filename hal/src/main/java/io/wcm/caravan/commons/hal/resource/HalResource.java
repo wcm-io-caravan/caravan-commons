@@ -343,6 +343,25 @@ public final class HalResource implements HalObject {
     return removeResource(HalResourceType.LINKS, relation, index);
   }
 
+
+  /**
+   * Remove the link with the given relation and href
+   * @param relation Link relation
+   * @param href to identify the link to remove
+   * @return this HAL resource
+   */
+  public HalResource removeLinkWithHref(String relation, String href) {
+
+    List<Link> links = getLinks(relation);
+    for (int i = 0; i < links.size(); i++) {
+      if (href.equals(links.get(i).getHref())) {
+        return removeLink(relation, i);
+      }
+    }
+
+    return this;
+  }
+
   /**
    * Removes one embedded resource for the given relation and index.
    * @param relation Embedded resource relation
@@ -432,5 +451,6 @@ public final class HalResource implements HalObject {
     Streams.of(getStateFieldNames()).forEach(field -> model.remove(field));
     return this;
   }
+
 
 }
