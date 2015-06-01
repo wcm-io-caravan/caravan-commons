@@ -26,6 +26,7 @@ import io.wcm.caravan.commons.stream.Collectors;
 import io.wcm.caravan.commons.stream.Streams;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,7 +37,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 /**
- * Augments a HAL resource by CURI documentation links. Doesn't override existing CURI links in a HAL resource.
+ * Augments a HAL resource by CURI documentation links for links in the main and embedded resources. Pre-defined CURIES
+ * in the HAL resource will remain and not overwritten.
  */
 public class HalCuriAugmenter {
 
@@ -108,7 +110,7 @@ public class HalCuriAugmenter {
   public HalCuriAugmenter augment(HalResource hal) {
 
     Set<String> existingCurieNames = getExistingCurieNames(hal);
-    Set<Link> curieLinks = getCurieLinks(hal, existingCurieNames);
+    Set<Link> curieLinks = getCuriLinks(hal, existingCurieNames);
     hal.addLinks(LINK_RELATION_CURIES, curieLinks);
     return this;
 
@@ -125,11 +127,18 @@ public class HalCuriAugmenter {
 
   }
 
-  private Set<Link> getCurieLinks(HalResource hal, Set<String> existingCurieNames) {
+  private Set<Link> getCuriLinks(HalResource hal, Set<String> existingCurieNames) {
 
     Set<Link> curiLinks = Sets.newLinkedHashSet();
+    curiLinks.addAll(getCuriLinksForCurrentHalResource(hal, existingCurieNames));
+    curiLinks.addAll(getCuriLinksForEmbeddedResources(hal, existingCurieNames));
+    return curiLinks;
 
-    Streams.of(hal.getLinks().keySet())
+  }
+
+  private List<Link> getCuriLinksForCurrentHalResource(HalResource hal, Set<String> existingCurieNames) {
+
+    return Streams.of(hal.getLinks().keySet())
         // get CURI name for relation
         .map(relation -> getCurieName(relation))
         // filter CURIE being empty or exist in HAL resource
@@ -138,10 +147,15 @@ public class HalCuriAugmenter {
         .map(curieName -> registry.get(curieName))
         // filter non existing links
         .filter(link -> link != null)
-        // add distinct links
-        .forEach(link -> curiLinks.add(link));
+        .collect(Collectors.toList());
 
-    return curiLinks;
+  }
+
+  private List<Link> getCuriLinksForEmbeddedResources(HalResource hal, Set<String> existingCurieNames) {
+
+    return Streams.of(hal.getEmbedded().values())
+        .flatMap(embeddedResource -> Streams.of(getCuriLinks(embeddedResource, existingCurieNames)))
+        .collect(Collectors.toList());
 
   }
 

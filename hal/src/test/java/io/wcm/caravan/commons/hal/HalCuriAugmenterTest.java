@@ -117,4 +117,17 @@ public class HalCuriAugmenterTest {
     assertEquals(2, curies.size());
   }
 
+  @Test
+  public void augment_shouldAddCuriForLinksInEmbeddedResource() {
+    HalResource item = HalResourceFactory.createResource("/item")
+        .addLinks("cust:item", HalResourceFactory.createLink("/item-link"));
+    hal.addEmbedded("item", item);
+
+    augmenter.augment(hal);
+
+    List<Link> curies = hal.getLinks("curies");
+    assertEquals(3, curies.size());
+    assertEquals("cust", curies.get(2).getName());
+  }
+
 }
