@@ -74,6 +74,19 @@ public class HalResourceTest {
   }
 
   @Test
+  public void getLinksString_shouldReturnNamedLinksForRelation() throws Exception {
+    List<Link> links = hal.getLinks("children");
+    assertEquals(2, links.size());
+    Link link0 = links.get(0);
+    assertEquals("/children1", link0.getHref());
+    assertEquals("children 1", link0.getName());
+    Link link1 = links.get(1);
+    assertEquals("/children2", link1.getHref());
+    assertEquals("children 2", link1.getName());
+  }
+
+
+  @Test
   public void getLinksString_shouldReturnEmptyListForUnkwnownRelation() {
     List<Link> links = hal.getLinks("self2");
     assertTrue(links.isEmpty());
