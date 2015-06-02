@@ -19,7 +19,6 @@
  */
 package io.wcm.caravan.commons.jaxrs;
 
-import org.apache.commons.lang3.StringUtils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
@@ -44,12 +43,7 @@ public final class ApplicationPath {
    * @return Application path or null if not defined
    */
   public static String get(Bundle bundle) {
-    String applicationPath = bundle.getHeaders().get(HEADER_APPLICATON_PATH);
-    if (StringUtils.isBlank(applicationPath)) {
-      throw new IllegalArgumentException("Bundle header '" + HEADER_APPLICATON_PATH + "' "
-          + "not set for bundle '" + bundle.getSymbolicName() + "'.");
-    }
-    return applicationPath;
+    return bundle.getHeaders().get(HEADER_APPLICATON_PATH);
   }
 
   /**

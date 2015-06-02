@@ -20,6 +20,7 @@
 package io.wcm.caravan.commons.jaxrs;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.util.Dictionary;
@@ -61,10 +62,10 @@ public class ApplicationPathTest {
     assertEquals(TEST_PATH, ApplicationPath.get(bundle));
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void testBundle_HeaderNotSet() {
     when(bundle.getHeaders()).thenReturn(new Hashtable<String, String>());
-    ApplicationPath.get(bundle);
+    assertNull(ApplicationPath.get(bundle));
   }
 
   @Test
