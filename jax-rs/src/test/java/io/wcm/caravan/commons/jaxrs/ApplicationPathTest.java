@@ -61,6 +61,12 @@ public class ApplicationPathTest {
     assertEquals(TEST_PATH, ApplicationPath.get(bundle));
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testBundle_HeaderNotSet() {
+    when(bundle.getHeaders()).thenReturn(new Hashtable<String, String>());
+    ApplicationPath.get(bundle);
+  }
+
   @Test
   public void testBundleContext() {
     assertEquals(TEST_PATH, ApplicationPath.get(bundleContext));
