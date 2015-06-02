@@ -31,7 +31,7 @@ public final class ApplicationPath {
   /**
    * OSGi bundle header name that defines the "application path" (URI prefix) for all JAX-RS services in the bundle.
    */
-  static final String HEADER_APPLICATON_PATH = "Caravan-JaxRs-ApplicationPath";
+  public static final String HEADER_APPLICATON_PATH = "Caravan-JaxRs-ApplicationPath";
 
   private ApplicationPath() {
     // static methods only
