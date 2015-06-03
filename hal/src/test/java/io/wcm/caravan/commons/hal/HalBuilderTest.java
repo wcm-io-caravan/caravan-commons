@@ -76,17 +76,17 @@ public class HalBuilderTest {
   @Test
   public void linkStringString_shouldSetLinkWithHref() throws Exception {
     HalResource hal = new HalBuilder(HAL_URI)
-        .link("next", "/next")
-        .build();
+    .link("next", "/next")
+    .build();
     assertEquals("/next", hal.getLink("next").getHref());
   }
 
   @Test
   public void linkStringStringString_shouldSetLinkWithHrefAndTitle() throws Exception {
     Link link = new HalBuilder(HAL_URI)
-        .link("next", "/next", "nextTitle")
-        .build()
-        .getLink("next");
+    .link("next", "/next", "nextTitle")
+    .build()
+    .getLink("next");
     assertEquals("/next", link.getHref());
     assertEquals("nextTitle", link.getTitle());
   }
@@ -94,9 +94,9 @@ public class HalBuilderTest {
   @Test
   public void linkStringStringStringString_shouldSetLinkWithHrefAndTitleAndName() throws Exception {
     Link link = new HalBuilder(HAL_URI)
-        .link("next", "/next", "nextTitle", "nextName")
-        .build()
-        .getLink("next");
+    .link("next", "/next", "nextTitle", "nextName")
+    .build()
+    .getLink("next");
     assertEquals("/next", link.getHref());
     assertEquals("nextTitle", link.getTitle());
     assertEquals("nextName", link.getName());
@@ -109,38 +109,26 @@ public class HalBuilderTest {
     assertEquals("doc", link.getName());
   }
 
-  private static final class State {
+  static final class State {
 
     private String att1;
     private int att2;
 
-    /**
-     * @return Returns the att1.
-     */
     public String getAtt1() {
       return this.att1;
     }
 
-    /**
-     * @param att1 The att1 to set.
-     */
-    public State setAtt1(String att1) {
-      this.att1 = att1;
+    public State setAtt1(String value) {
+      this.att1 = value;
       return this;
     }
 
-    /**
-     * @return Returns the att2.
-     */
     public int getAtt2() {
       return this.att2;
     }
 
-    /**
-     * @param att2 The att2 to set.
-     */
-    public State setAtt2(int att2) {
-      this.att2 = att2;
+    public State setAtt2(int value) {
+      this.att2 = value;
       return this;
     }
 

@@ -31,6 +31,7 @@ import io.wcm.caravan.commons.stream.Streams;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,9 +44,9 @@ public class HalCuriAugmenterTest {
   @Before
   public void setUp() {
     augmenter = new HalCuriAugmenter()
-        .register("ex", "https://example.com/doc/ex/{rel}")
-        .register("in", "https://example.com/doc/in/{rel}")
-        .register("cust", "https://example.com/doc/cust/{rel}");
+    .register("ex", "https://example.com/doc/ex/{rel}")
+    .register("in", "https://example.com/doc/in/{rel}")
+    .register("cust", "https://example.com/doc/cust/{rel}");
     hal = HalResourceFactory.createResource("/resource")
         .setLink("ex:external-link", HalResourceFactory.createLink("/external-link"))
         .addLinks("in:children", HalResourceFactory.createLink("/child-1"), HalResourceFactory.createLink("/child-2"))
@@ -96,9 +97,9 @@ public class HalCuriAugmenterTest {
   public void augment_shouldNotAddCuriForMissingCurieName() {
     augmenter.augment(hal);
     Streams.of(hal.getLinks("curies"))
-        .map(link -> link.getName())
-        .filter(name -> name == "cust")
-        .forEach(name -> fail("cust is no CURI for this HAL"));
+    .map(link -> link.getName())
+    .filter(name -> StringUtils.equals(name, "cust"))
+    .forEach(name -> fail("cust is no CURI for this HAL"));
   }
 
   @Test
