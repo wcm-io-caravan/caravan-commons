@@ -45,6 +45,12 @@
   </scm>
 
   <dependencies>
+  
+    <dependency>
+      <groupId>io.wcm.caravan</groupId>
+      <artifactId>io.wcm.caravan.commons.stream</artifactId>
+      <version>0.5.0</version>
+    </dependency>
 
     <dependency>
       <groupId>javax.servlet</groupId>
