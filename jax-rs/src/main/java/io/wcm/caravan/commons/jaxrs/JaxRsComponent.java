@@ -24,7 +24,6 @@ package io.wcm.caravan.commons.jaxrs;
  */
 //CHECKSTYLE:OFF
 public interface JaxRsComponent {
-
   //CHECKSTYLE:ON
 
   /**
