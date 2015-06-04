@@ -52,7 +52,7 @@
       <artifactId>org.apache.sling.commons.osgi</artifactId>
       <scope>compile</scope>
     </dependency>
-    
+
     <!-- JAX-RS -->
     <dependency>
       <groupId>javax.ws.rs</groupId>

@@ -45,7 +45,7 @@
   </scm>
 
   <dependencies>
-  
+
     <dependency>
       <groupId>io.wcm.caravan</groupId>
       <artifactId>io.wcm.caravan.commons.stream</artifactId>
@@ -64,7 +64,7 @@
       <artifactId>org.apache.sling.commons.osgi</artifactId>
       <scope>compile</scope>
     </dependency>
-    
+
     <!-- Commons -->
     <dependency>
       <groupId>org.apache.commons</groupId>
