@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Properties;
 import org.apache.felix.scr.annotations.Property;
 import org.apache.felix.scr.annotations.Service;
 
@@ -41,9 +40,7 @@ import org.apache.felix.scr.annotations.Service;
  */
 @Component(immediate = true)
 @Service(Filter.class)
-@Properties({
-  @Property(name = "pattern", value = HalBrowserHttpServiceMounter.HALBROWSER_URI_PREFIX + "(/)?")
-})
+@Property(name = "pattern", value = HalBrowserHttpServiceMounter.HALBROWSER_URI_PREFIX + "(/)?")
 public class HalBrowserRootForwardFilter implements Filter {
 
   private static final String INDEX_PAGE_PATH = "/halbrowser-webapp/browser.html";
