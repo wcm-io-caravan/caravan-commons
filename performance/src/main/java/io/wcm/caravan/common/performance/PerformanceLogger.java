@@ -30,6 +30,7 @@ import org.slf4j.MarkerFactory;
 public final class PerformanceLogger {
 
   private static final Logger log = LoggerFactory.getLogger(PerformanceLogger.class);
+
   private PerformanceLogger() {
     // default empty constructor
   }
@@ -48,7 +49,9 @@ public final class PerformanceLogger {
    * @param metrics PerformanceMetrics a result of measurement
    */
   public static void log(Marker marker, PerformanceMetrics metrics) {
-    log.debug(marker, getEndMetrics(metrics));
+    if (log.isDebugEnabled()) {
+      log.debug(marker, getEndMetrics(metrics));
+    }
   }
 
   private static String getEndMetrics(PerformanceMetrics metrics) {
@@ -60,4 +63,5 @@ public final class PerformanceLogger {
         + " - " + "description : " + metrics.getDescriptor()
         + " - " + "correlation id : " + metrics.getCorrelationId();
   }
+
 }

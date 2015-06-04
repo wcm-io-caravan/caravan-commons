@@ -105,7 +105,6 @@ public final class PerformanceMetrics {
    */
   public Action0 getStartAction() {
     return new Action0() {
-
       @Override
       public void call() {
         if (startTime == null) {
@@ -121,7 +120,6 @@ public final class PerformanceMetrics {
    */
   public Action0 getEndAction() {
     return new Action0() {
-
       @Override
       public void call() {
         if (endTime == null) {
