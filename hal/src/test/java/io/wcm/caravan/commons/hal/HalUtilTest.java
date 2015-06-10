@@ -31,9 +31,11 @@ import io.wcm.caravan.commons.stream.Streams;
 import java.util.Collection;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ListMultimap;
 
 public class HalUtilTest {
@@ -45,7 +47,7 @@ public class HalUtilTest {
 
     payload = HalResourceFactory.createResource("/resource")
         .addLinks("curies", HalResourceFactory.createLink("/doc#{rel}").setName("topic"))
-        .addLinks("item", HalResourceFactory.createLink("/link-1"), HalResourceFactory.createLink("/link-2"))
+        .addLinks("section", HalResourceFactory.createLink("/link-1"), HalResourceFactory.createLink("/link-2"))
         .addEmbedded("item", HalResourceFactory.createResource("/embedded-1")
             .addLinks("item", HalResourceFactory.createLink("/embedded-1-link-1"), HalResourceFactory.createLink("/embedded-1-link-2")));
 
@@ -55,7 +57,7 @@ public class HalUtilTest {
   public void getAllLinks_shouldExtractAllMainResourceLinks() {
     ListMultimap<String, Link> links = HalUtil.getAllLinks(payload);
     assertEquals("/resource", links.get("self").get(0).getHref());
-    assertEquals("/link-1", links.get("item").get(0).getHref());
+    assertEquals("/link-1", links.get("section").get(0).getHref());
   }
 
   private Set<String> getUris(Collection<Link> links) {
@@ -65,20 +67,29 @@ public class HalUtilTest {
   @Test
   public void getAllLinks_shouldExtractAllEmbeddedResourceLinks() {
     ListMultimap<String, Link> links = HalUtil.getAllLinks(payload);
-    assertEquals("/embedded-1", links.get("item").get(2).getHref());
-    assertEquals("/embedded-1-link-1", links.get("item").get(3).getHref());
+    assertEquals("/embedded-1", links.get("item").get(0).getHref());
+    assertEquals("/embedded-1-link-1", links.get("item").get(1).getHref());
   }
 
   @Test
-  public void getAllLinks_shouldExtractCuries() {
+  public void getAllLinks_shouldExtractNoCuriLinks() {
     ListMultimap<String, Link> links = HalUtil.getAllLinks(payload);
-    assertTrue(links.containsKey("curies"));
+    assertFalse(links.containsKey("curies"));
   }
 
   @Test
-  public void getAllLinksExceptCuries_shouldExtractNoCuriLinks() {
-    ListMultimap<String, Link> links = HalUtil.getAllLinksExceptCuries(payload);
-    assertFalse(links.containsKey("curies"));
+  public void getAllLinksWithPredicat_shouldOnlyExtractLinksFittingThePredicate() {
+
+    ListMultimap<String, Link> links = HalUtil.getAllLinks(payload, new Predicate<Pair<String, Link>>() {
+
+      @Override
+      public boolean apply(Pair<String, Link> input) {
+        return input.getKey().equals("item");
+      }
+    });
+    assertTrue(links.containsKey("item"));
+    assertFalse(links.containsKey("section"));
+
   }
 
   @Test
@@ -86,8 +97,10 @@ public class HalUtilTest {
 
     Set<String> uris = getUris(HalUtil.getAllLinksForRelation(payload, "item"));
     assertFalse(uris.contains("/resource"));
-    assertTrue(uris.contains("/link-1"));
-    assertTrue(uris.contains("/link-2"));
+    assertFalse(uris.contains("/link-1"));
+    assertFalse(uris.contains("/link-2"));
+    assertTrue(uris.contains("/embedded-1-link-1"));
+    assertTrue(uris.contains("/embedded-1-link-2"));
 
   }
 
