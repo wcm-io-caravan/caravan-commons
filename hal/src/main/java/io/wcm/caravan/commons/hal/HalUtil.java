@@ -67,19 +67,19 @@ public final class HalUtil {
     Builder<String, Link> builder = ImmutableListMultimap.builder();
     // load links for resource
     Streams.of(hal.getLinks().keySet())
-        // filter curies
-        .filter(relation -> !"curies".equals(relation))
-        // group relation and links
-        .<Pair<String, Link>> flatMap(relation -> Streams.of(hal.getLinks(relation)).map(link -> Pair.of(relation, link)))
-        // filter by predicate
-        .filter(pair -> predicate == null || predicate.apply(pair))
-        // add to map
-        .forEach(pair -> builder.put("self".equals(pair.getKey()) ? embeddedRelation : pair.getKey(), pair.getValue()));
+    // filter curies
+    .filter(relation -> !"curies".equals(relation))
+    // group relation and links
+    .<Pair<String, Link>>flatMap(relation -> Streams.of(hal.getLinks(relation)).map(link -> Pair.of(relation, link)))
+    // filter by predicate
+    .filter(pair -> predicate == null || predicate.apply(pair))
+    // add to map
+    .forEach(pair -> builder.put("self".equals(pair.getKey()) ? embeddedRelation : pair.getKey(), pair.getValue()));
 
     // load links for embedded resources
     Streams.of(hal.getEmbedded().entries())
-        .map(entry -> getAllLinks(entry.getValue(), entry.getKey(), predicate))
-        .forEach(embeddedLinks -> builder.putAll(embeddedLinks));
+    .map(entry -> getAllLinks(entry.getValue(), entry.getKey(), predicate))
+    .forEach(embeddedLinks -> builder.putAll(embeddedLinks));
 
     return builder.build();
 

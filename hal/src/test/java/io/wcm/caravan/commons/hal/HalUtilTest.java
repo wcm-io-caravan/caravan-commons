@@ -31,6 +31,7 @@ import io.wcm.caravan.commons.stream.Streams;
 import java.util.Collection;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,10 +82,9 @@ public class HalUtilTest {
   public void getAllLinksWithPredicat_shouldOnlyExtractLinksFittingThePredicate() {
 
     ListMultimap<String, Link> links = HalUtil.getAllLinks(payload, new Predicate<Pair<String, Link>>() {
-
       @Override
       public boolean apply(Pair<String, Link> input) {
-        return input.getKey().equals("item");
+        return StringUtils.equals(input.getKey(), "item");
       }
     });
     assertTrue(links.containsKey("item"));
