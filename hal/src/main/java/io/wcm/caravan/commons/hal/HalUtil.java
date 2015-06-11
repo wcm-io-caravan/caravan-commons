@@ -27,6 +27,7 @@ import io.wcm.caravan.commons.stream.Streams;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.osgi.annotation.versioning.ProviderType;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableListMultimap;
@@ -37,10 +38,11 @@ import com.google.common.collect.Lists;
 /**
  * Utility class for HAL resources.
  */
+@ProviderType
 public final class HalUtil {
 
   private HalUtil() {
-    // nothing to do
+    // static methods only
   }
 
   /**
@@ -82,7 +84,6 @@ public final class HalUtil {
     .forEach(embeddedLinks -> builder.putAll(embeddedLinks));
 
     return builder.build();
-
   }
 
   /**
@@ -99,7 +100,6 @@ public final class HalUtil {
         .collect(Collectors.toList());
     links.addAll(embeddedLinks);
     return links;
-
   }
 
 }

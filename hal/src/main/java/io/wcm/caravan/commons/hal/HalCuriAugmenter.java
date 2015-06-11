@@ -32,6 +32,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.osgi.annotation.versioning.ProviderType;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -40,7 +41,8 @@ import com.google.common.collect.Sets;
  * Augments a HAL resource by CURI documentation links for links in the main and embedded resources. Pre-defined CURIES
  * in the HAL resource will remain and not overwritten.
  */
-public class HalCuriAugmenter {
+@ProviderType
+public final class HalCuriAugmenter {
 
   /**
    * HAL specific relation for CURI links.
