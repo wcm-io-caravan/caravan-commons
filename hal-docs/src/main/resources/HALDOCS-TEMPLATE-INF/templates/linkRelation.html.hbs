@@ -1,0 +1,51 @@
+{{#partial "htmlTitle"}}{{linkRelation.rel}} - {{service.name}}{{/partial}}
+
+{{#partial "content"}}
+
+<h1>{{linkRelation.rel}}</h1>
+  
+{{{linkRelation.descriptionMarkup}}}
+  
+
+{{#if linkRelation.jsonSchemaRef}}
+
+<hr/>
+
+<h2>Properties</h2>
+
+<script src="lib/docson/widget.js" data-schema="{{linkRelation.jsonSchemaRef}}"></script>
+
+{{/if}}
+
+
+{{#if linkRelation.nestedLinkRelations}}
+
+<hr/>
+
+<h2>Embedded resources</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Link Relation</th>
+      <th>Description</th>
+      <th>Docs</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each linkRelation.nestedLinkRelations}}
+    <tr>
+      <td><a href="{{this.filename}}"><strong>{{this.rel}}</strong></a></td>
+      <td>{{{this.descriptionMarkup}}}</td>
+      <td><a href="{{this.filename}}" title="Documentation"><i class="icon-book"></i></a></td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+{{/if}}
+
+
+{{/partial}}
+
+{{> base.html.hbs}}
