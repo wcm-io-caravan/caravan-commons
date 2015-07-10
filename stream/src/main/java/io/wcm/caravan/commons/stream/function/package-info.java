@@ -20,5 +20,5 @@
 /**
  * Implementation of a tiny subset of Java 8 java.util.function for Java 7 compatibility.
  */
-@org.osgi.annotation.versioning.Version("0.5.0")
+@org.osgi.annotation.versioning.Version("0.6.0")
 package io.wcm.caravan.commons.stream.function;

@@ -2,7 +2,7 @@
  * #%L
  * wcm.io
  * %%
- * Copyright (C) 2014 wcm.io
+ * Copyright (C) 2015 wcm.io
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,19 @@
  * limitations under the License.
  * #L%
  */
+package io.wcm.caravan.commons.stream.function;
+
 /**
- * Implementation of a tiny subset of Java 8 java.util.stream for Java 7 compatibility.
+ * Represents a supplier of results.
+ * @param <T> the type of results supplied by this supplier.
  */
-@org.osgi.annotation.versioning.Version("0.6.0")
-package io.wcm.caravan.commons.stream;
+@FunctionalInterface
+public interface Supplier<T> {
+
+  /**
+   * Gets a result.
+   * @return a result
+   */
+  T get();
+
+}

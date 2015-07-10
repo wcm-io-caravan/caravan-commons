@@ -21,6 +21,7 @@ package io.wcm.caravan.commons.stream;
 
 import io.wcm.caravan.commons.stream.function.Consumer;
 import io.wcm.caravan.commons.stream.function.Function;
+import io.wcm.caravan.commons.stream.function.Optional;
 
 import java.util.Iterator;
 
@@ -78,5 +79,19 @@ public interface Stream<T> {
    * @return the new stream
    */
   <R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper);
+
+  /**
+   * Returns an {@link Optional} describing the first element of this stream, or an empty {@code Optional} if the stream
+   * is empty. If the stream has no encounter order, then any element may be returned.
+   * @return an {@code Optional} describing the first element of this stream, or an empty one if the stream is empty
+   * @throws NullPointerException if the element selected is null
+   */
+  Optional<T> findFirst();
+
+  /**
+   * Returns the count of elements in this stream.
+   * @return the count of elements in this stream
+   */
+  long count();
 
 }

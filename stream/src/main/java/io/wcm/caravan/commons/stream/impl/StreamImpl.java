@@ -24,6 +24,7 @@ import io.wcm.caravan.commons.stream.Collector;
 import io.wcm.caravan.commons.stream.Stream;
 import io.wcm.caravan.commons.stream.function.Consumer;
 import io.wcm.caravan.commons.stream.function.Function;
+import io.wcm.caravan.commons.stream.function.Optional;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -96,6 +97,27 @@ public final class StreamImpl<T> implements Stream<T> {
       }
     }
     return new StreamImpl<R>(result);
+  }
+
+  @Override
+  public Optional<T> findFirst() {
+    Iterator<T> iterator = iterator();
+    if (iterator.hasNext()) {
+      return Optional.<T>of(iterator.next());
+    }
+    else {
+      return Optional.<T>empty();
+    }
+  }
+
+  @Override
+  @SuppressWarnings("unused")
+  public long count() {
+    long count = 0;
+    for (T item : iterable) {
+      count++;
+    }
+    return count;
   }
 
 }

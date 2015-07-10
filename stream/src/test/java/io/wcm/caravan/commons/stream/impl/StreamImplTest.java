@@ -79,15 +79,27 @@ public class StreamImplTest {
   }
 
   @Test
-  public void testFlatMap() throws Exception {
+  public void testFlatMap() {
     Stream<String> stream = Streams.of(SAMPLE_LIST).flatMap(e -> Streams.of(e, e + "-new"));
     assertEquals(ImmutableList.of("item1", "item1-new", "item2", "item2-new"), stream.collect(Collectors.toList()));
   }
 
   @Test
-  public void testFlatMapNull() throws Exception {
+  public void testFlatMapNull() {
     Stream<String> stream = Streams.of(SAMPLE_LIST).flatMap(e -> "item1".equals(e) ? Streams.of(e) : null);
     assertEquals(ImmutableList.of("item1"), stream.collect(Collectors.toList()));
+  }
+
+  @Test
+  public void testFindFirst() {
+    assertEquals("item1", Streams.of(SAMPLE_LIST).findFirst().orElse("not-found"));
+    assertEquals("not-found", Streams.of(ImmutableList.of()).findFirst().orElse("not-found"));
+  }
+
+  @Test
+  public void testCount() {
+    assertEquals(2, Streams.of(SAMPLE_LIST).count());
+    assertEquals(0, Streams.of(ImmutableList.of()).count());
   }
 
 }
