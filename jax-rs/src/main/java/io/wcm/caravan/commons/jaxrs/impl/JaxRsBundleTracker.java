@@ -46,9 +46,9 @@ import org.slf4j.LoggerFactory;
  * If any is found and an application path is defined a jersey instance dedicated to this bundle is instantiated.
  */
 @Component(immediate = true)
-public class JaxRsPackageBundleTracker implements BundleTrackerCustomizer<ComponentInstance> {
+public class JaxRsBundleTracker implements BundleTrackerCustomizer<ComponentInstance> {
 
-  private static final Logger log = LoggerFactory.getLogger(JaxRsPackageBundleTracker.class);
+  private static final Logger log = LoggerFactory.getLogger(JaxRsBundleTracker.class);
 
   private BundleContext bundleContext;
   private BundleTracker bundleTracker;
