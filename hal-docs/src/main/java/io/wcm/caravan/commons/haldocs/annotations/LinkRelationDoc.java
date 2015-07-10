@@ -36,4 +36,9 @@ public @interface LinkRelationDoc {
    */
   String jsonSchema() default "";
 
+  /**
+   * Link relations that may be returned in the reponse of this relation.
+   */
+  String[] nestedLinkRelations() default {};
+
 }
