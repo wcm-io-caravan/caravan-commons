@@ -29,16 +29,16 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface LinkRelationDoc {
+public @interface LinkRelationRef {
 
   /**
-   * Reference to JSON schema.
+   * Link relation name.
    */
-  String jsonSchema() default "";
+  String value() default "";
 
   /**
-   * Link relations that may be returned in the reponse of this relation.
+   * Optional description for describing the link relation in context of the parent link relation.
    */
-  LinkRelationRef[] nested() default {};
+  String description() default "";
 
 }
