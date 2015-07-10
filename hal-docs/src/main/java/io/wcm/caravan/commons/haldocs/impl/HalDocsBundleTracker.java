@@ -21,6 +21,9 @@ package io.wcm.caravan.commons.haldocs.impl;
 
 import io.wcm.caravan.commons.jaxrs.ApplicationPath;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
@@ -29,7 +32,10 @@ import org.apache.felix.scr.annotations.Reference;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
+import org.osgi.service.component.ComponentConstants;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.ComponentFactory;
+import org.osgi.service.component.ComponentInstance;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.osgi.util.tracker.BundleTracker;
@@ -42,7 +48,7 @@ import org.slf4j.LoggerFactory;
  * via HTTP service to /docs/api/{serviceId}/*.
  */
 @Component(immediate = true)
-public class HalDocsBundleTracker implements BundleTrackerCustomizer<String> {
+public class HalDocsBundleTracker implements BundleTrackerCustomizer<ComponentInstance> {
 
   /**
    * Classpath prefix where HAL documentation files are stored.
@@ -55,29 +61,38 @@ public class HalDocsBundleTracker implements BundleTrackerCustomizer<String> {
   public static final String SERVICE_DOC_FILE = "serviceDoc.json";
 
   static final String DOCS_URI_PREFIX = "/docs/api";
+  static final String DOCS_RESOURCES_URI_PREFIX = "/docs/resources";
+  static final String CLASSPATH_FRONTEND = "HALDOCS-TEMPLATE-INF/frontend";
 
   private static final Logger log = LoggerFactory.getLogger(HalDocsBundleTracker.class);
 
   private BundleContext bundleContext;
   private BundleTracker bundleTracker;
 
+  @Reference(target = "(" + ComponentConstants.COMPONENT_FACTORY + "=" + HalDocsServlet.FACTORY + ")")
+  private ComponentFactory servletFactory;
+
   @Reference
   private HttpService httpService;
 
   @Activate
-  void activate(ComponentContext componentContext) {
+  void activate(ComponentContext componentContext) throws NamespaceException {
     bundleContext = componentContext.getBundleContext();
-    this.bundleTracker = new BundleTracker<String>(bundleContext, Bundle.ACTIVE, this);
+    this.bundleTracker = new BundleTracker<ComponentInstance>(bundleContext, Bundle.ACTIVE, this);
     this.bundleTracker.open();
+
+    // mount static resources for docs frontend
+    httpService.registerResources(DOCS_RESOURCES_URI_PREFIX, CLASSPATH_FRONTEND, null);
   }
 
   @Deactivate
   void deactivate(ComponentContext componentContext) {
     this.bundleTracker.close();
+    httpService.unregister(DOCS_RESOURCES_URI_PREFIX);
   }
 
   @Override
-  public String addingBundle(Bundle bundle, BundleEvent event) {
+  public ComponentInstance addingBundle(Bundle bundle, BundleEvent event) {
     String applicationPath = ApplicationPath.get(bundle);
     if (StringUtils.isNotBlank(applicationPath) && hasHalDocs(bundle)) {
       String docsPath = getDocsPath(applicationPath);
@@ -86,37 +101,35 @@ public class HalDocsBundleTracker implements BundleTrackerCustomizer<String> {
         log.info("Mount HAL docs for {} to {}", bundle.getSymbolicName(), docsPath);
       }
 
-      try {
-        httpService.registerResources(docsPath, DOCS_CLASSPATH_PREFIX,
-            new HttpContextWrapper(httpService.createDefaultHttpContext(), bundle));
-      }
-      catch (NamespaceException ex) {
-        throw new RuntimeException("Unable to mount hal docs to " + docsPath, ex);
-      }
-      return docsPath;
+      // register HAL docs servlet on HTTP whiteboard
+      Dictionary<String, Object> serviceConfig = new Hashtable<>();
+      serviceConfig.put("alias", docsPath);
+      serviceConfig.put(HalDocsServlet.PROPERTY_BUNDLE, bundle);
+      return servletFactory.newInstance(serviceConfig);
     }
     return null;
   }
 
   @Override
-  public void modifiedBundle(Bundle bundle, BundleEvent event, String docsPath) {
+  public void modifiedBundle(Bundle bundle, BundleEvent event, ComponentInstance componentInstance) {
     // nothing to do
   }
 
   @Override
-  public void removedBundle(Bundle bundle, BundleEvent event, String docsPath) {
-    if (docsPath == null) {
+  public void removedBundle(Bundle bundle, BundleEvent event, ComponentInstance componentInstance) {
+    if (componentInstance == null) {
       return;
     }
     if (log.isInfoEnabled()) {
+      String applicationPath = ApplicationPath.get(bundle);
+      String docsPath = getDocsPath(applicationPath);
       log.info("Unmount HAL docs for {} from {}", bundle.getSymbolicName(), docsPath);
     }
-    httpService.unregister(docsPath);
+    componentInstance.dispose();
   }
 
   private boolean hasHalDocs(Bundle bundle) {
-    // TODO: check bundle contents if documentation artifacts exist
-    return true;
+    return bundle.getResource(DOCS_CLASSPATH_PREFIX + "/" + SERVICE_DOC_FILE) != null;
   }
 
   private String getDocsPath(String applicationPath) {

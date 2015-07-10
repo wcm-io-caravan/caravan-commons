@@ -76,13 +76,6 @@ public class Service {
   }
 
   /**
-   * @return Filename for generated markup file.
-   */
-  public String getFilename() {
-    return "index.html";
-  }
-
-  /**
    * Resolves all nested link relations.
    */
   public void resolve() {
@@ -105,7 +98,6 @@ public class Service {
         refs.remove();
       }
       else {
-        ref.setFilename(referencedRel.getFilename());
         if (StringUtils.isBlank(ref.getDescriptionMarkup())) {
           ref.setDescriptionMarkup(referencedRel.getDescriptionMarkup());
         }

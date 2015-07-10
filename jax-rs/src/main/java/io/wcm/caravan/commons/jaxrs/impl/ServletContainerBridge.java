@@ -72,7 +72,7 @@ import com.google.common.collect.Sets;
 public class ServletContainerBridge extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
-  static final String SERVLETCONTAINER_BRIDGE_FACTORY = "caravan.jaxrs.servlertcontainer.bridge.factory";
+  static final String SERVLETCONTAINER_BRIDGE_FACTORY = "caravan.jaxrs.servletcontainer.bridge.factory";
   static final String PROPERTY_BUNDLE = "caravan.jaxrs.relatedBundle";
   static final String PROPERTY_GLOBAL_COMPONENT = "caravan.jaxrs.globalComponent";
 

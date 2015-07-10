@@ -81,8 +81,7 @@ public class JaxRsBundleTracker implements BundleTrackerCustomizer<ComponentInst
       Dictionary<String, Object> serviceConfig = new Hashtable<>();
       serviceConfig.put("alias", applicationPath);
       serviceConfig.put(ServletContainerBridge.PROPERTY_BUNDLE, bundle);
-      ComponentInstance componentInstance = servletContainerBridgeFactory.newInstance(serviceConfig);
-      return componentInstance;
+      return servletContainerBridgeFactory.newInstance(serviceConfig);
     }
     return null;
   }

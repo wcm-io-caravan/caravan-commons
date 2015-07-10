@@ -77,13 +77,6 @@ public class LinkRelation implements Comparable<LinkRelation> {
     this.nestedRels.add(ref);
   }
 
-  /**
-   * @return Filename for generated markup file.
-   */
-  public String getFilename() {
-    return "rel-" + StringUtils.replace(getRel(), ":", "-") + ".html";
-  }
-
   @Override
   public int hashCode() {
     return rel.hashCode();

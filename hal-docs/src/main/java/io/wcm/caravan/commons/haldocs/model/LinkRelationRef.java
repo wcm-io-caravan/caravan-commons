@@ -21,8 +21,6 @@ package io.wcm.caravan.commons.haldocs.model;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 /**
  * Link relation reference for nested link relations.
  */
@@ -30,9 +28,6 @@ public class LinkRelationRef implements Comparable<LinkRelationRef> {
 
   private String rel;
   private String descriptionMarkup;
-
-  @JsonIgnore
-  private String filename;
 
   public String getRel() {
     return this.rel;
@@ -48,14 +43,6 @@ public class LinkRelationRef implements Comparable<LinkRelationRef> {
 
   public void setDescriptionMarkup(String descriptionMarkup) {
     this.descriptionMarkup = descriptionMarkup;
-  }
-
-  public String getFilename() {
-    return this.filename;
-  }
-
-  public void setFilename(String filename) {
-    this.filename = filename;
   }
 
   @Override

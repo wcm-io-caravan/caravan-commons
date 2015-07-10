@@ -38,12 +38,15 @@ import com.google.common.collect.ImmutableMap;
  */
 class HttpContextWrapper implements HttpContext {
 
+  static final String MIMETYPE_JSON = "application/json";
+  static final String MIMETYPE_HTML = "text/html;charset=" + CharEncoding.UTF_8;
+
   /**
    * List of common mime types we should support always.
    */
   private static final Map<String, String> MIME_TYPES = ImmutableMap.<String, String>builder()
-      .put("json", "application/json")
-      .put("html", "text/html;charset=" + CharEncoding.UTF_8)
+      .put("json", MIMETYPE_JSON)
+      .put("html", MIMETYPE_HTML)
       .build();
 
   private final HttpContext delegate;

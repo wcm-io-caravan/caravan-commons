@@ -17,28 +17,29 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.haldocs.impl.generator;
+package io.wcm.caravan.commons.haldocs.impl;
 
+import static org.junit.Assert.assertEquals;
 import io.wcm.caravan.commons.haldocs.model.LinkRelation;
 import io.wcm.caravan.commons.haldocs.model.Service;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.junit.Before;
 import org.junit.Test;
 
-public class ServiceDocGeneratorTest {
+public class ServiceJsonTest {
 
-  private ServiceDocGenerator underTest;
+  private Service service;
 
   @Before
-  public void setUp() throws Exception {
-    underTest = new ServiceDocGenerator();
-  }
-
-  @Test
-  public void testGenerate() throws Exception {
-    Service service = new Service();
+  public void setUp() {
+    service = new Service();
     service.setServiceId("/my/test/service");
     service.setName("My Test Service");
     service.setDescriptionMarkup("<p>This is a lengthy description of the service. "
@@ -72,8 +73,25 @@ public class ServiceDocGeneratorTest {
     rel1.addNestedLinkRelation(rel2.getRel(), "Description for rel1->rel2");
     rel2.addNestedLinkRelation(rel3.getRel(), null);
     rel2.addNestedLinkRelation("unknown/invalid", null);
+  }
 
-    underTest.generate(service, new File("target/documentation-test"));
+  @Test
+  public void testWriteRead() throws IOException {
+    File targetFile = new File("target/documentation-test/serviceDoc.json");
+    targetFile.getParentFile().mkdirs();
+
+    try (OutputStream os = new FileOutputStream(targetFile)) {
+      ServiceJson.write(service, os);
+    }
+    Service service2;
+    try (InputStream is = new FileInputStream(targetFile)) {
+      service2 = ServiceJson.read(is);
+    }
+
+    assertEquals(service.getServiceId(), service2.getServiceId());
+    assertEquals(service.getName(), service2.getName());
+    assertEquals(service.getDescriptionMarkup(), service2.getDescriptionMarkup());
+    assertEquals(service.getLinkRelations(), service2.getLinkRelations());
   }
 
 }
