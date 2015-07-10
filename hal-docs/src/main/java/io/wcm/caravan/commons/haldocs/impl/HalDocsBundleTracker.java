@@ -44,8 +44,17 @@ import org.slf4j.LoggerFactory;
 @Component(immediate = true)
 public class HalDocsBundleTracker implements BundleTrackerCustomizer<String> {
 
+  /**
+   * Classpath prefix where HAL documentation files are stored.
+   */
+  public static final String DOCS_CLASSPATH_PREFIX = "HAL-DOCS-INF";
+
+  /**
+   * Filename with serialized model information for HAL documentation.
+   */
+  public static final String SERVICE_DOC_FILE = "serviceDoc.json";
+
   static final String DOCS_URI_PREFIX = "/docs/api";
-  static final String DOCS_CLASSPATH_PREFIX = "HAL-DOCS-INF";
 
   private static final Logger log = LoggerFactory.getLogger(HalDocsBundleTracker.class);
 

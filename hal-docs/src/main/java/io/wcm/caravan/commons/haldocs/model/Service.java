@@ -86,7 +86,7 @@ public class Service {
    * Resolves all nested link relations.
    */
   public void resolve() {
-    linkRelations.forEach(this::resolve);
+    Streams.of(linkRelations).forEach(this::resolve);
   }
 
   /**
