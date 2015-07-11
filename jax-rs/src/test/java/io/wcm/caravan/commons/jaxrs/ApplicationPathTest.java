@@ -55,6 +55,7 @@ public class ApplicationPathTest {
 
     when(bundleContext.getBundle()).thenReturn(bundle);
     when(componentContext.getBundleContext()).thenReturn(bundleContext);
+    when(componentContext.getProperties()).thenReturn(new Hashtable<>());
   }
 
   @Test

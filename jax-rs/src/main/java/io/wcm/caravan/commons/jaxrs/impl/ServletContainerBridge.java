@@ -19,6 +19,7 @@
  */
 package io.wcm.caravan.commons.jaxrs.impl;
 
+import io.wcm.caravan.commons.jaxrs.ApplicationPath;
 import io.wcm.caravan.commons.jaxrs.JaxRsComponent;
 
 import java.io.IOException;
@@ -78,6 +79,7 @@ public class ServletContainerBridge extends HttpServlet {
 
   private BundleContext bundleContext;
   private Bundle bundle;
+  private String applicationPath;
   private JaxRsApplication application;
   private ServletContainer servletContainer;
   private volatile boolean isDirty;
@@ -99,6 +101,7 @@ public class ServletContainerBridge extends HttpServlet {
     // bundle which contains the JAX-RS services
     bundle = (Bundle)componentContext.getProperties().get(PROPERTY_BUNDLE);
     bundleContext = bundle.getBundleContext();
+    applicationPath = ApplicationPath.get(bundle);
 
     // delayed registering of references that where added before activation
     for (ServiceReference<ComponentFactory> serviceReference : serviceReferencesDuringStartup) {
@@ -172,6 +175,7 @@ public class ServletContainerBridge extends HttpServlet {
     ComponentFactory componentFactory = bundleContext.getService(serviceReference);
     Dictionary<String, Object> props = new Hashtable<>();
     props.put(PROPERTY_GLOBAL_COMPONENT, true);
+    props.put(ApplicationPath.PROPERTY_APPLICATON_PATH, applicationPath);
     ComponentInstance componentInstance = componentFactory.newInstance(props);
     Object component = componentInstance.getInstance();
     globalJaxRsComponentInstances.put(serviceReference, componentInstance);

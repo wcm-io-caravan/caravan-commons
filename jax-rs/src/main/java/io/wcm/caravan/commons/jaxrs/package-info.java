@@ -20,5 +20,5 @@
 /**
  * Provides transparent JAX-RS integration for OSGi services based on the Jersey JAX-RS implementation.
  */
-@org.osgi.annotation.versioning.Version("0.5.0")
+@org.osgi.annotation.versioning.Version("0.6.0")
 package io.wcm.caravan.commons.jaxrs;

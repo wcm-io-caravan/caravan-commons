@@ -19,6 +19,7 @@
  */
 package io.wcm.caravan.commons.jaxrs;
 
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
@@ -32,6 +33,12 @@ public final class ApplicationPath {
    * OSGi bundle header name that defines the "application path" (URI prefix) for all JAX-RS services in the bundle.
    */
   public static final String HEADER_APPLICATON_PATH = "Caravan-JaxRs-ApplicationPath";
+
+  /**
+   * OSGi service property name that defines the "application path" (URI prefix).
+   * This property set is automatically set for "global" JAX-RS components.
+   */
+  public static final String PROPERTY_APPLICATON_PATH = "caravan.jaxrs.applicationPath";
 
   private ApplicationPath() {
     // static methods only
@@ -57,10 +64,16 @@ public final class ApplicationPath {
 
   /**
    * Get JAX-RS application path for bundle of component context.
+   * If the component context is from an "global" JAx-RS Component the application path for which the
+   * factory instance was created is returned.
    * @param componentContext Component Context
    * @return Application path or null if not defined
    */
   public static String get(ComponentContext componentContext) {
+    String applicationPath = (String)componentContext.getProperties().get(PROPERTY_APPLICATON_PATH);
+    if (StringUtils.isNotBlank(applicationPath)) {
+      return applicationPath;
+    }
     return get(componentContext.getBundleContext().getBundle());
   }
 
