@@ -1,4 +1,4 @@
-<img src="http://wcm.io/images/favicon-16@2x.png"/> Caravan Commons
+<img src="http://wcm.io/images/favicon-16@2x.png"/> wcm.io Caravan Commons
 ======
 [![Build Status](https://travis-ci.org/wcm-io-caravan/caravan-commons.png?branch=master)](https://travis-ci.org/wcm-io-caravan/caravan-commons)
 
