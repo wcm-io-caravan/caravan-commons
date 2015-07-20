@@ -21,3 +21,8 @@ Implements a tiny subset of the Java 8 stream API to use the basic features in J
 
 [apidocs]: apidocs/
 [changelog]: changes-report.html
+
+
+### Overview
+
+This is only an intermediate solution and will be removed when Java 7 support is dropped for wcm.io Caravan.

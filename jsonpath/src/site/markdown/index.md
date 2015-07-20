@@ -1,6 +1,6 @@
 ## About Commons JsonPath
 
-Provides preconfigured JsonPath implementation.
+Provide preconfigured [JsonPath](http://goessner.net/articles/JsonPath/) implementation based on [Jayway JsonPath](https://github.com/jayway/JsonPath).
 
 
 ### Maven Dependency
@@ -19,3 +19,10 @@ Provides preconfigured JsonPath implementation.
 
 
 [changelog]: changes-report.html
+
+
+### Overview
+
+* Embeds JsonPath incl. dependencies
+* Exports public JsonPath API
+* Preconfigured to use JacksonJsonNodeJsonProvider and JacksonMappingProvider
