@@ -24,9 +24,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.wcm.caravan.maven</groupId>
-    <artifactId>io.wcm.caravan.maven.caravan-global-parent</artifactId>
-    <version>4</version>
+    <groupId>io.wcm.caravan</groupId>
+    <artifactId>io.wcm.caravan.parent_toplevel</artifactId>
+    <version>0.5.5-SNAPSHOT</version>
     <relativePath/>
   </parent>
 
@@ -36,8 +36,10 @@
   <packaging>pom</packaging>
 
   <name>Caravan Commons Root</name>
+  <description>Common libraries for OSGi-based RESTful micro services.</description>
 
   <modules>
+    <module>parent</module>
     <module>cors</module>
     <module>httpclient</module>
     <module>jax-rs</module>
