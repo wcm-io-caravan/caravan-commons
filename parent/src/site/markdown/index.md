@@ -7,7 +7,6 @@ Common libraries for OSGi-based RESTful micro services.
 
 * [CORS Filter](cors/): Servlet filter for managing CORS header in HTTP responses.
 * [HTTP Client](httpclient/): Provides preconfigured Apache HTTP Client instances.
-* [JAX-RS Connector](jax-rs/): Provides transparent JAX-RS integration for OSGi services based on the Jersey JAX-RS implementation.
 * [JsonPath](jsonpath/): Provides preconfigured JsonPath implementation.
 * [Metrics](metrics/): Metrics integration.
 * [Performance Metrics](performance/): Performance Metrics Framework.
