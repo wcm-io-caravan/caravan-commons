@@ -52,7 +52,6 @@ import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.nio.reactor.IOReactorException;
-import org.apache.http.ssl.SSLContexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,7 +85,7 @@ class HttpClientItem {
       }
     }
     else {
-      sslContext = SSLContexts.createDefault();
+      sslContext = CertificateLoader.createDefaultSSlContext();
     }
 
     CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
