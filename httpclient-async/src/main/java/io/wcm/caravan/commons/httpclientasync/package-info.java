@@ -18,7 +18,7 @@
  * #L%
  */
 /**
- * HTTP Client Factory.
+ * Async HTTP Client Factory.
  */
-@org.osgi.annotation.versioning.Version("0.5.0")
-package io.wcm.caravan.commons.httpclient;
+@org.osgi.annotation.versioning.Version("1.0.0")
+package io.wcm.caravan.commons.httpclientasync;

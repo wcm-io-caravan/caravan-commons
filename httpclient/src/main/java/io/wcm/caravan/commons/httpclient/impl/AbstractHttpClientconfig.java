@@ -29,7 +29,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * Common functionality for {@link HttpClientConfig} implememtations.
  */
-abstract class AbstractHttpClientconfig implements HttpClientConfig {
+public abstract class AbstractHttpClientconfig implements HttpClientConfig {
 
   /**
    * List of properties of this class that contain sensitive information which should not be logged.

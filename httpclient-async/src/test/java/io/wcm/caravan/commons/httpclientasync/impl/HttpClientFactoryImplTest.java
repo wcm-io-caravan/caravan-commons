@@ -17,16 +17,17 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.httpclient.impl;
+package io.wcm.caravan.commons.httpclientasync.impl;
 
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECT_TIMEOUT_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HOST_PATTERNS_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.WS_ADDRESSINGTO_URIS_PROPERTY;
 import static org.junit.Assert.assertEquals;
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-import io.wcm.caravan.commons.httpclient.HttpClientFactory;
+import io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl;
+import io.wcm.caravan.commons.httpclientasync.HttpClientFactory;
 
-import org.apache.http.nio.client.HttpAsyncClient;
+import org.apache.http.client.HttpClient;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
 import org.junit.Rule;
@@ -38,7 +39,7 @@ import org.osgi.framework.Constants;
 import com.google.common.collect.ImmutableMap;
 
 @RunWith(MockitoJUnitRunner.class)
-public class HttpClientFactoryImplAsyncTest {
+public class HttpClientFactoryImplTest {
 
   @Rule
   public OsgiContext context = new OsgiContext();
@@ -66,13 +67,13 @@ public class HttpClientFactoryImplAsyncTest {
 
     HttpClientFactory underTest = context.registerInjectActivateService(new HttpClientFactoryImpl());
 
-    HttpAsyncClient client1 = underTest.getAsync("http://host1/xyz");
+    HttpClient client1 = underTest.get("http://host1/xyz");
     assertEquals("client1.timeout", 55, HttpClientTestUtils.getConnectTimeout(client1));
 
-    HttpAsyncClient client2 = underTest.getAsync("http://host2/xyz");
+    HttpClient client2 = underTest.get("http://host2/xyz");
     assertEquals("client2.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2));
 
-    HttpAsyncClient client3 = underTest.getAsync("http://host3/xyz");
+    HttpClient client3 = underTest.get("http://host3/xyz");
     assertEquals("client3.timeout", HttpClientConfig.CONNECT_TIMEOUT_DEFAULT, HttpClientTestUtils.getConnectTimeout(client3));
 
     MockOsgi.deactivate(underTest);
@@ -98,20 +99,20 @@ public class HttpClientFactoryImplAsyncTest {
 
     HttpClientFactory underTest = context.registerInjectActivateService(new HttpClientFactoryImpl());
 
-    HttpAsyncClient client1 = underTest.getAsync("http://host1/xyz");
+    HttpClient client1 = underTest.get("http://host1/xyz");
     assertEquals("client1.timeout", 55, HttpClientTestUtils.getConnectTimeout(client1));
 
-    HttpAsyncClient client2 = underTest.getAsync("http://host2/xyz");
+    HttpClient client2 = underTest.get("http://host2/xyz");
     assertEquals("client2.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2));
 
-    HttpAsyncClient client3 = underTest.getAsync("http://host3/xyz");
+    HttpClient client3 = underTest.get("http://host3/xyz");
     assertEquals("client3.timeout", 66, HttpClientTestUtils.getConnectTimeout(client3));
 
     MockOsgi.deactivate(underTest);
   }
 
   @Test
-  public void testGetHttpClientConfigForWebservice() {
+  public void testGetConfigForWebservice() {
 
     context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
@@ -136,22 +137,22 @@ public class HttpClientFactoryImplAsyncTest {
 
     HttpClientFactory underTest = context.registerInjectActivateService(new HttpClientFactoryImpl());
 
-    HttpAsyncClient client1a = underTest.getWsAsync("http://host1/xyz", "http://uri1");
+    HttpClient client1a = underTest.getWs("http://host1/xyz", "http://uri1");
     assertEquals("client1a.timeout", 55, HttpClientTestUtils.getConnectTimeout(client1a));
 
-    HttpAsyncClient client1b = underTest.getWsAsync("http://host1/xyz", "http://uri2");
+    HttpClient client1b = underTest.getWs("http://host1/xyz", "http://uri2");
     assertEquals("client1b.timeout", 15000, HttpClientTestUtils.getConnectTimeout(client1b));
 
-    HttpAsyncClient client1c = underTest.getWsAsync("http://host1/xyz", null);
+    HttpClient client1c = underTest.getWs("http://host1/xyz", null);
     assertEquals("client1c.timeout", 15000, HttpClientTestUtils.getConnectTimeout(client1c));
 
-    HttpAsyncClient client2a = underTest.getWsAsync("http://host2/xyz", "http://uri1");
+    HttpClient client2a = underTest.getWs("http://host2/xyz", "http://uri1");
     assertEquals("client2a.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2a));
 
-    HttpAsyncClient client2b = underTest.getWsAsync("http://host2/xyz", "http://uri2");
+    HttpClient client2b = underTest.getWs("http://host2/xyz", "http://uri2");
     assertEquals("client2b.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2b));
 
-    HttpAsyncClient client2c = underTest.getWsAsync("http://host2/xyz", null);
+    HttpClient client2c = underTest.getWs("http://host2/xyz", null);
     assertEquals("client2c.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2c));
 
     MockOsgi.deactivate(underTest);

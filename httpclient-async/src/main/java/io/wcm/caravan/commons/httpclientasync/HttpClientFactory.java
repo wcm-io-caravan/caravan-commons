@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.httpclient;
+package io.wcm.caravan.commons.httpclientasync;
 
 import java.net.URI;
 

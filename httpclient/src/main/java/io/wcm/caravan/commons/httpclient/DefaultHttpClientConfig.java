@@ -17,15 +17,19 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.httpclient.impl;
+package io.wcm.caravan.commons.httpclient;
 
-import io.wcm.caravan.commons.httpclient.HttpClientConfig;
+import io.wcm.caravan.commons.httpclient.impl.AbstractHttpClientconfig;
+import io.wcm.caravan.commons.httpclient.impl.CertificateLoader;
 
 /**
  * Default http client configuration.
  */
-final class DefaultHttpClientConfig extends AbstractHttpClientconfig {
+public final class DefaultHttpClientConfig extends AbstractHttpClientconfig {
 
+  /**
+   * Holds the default HTTP client configuration that is used when no matching configuration was provided.
+   */
   public static final HttpClientConfig INSTANCE = new DefaultHttpClientConfig();
 
   private DefaultHttpClientConfig() {

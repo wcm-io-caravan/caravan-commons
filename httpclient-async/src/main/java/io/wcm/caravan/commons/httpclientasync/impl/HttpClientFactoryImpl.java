@@ -17,10 +17,11 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.httpclient.impl;
+package io.wcm.caravan.commons.httpclientasync.impl;
 
+import io.wcm.caravan.commons.httpclient.DefaultHttpClientConfig;
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-import io.wcm.caravan.commons.httpclient.HttpClientFactory;
+import io.wcm.caravan.commons.httpclientasync.HttpClientFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;

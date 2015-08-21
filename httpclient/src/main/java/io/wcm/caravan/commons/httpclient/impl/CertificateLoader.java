@@ -41,7 +41,7 @@ import org.apache.http.conn.ssl.SSLInitializationException;
 /**
  * Helper class for loading certificates for SSL communication.
  */
-final class CertificateLoader {
+public final class CertificateLoader {
 
   /**
    * Default SSL context type
