@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.httpclientasync.impl;
+package io.wcm.caravan.commons.httpasyncclient.impl;
 
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;

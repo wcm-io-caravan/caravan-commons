@@ -17,15 +17,15 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.httpclientasync.impl;
+package io.wcm.caravan.commons.httpasyncclient.impl;
 
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECT_TIMEOUT_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HOST_PATTERNS_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.WS_ADDRESSINGTO_URIS_PROPERTY;
 import static org.junit.Assert.assertEquals;
+import io.wcm.caravan.commons.httpasyncclient.HttpAsyncClientFactory;
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 import io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl;
-import io.wcm.caravan.commons.httpclientasync.HttpAsyncClientFactory;
 
 import org.apache.http.nio.client.HttpAsyncClient;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
