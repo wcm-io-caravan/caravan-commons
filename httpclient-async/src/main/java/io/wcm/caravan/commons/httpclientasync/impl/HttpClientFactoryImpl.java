@@ -21,7 +21,7 @@ package io.wcm.caravan.commons.httpclientasync.impl;
 
 import io.wcm.caravan.commons.httpclient.DefaultHttpClientConfig;
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-import io.wcm.caravan.commons.httpclientasync.HttpClientFactory;
+import io.wcm.caravan.commons.httpclientasync.HttpAsyncClientFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -37,17 +37,16 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.apache.felix.scr.annotations.Service;
-import org.apache.http.client.HttpClient;
 import org.apache.http.nio.client.HttpAsyncClient;
 import org.apache.sling.commons.osgi.ServiceUtil;
 import org.osgi.framework.BundleContext;
 
 /**
- * Default implementation of {@link HttpClientFactory}.
+ * Default implementation of {@link HttpAsyncClientFactory}.
  */
 @Component(immediate = true)
-@Service(HttpClientFactory.class)
-public class HttpClientFactoryImpl implements HttpClientFactory {
+@Service(HttpAsyncClientFactory.class)
+public class HttpClientFactoryImpl implements HttpAsyncClientFactory {
 
   @Reference(name = "httpClientConfig", referenceInterface = HttpClientConfig.class,
       cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, policy = ReferencePolicy.DYNAMIC)
@@ -82,42 +81,22 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
   }
 
   @Override
-  public HttpClient get(String targetUrl) {
-    return getFactoryItem(toUri(targetUrl), null).getHttpClient();
-  }
-
-  @Override
-  public HttpClient get(URI targetUrl) {
-    return getFactoryItem(targetUrl, null).getHttpClient();
-  }
-
-  @Override
-  public HttpAsyncClient getAsync(String targetUrl) {
+  public HttpAsyncClient get(String targetUrl) {
     return getFactoryItem(toUri(targetUrl), null).getHttpAsyncClient();
   }
 
   @Override
-  public HttpAsyncClient getAsync(URI targetUrl) {
+  public HttpAsyncClient get(URI targetUrl) {
     return getFactoryItem(targetUrl, null).getHttpAsyncClient();
   }
 
   @Override
-  public HttpClient getWs(String targetUrl, String wsAddressingToUri) {
-    return getFactoryItem(toUri(targetUrl), wsAddressingToUri).getHttpClient();
-  }
-
-  @Override
-  public HttpClient getWs(URI targetUrl, URI wsAddressingToUri) {
-    return getFactoryItem(targetUrl, wsAddressingToUri.toString()).getHttpClient();
-  }
-
-  @Override
-  public HttpAsyncClient getWsAsync(String targetUrl, String wsAddressingToUri) {
+  public HttpAsyncClient getWs(String targetUrl, String wsAddressingToUri) {
     return getFactoryItem(toUri(targetUrl), wsAddressingToUri).getHttpAsyncClient();
   }
 
   @Override
-  public HttpAsyncClient getWsAsync(URI targetUrl, URI wsAddressingToUri) {
+  public HttpAsyncClient getWs(URI targetUrl, URI wsAddressingToUri) {
     return getFactoryItem(targetUrl, wsAddressingToUri.toString()).getHttpAsyncClient();
   }
 

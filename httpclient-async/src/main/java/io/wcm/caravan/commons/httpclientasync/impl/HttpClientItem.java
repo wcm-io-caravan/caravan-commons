@@ -34,14 +34,8 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.ProxyAuthenticationStrategy;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager;
@@ -61,9 +55,7 @@ import org.slf4j.LoggerFactory;
 class HttpClientItem {
 
   private final HttpClientConfig config;
-  private final PoolingHttpClientConnectionManager connectionManager;
   private final PoolingNHttpClientConnectionManager asyncConnectionManager;
-  private final CloseableHttpClient httpClient;
   private final CloseableHttpAsyncClient httpAsyncClient;
 
   private static final Logger log = LoggerFactory.getLogger(HttpClientItem.class);
@@ -101,56 +93,11 @@ class HttpClientItem {
     }
 
     // build http clients
-    connectionManager = buildConnectionManager(config, sslContext);
-    httpClient = buildHttpClient(config, connectionManager, credentialsProvider);
     asyncConnectionManager = buildAsyncConnectionManager(config, sslContext);
     httpAsyncClient = buildHttpAsyncClient(config, asyncConnectionManager, credentialsProvider);
 
     // start async client
     httpAsyncClient.start();
-  }
-
-  private static PoolingHttpClientConnectionManager buildConnectionManager(HttpClientConfig config,
-      SSLContext sslContext) {
-    // scheme configuration
-    ConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext);
-    Registry<ConnectionSocketFactory> schemeRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
-        .register("http", PlainConnectionSocketFactory.getSocketFactory())
-        .register("https", sslSocketFactory)
-        .build();
-
-    // pooling settings
-    PoolingHttpClientConnectionManager conmgr = new PoolingHttpClientConnectionManager(schemeRegistry);
-    conmgr.setMaxTotal(config.getMaxTotalConnections());
-    conmgr.setDefaultMaxPerRoute(config.getMaxConnectionsPerHost());
-    return conmgr;
-  }
-
-  private static CloseableHttpClient buildHttpClient(HttpClientConfig config,
-      PoolingHttpClientConnectionManager connectionManager, CredentialsProvider credentialsProvider) {
-
-    // prepare HTTPClient builder
-    HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()
-        .setConnectionManager(connectionManager);
-
-    // timeout settings
-    httpClientBuilder.setDefaultRequestConfig(RequestConfig.custom()
-        .setConnectTimeout(config.getConnectTimeout())
-        .setSocketTimeout(config.getSocketTimeout()).build());
-
-    httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-
-    // optional proxy support
-    if (StringUtils.isNotEmpty(config.getProxyHost())) {
-      httpClientBuilder.setProxy(new HttpHost(config.getProxyHost(), config.getProxyPort()));
-
-      // optional proxy authentication
-      if (StringUtils.isNotEmpty(config.getProxyUser())) {
-        httpClientBuilder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
-      }
-    }
-
-    return httpClientBuilder.build();
   }
 
   private static PoolingNHttpClientConnectionManager buildAsyncConnectionManager(HttpClientConfig config,
@@ -204,13 +151,6 @@ class HttpClientItem {
   }
 
   /**
-   * @return Http client instance (synchronous)
-   */
-  public CloseableHttpClient getHttpClient() {
-    return httpClient;
-  }
-
-  /**
    * @return Http client instance (asynchronous)
    */
   public CloseableHttpAsyncClient getHttpAsyncClient() {
@@ -232,12 +172,6 @@ class HttpClientItem {
    * Close underlying http clients.
    */
   public void close() {
-    try {
-      httpClient.close();
-    }
-    catch (IOException ex) {
-      log.warn("Error closing HTTP client.", ex);
-    }
     try {
       httpAsyncClient.close();
     }

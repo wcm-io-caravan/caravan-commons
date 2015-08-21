@@ -21,31 +21,14 @@ package io.wcm.caravan.commons.httpclientasync;
 
 import java.net.URI;
 
-import org.apache.http.client.HttpClient;
 import org.apache.http.nio.client.HttpAsyncClient;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
- * Interface for getting a pre-configured {@link HttpClient} or {@link HttpAsyncClient} instance.
+ * Interface for getting a pre-configured {@link HttpAsyncClient} instance.
  */
 @ProviderType
-public interface HttpClientFactory {
-
-  /**
-   * Returns a configured synchronous Http Client for the given target URL. If a special configuration
-   * (e.g. timeout setting, proxy server, authentication) is configured it is applied in the factory.
-   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
-   * @return Http Client
-   */
-  HttpClient get(String targetUrl);
-
-  /**
-   * Returns a configured synchronous Http Client for the given target URL. If a special configuration
-   * (e.g. timeout setting, proxy server, authentication) is configured it is applied in the factory.
-   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
-   * @return Http Client
-   */
-  HttpClient get(URI targetUrl);
+public interface HttpAsyncClientFactory {
 
   /**
    * Returns a configured asynchronous Http Client for the given target URL. If a special configuration
@@ -53,7 +36,7 @@ public interface HttpClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Http Client
    */
-  HttpAsyncClient getAsync(String targetUrl);
+  HttpAsyncClient get(String targetUrl);
 
   /**
    * Returns a configured asynchronous Http Client for the given target URL. If a special configuration
@@ -61,29 +44,7 @@ public interface HttpClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Http Client
    */
-  HttpAsyncClient getAsync(URI targetUrl);
-
-  /**
-   * Returns a configured synchronous Http Client for the given target URL. The Http Client is dedicated
-   * for SOAP access and supports filtering specific configuration via the "WS Addressing To" URI.
-   * If a special configuration (e.g. timeout setting, proxy server, authentication) is configured it is
-   * applied in the factory.
-   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
-   * @param wsAddressingToUri WS Addressing "To" header
-   * @return Http Client
-   */
-  HttpClient getWs(String targetUrl, String wsAddressingToUri);
-
-  /**
-   * Returns a configured synchronous Http Client for the given target URL. The Http Client is dedicated
-   * for SOAP access and supports filtering specific configuration via the "WS Addressing To" URI.
-   * If a special configuration (e.g. timeout setting, proxy server, authentication) is configured it is
-   * applied in the factory.
-   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
-   * @param wsAddressingToUri WS Addressing "To" header
-   * @return Http Client
-   */
-  HttpClient getWs(URI targetUrl, URI wsAddressingToUri);
+  HttpAsyncClient get(URI targetUrl);
 
   /**
    * Returns a configured asynchronous Http Client for the given target URL. The Http Client is dedicated
@@ -94,7 +55,7 @@ public interface HttpClientFactory {
    * @param wsAddressingToUri WS Addressing "To" header
    * @return Http Client
    */
-  HttpAsyncClient getWsAsync(String targetUrl, String wsAddressingToUri);
+  HttpAsyncClient getWs(String targetUrl, String wsAddressingToUri);
 
   /**
    * Returns a configured asynchronous Http Client for the given target URL. The Http Client is dedicated
@@ -105,6 +66,6 @@ public interface HttpClientFactory {
    * @param wsAddressingToUri WS Addressing "To" header
    * @return Http Client
    */
-  HttpAsyncClient getWsAsync(URI targetUrl, URI wsAddressingToUri);
+  HttpAsyncClient getWs(URI targetUrl, URI wsAddressingToUri);
 
 }

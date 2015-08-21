@@ -23,13 +23,10 @@ import java.lang.reflect.Field;
 
 import org.apache.http.HttpHost;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.conn.routing.HttpRoutePlanner;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager;
 import org.apache.http.nio.client.HttpAsyncClient;
 import org.apache.http.nio.conn.SchemeIOSessionStrategy;
@@ -42,39 +39,6 @@ public final class HttpClientTestUtils {
 
   private HttpClientTestUtils() {
     // static methods only
-  }
-
-  public static RequestConfig getDefaultRequestConfig(HttpClient httpClient) {
-    return (RequestConfig)getField(httpClient, "defaultConfig");
-  }
-
-  public static int getConnectTimeout(HttpClient httpClient) {
-    return getDefaultRequestConfig(httpClient).getConnectTimeout();
-  }
-
-  public static PoolingHttpClientConnectionManager getConnectionManager(HttpClient httpClient) {
-    return (PoolingHttpClientConnectionManager)getField(httpClient, "connManager");
-  }
-
-  public static CredentialsProvider getCredentialsProvider(HttpClient httpClient) {
-    return (CredentialsProvider)getField(httpClient, "credentialsProvider");
-  }
-
-  public static HttpHost getProxyHost(HttpClient httpClient) {
-    HttpRoutePlanner routePlanner = (HttpRoutePlanner)getField(httpClient, "routePlanner");
-    if (routePlanner instanceof DefaultProxyRoutePlanner) {
-      return (HttpHost)getField(routePlanner, "proxy");
-    }
-    else {
-      return null;
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  public static Registry<ConnectionSocketFactory> getSchemeRegistry(HttpClient httpClient) {
-    PoolingHttpClientConnectionManager connManager = getConnectionManager(httpClient);
-    Object connectionOperator = getField(connManager, "connectionOperator");
-    return (Registry<ConnectionSocketFactory>)getField(connectionOperator, "socketFactoryRegistry");
   }
 
   public static RequestConfig getDefaultRequestConfig(HttpAsyncClient httpClient) {

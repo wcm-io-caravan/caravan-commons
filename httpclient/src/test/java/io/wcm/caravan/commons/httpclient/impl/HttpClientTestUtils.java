@@ -30,9 +30,6 @@ import org.apache.http.conn.routing.HttpRoutePlanner;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager;
-import org.apache.http.nio.client.HttpAsyncClient;
-import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 
 /**
  * Utility functions to get internal configuration settings from an HttpClient instance.
@@ -75,39 +72,6 @@ public final class HttpClientTestUtils {
     PoolingHttpClientConnectionManager connManager = getConnectionManager(httpClient);
     Object connectionOperator = getField(connManager, "connectionOperator");
     return (Registry<ConnectionSocketFactory>)getField(connectionOperator, "socketFactoryRegistry");
-  }
-
-  public static RequestConfig getDefaultRequestConfig(HttpAsyncClient httpClient) {
-    return (RequestConfig)getField(httpClient, "defaultConfig");
-  }
-
-  public static int getConnectTimeout(HttpAsyncClient httpClient) {
-    return getDefaultRequestConfig(httpClient).getConnectTimeout();
-  }
-
-  public static PoolingNHttpClientConnectionManager getConnectionManager(HttpAsyncClient httpClient) {
-    return (PoolingNHttpClientConnectionManager)getField(httpClient, "connmgr");
-  }
-
-  public static CredentialsProvider getCredentialsProvider(HttpAsyncClient httpClient) {
-    return (CredentialsProvider)getField(httpClient, "credentialsProvider");
-  }
-
-  public static HttpHost getProxyHost(HttpAsyncClient httpClient) {
-    Object exec = getField(httpClient, "exec");
-    HttpRoutePlanner routePlanner = (HttpRoutePlanner)getField(exec, "routePlanner");
-    if (routePlanner instanceof DefaultProxyRoutePlanner) {
-      return (HttpHost)getField(routePlanner, "proxy");
-    }
-    else {
-      return null;
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  public static Registry<SchemeIOSessionStrategy> getSchemeRegistry(HttpAsyncClient httpClient) {
-    PoolingNHttpClientConnectionManager connManager = getConnectionManager(httpClient);
-    return (Registry<SchemeIOSessionStrategy>)getField(connManager, "iosessionFactoryRegistry");
   }
 
   private static Object getField(Object object, String fieldName) {

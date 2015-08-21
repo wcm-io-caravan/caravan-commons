@@ -38,7 +38,6 @@ import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.http.client.HttpClient;
-import org.apache.http.nio.client.HttpAsyncClient;
 import org.apache.sling.commons.osgi.ServiceUtil;
 import org.osgi.framework.BundleContext;
 
@@ -92,16 +91,6 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
   }
 
   @Override
-  public HttpAsyncClient getAsync(String targetUrl) {
-    return getFactoryItem(toUri(targetUrl), null).getHttpAsyncClient();
-  }
-
-  @Override
-  public HttpAsyncClient getAsync(URI targetUrl) {
-    return getFactoryItem(targetUrl, null).getHttpAsyncClient();
-  }
-
-  @Override
   public HttpClient getWs(String targetUrl, String wsAddressingToUri) {
     return getFactoryItem(toUri(targetUrl), wsAddressingToUri).getHttpClient();
   }
@@ -109,16 +98,6 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
   @Override
   public HttpClient getWs(URI targetUrl, URI wsAddressingToUri) {
     return getFactoryItem(targetUrl, wsAddressingToUri.toString()).getHttpClient();
-  }
-
-  @Override
-  public HttpAsyncClient getWsAsync(String targetUrl, String wsAddressingToUri) {
-    return getFactoryItem(toUri(targetUrl), wsAddressingToUri).getHttpAsyncClient();
-  }
-
-  @Override
-  public HttpAsyncClient getWsAsync(URI targetUrl, URI wsAddressingToUri) {
-    return getFactoryItem(targetUrl, wsAddressingToUri.toString()).getHttpAsyncClient();
   }
 
   private HttpClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri) {
