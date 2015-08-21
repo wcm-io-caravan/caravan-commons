@@ -17,10 +17,9 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.httpclient;
+package io.wcm.caravan.commons.httpclient.impl.helpers;
 
-import io.wcm.caravan.commons.httpclient.impl.AbstractHttpClientconfig;
-import io.wcm.caravan.commons.httpclient.impl.CertificateLoader;
+import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 
 /**
  * Default http client configuration.

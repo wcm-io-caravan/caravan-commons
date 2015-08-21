@@ -20,6 +20,7 @@
 package io.wcm.caravan.commons.httpclient.impl;
 
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;

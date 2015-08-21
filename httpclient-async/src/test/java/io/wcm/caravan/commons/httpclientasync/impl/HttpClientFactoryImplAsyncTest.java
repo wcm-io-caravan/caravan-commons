@@ -65,7 +65,7 @@ public class HttpClientFactoryImplAsyncTest {
         .put(Constants.SERVICE_RANKING, 20)
         .build());
 
-    HttpAsyncClientFactory underTest = context.registerInjectActivateService(new HttpClientFactoryImpl());
+    HttpAsyncClientFactory underTest = context.registerInjectActivateService(new HttpAsyncClientFactoryImpl());
 
     HttpAsyncClient client1 = underTest.get("http://host1/xyz");
     assertEquals("client1.timeout", 55, HttpClientTestUtils.getConnectTimeout(client1));
@@ -97,7 +97,7 @@ public class HttpClientFactoryImplAsyncTest {
         .put(Constants.SERVICE_RANKING, 20)
         .build());
 
-    HttpAsyncClientFactory underTest = context.registerInjectActivateService(new HttpClientFactoryImpl());
+    HttpAsyncClientFactory underTest = context.registerInjectActivateService(new HttpAsyncClientFactoryImpl());
 
     HttpAsyncClient client1 = underTest.get("http://host1/xyz");
     assertEquals("client1.timeout", 55, HttpClientTestUtils.getConnectTimeout(client1));
@@ -135,7 +135,7 @@ public class HttpClientFactoryImplAsyncTest {
         .put(Constants.SERVICE_RANKING, 20)
         .build());
 
-    HttpAsyncClientFactory underTest = context.registerInjectActivateService(new HttpClientFactoryImpl());
+    HttpAsyncClientFactory underTest = context.registerInjectActivateService(new HttpAsyncClientFactoryImpl());
 
     HttpAsyncClient client1a = underTest.getWs("http://host1/xyz", "http://uri1");
     assertEquals("client1a.timeout", 55, HttpClientTestUtils.getConnectTimeout(client1a));

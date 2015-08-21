@@ -67,7 +67,7 @@ public class HttpClientItemAsyncTest {
         .put(MAX_TOTAL_CONNECTIONS_PROPERTY, 99)
         .build());
 
-    HttpClientItem item = new HttpClientItem(config);
+    HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
 
     PoolingNHttpClientConnectionManager connManager = HttpClientTestUtils.getConnectionManager(client);
@@ -84,7 +84,7 @@ public class HttpClientItemAsyncTest {
         .put(SOCKET_TIMEOUT_PROPERTY, 99)
         .build());
 
-    HttpClientItem item = new HttpClientItem(config);
+    HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
     RequestConfig requestConfig = HttpClientTestUtils.getDefaultRequestConfig(client);
     assertEquals(9, requestConfig.getConnectTimeout());
@@ -100,7 +100,7 @@ public class HttpClientItemAsyncTest {
         .put(HTTP_PASSWORD_PROPERTY, "httpPasswd")
         .build());
 
-    HttpClientItem item = new HttpClientItem(config);
+    HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
 
     Credentials credentials = HttpClientTestUtils.getCredentialsProvider(client).getCredentials(AuthScope.ANY);
@@ -114,7 +114,7 @@ public class HttpClientItemAsyncTest {
   public void testProxySettingsNoProxy() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl());
 
-    HttpClientItem item = new HttpClientItem(config);
+    HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
 
     HttpHost host = HttpClientTestUtils.getProxyHost(client);
@@ -133,7 +133,7 @@ public class HttpClientItemAsyncTest {
         .put(PROXY_PORT_PROPERTY, 123)
         .build());
 
-    HttpClientItem item = new HttpClientItem(config);
+    HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
 
     HttpHost host = HttpClientTestUtils.getProxyHost(client);
@@ -156,7 +156,7 @@ public class HttpClientItemAsyncTest {
         .put(PROXY_PASSWORD_PROPERTY, "proxypassword")
         .build());
 
-    HttpClientItem item = new HttpClientItem(config);
+    HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
 
     HttpHost host = HttpClientTestUtils.getProxyHost(client);
@@ -181,7 +181,7 @@ public class HttpClientItemAsyncTest {
         .put(TRUSTSTORE_PASSWORD_PROPERTY, CertificateLoaderTest.TRUSTSTORE_PASSWORD)
         .build());
 
-    HttpClientItem item = new HttpClientItem(config);
+    HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
 
     Registry<SchemeIOSessionStrategy> schemeRegistry = HttpClientTestUtils.getSchemeRegistry(client);

@@ -41,6 +41,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoaderTest;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;

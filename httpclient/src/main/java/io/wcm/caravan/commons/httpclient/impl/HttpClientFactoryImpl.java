@@ -19,9 +19,9 @@
  */
 package io.wcm.caravan.commons.httpclient.impl;
 
-import io.wcm.caravan.commons.httpclient.DefaultHttpClientConfig;
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 import io.wcm.caravan.commons.httpclient.HttpClientFactory;
+import io.wcm.caravan.commons.httpclient.impl.helpers.DefaultHttpClientConfig;
 
 import java.net.URI;
 import java.net.URISyntaxException;

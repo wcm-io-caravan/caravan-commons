@@ -20,6 +20,8 @@
 package io.wcm.caravan.commons.httpclient.impl;
 
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.AbstractHttpClientconfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
 
 import java.util.HashSet;
 import java.util.Map;

@@ -34,8 +34,8 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>Commons Async HTTP Client</name>
-  <description>Provides preconfigured Apache Async HTTP Client instances.</description>
+  <name>Commons HTTP Async Client</name>
+  <description>Provides preconfigured Apache HTTP Async Client instances.</description>
 
   <scm>
     <connection>scm:git:https://github.com/wcm-io-caravan/caravan-commons.git</connection>
@@ -100,6 +100,12 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <!-- Embed implementation helper classes from io.wcm.caravan.commons.httpclient -->
+            <Conditional-Package>io.wcm.caravan.commons.httpclient.impl.helpers</Conditional-Package>
+          </instructions>
+        </configuration>
       </plugin>
 
       <plugin>

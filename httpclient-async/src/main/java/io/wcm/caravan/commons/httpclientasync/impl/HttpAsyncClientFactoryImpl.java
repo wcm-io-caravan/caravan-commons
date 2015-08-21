@@ -19,8 +19,8 @@
  */
 package io.wcm.caravan.commons.httpclientasync.impl;
 
-import io.wcm.caravan.commons.httpclient.DefaultHttpClientConfig;
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.DefaultHttpClientConfig;
 import io.wcm.caravan.commons.httpclientasync.HttpAsyncClientFactory;
 
 import java.net.URI;
@@ -46,22 +46,22 @@ import org.osgi.framework.BundleContext;
  */
 @Component(immediate = true)
 @Service(HttpAsyncClientFactory.class)
-public class HttpClientFactoryImpl implements HttpAsyncClientFactory {
+public class HttpAsyncClientFactoryImpl implements HttpAsyncClientFactory {
 
   @Reference(name = "httpClientConfig", referenceInterface = HttpClientConfig.class,
       cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-  private final ConcurrentMap<Comparable<Object>, HttpClientItem> factoryItems = new ConcurrentSkipListMap<>();
+  private final ConcurrentMap<Comparable<Object>, HttpAsyncClientItem> factoryItems = new ConcurrentSkipListMap<>();
 
-  private HttpClientItem defaultFactoryItem;
+  private HttpAsyncClientItem defaultFactoryItem;
 
   @Activate
   private void activate(BundleContext context) {
-    defaultFactoryItem = new HttpClientItem(DefaultHttpClientConfig.INSTANCE);
+    defaultFactoryItem = new HttpAsyncClientItem(DefaultHttpClientConfig.INSTANCE);
   }
 
   @Deactivate
   private void deactivate() {
-    for (HttpClientItem item : factoryItems.values()) {
+    for (HttpAsyncClientItem item : factoryItems.values()) {
       item.close();
     }
     factoryItems.clear();
@@ -70,11 +70,11 @@ public class HttpClientFactoryImpl implements HttpAsyncClientFactory {
   }
 
   protected void bindHttpClientConfig(HttpClientConfig httpClientConfig, Map<String, Object> config) {
-    factoryItems.put(ServiceUtil.getComparableForServiceRanking(config), new HttpClientItem(httpClientConfig));
+    factoryItems.put(ServiceUtil.getComparableForServiceRanking(config), new HttpAsyncClientItem(httpClientConfig));
   }
 
   protected void unbindHttpClientConfig(HttpClientConfig httpClientConfig, Map<String, Object> config) {
-    HttpClientItem removed = factoryItems.remove(ServiceUtil.getComparableForServiceRanking(config));
+    HttpAsyncClientItem removed = factoryItems.remove(ServiceUtil.getComparableForServiceRanking(config));
     if (removed != null) {
       removed.close();
     }
@@ -100,8 +100,8 @@ public class HttpClientFactoryImpl implements HttpAsyncClientFactory {
     return getFactoryItem(targetUrl, wsAddressingToUri.toString()).getHttpAsyncClient();
   }
 
-  private HttpClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri) {
-    for (HttpClientItem item : factoryItems.values()) {
+  private HttpAsyncClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri) {
+    for (HttpAsyncClientItem item : factoryItems.values()) {
       if (item.matches(targetUrl.getHost(), wsAddressingToUri)) {
         return item;
       }
