@@ -17,13 +17,14 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.httpclient.impl;
+package io.wcm.caravan.commons.httpclient.impl.helpers;
 
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTORE_PASSWORD_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTORE_PATH_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_PASSWORD_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_PATH_PROPERTY;
 import static org.junit.Assert.assertNotNull;
+import io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -44,10 +45,10 @@ public class CertificateLoaderTest {
   @Rule
   public OsgiContext context = new OsgiContext();
 
-  static final String KEYSTORE_PATH = "/certificates/testcert.p12";
-  static final String KEYSTORE_PASSWORD = "test-certificate";
-  static final String TRUSTSTORE_PATH = "/certificates/trust.jks";
-  static final String TRUSTSTORE_PASSWORD = "test-keystore";
+  public static final String KEYSTORE_PATH = "/certificates/testcert.p12";
+  public static final String KEYSTORE_PASSWORD = "test-certificate";
+  public static final String TRUSTSTORE_PATH = "/certificates/trust.jks";
+  public static final String TRUSTSTORE_PASSWORD = "test-keystore";
 
   private static final StoreProperties STORE_PROPERTIES = new StoreProperties(TRUSTSTORE_PASSWORD,
       CertificateLoader.TRUST_MANAGER_TYPE_DEFAULT, CertificateLoader.TRUST_STORE_TYPE_DEFAULT);

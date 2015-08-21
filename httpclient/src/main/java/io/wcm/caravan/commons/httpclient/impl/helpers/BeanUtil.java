@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.httpclient.impl;
+package io.wcm.caravan.commons.httpclient.impl.helpers;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.SortedMap;

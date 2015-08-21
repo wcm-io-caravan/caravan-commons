@@ -42,6 +42,7 @@
     <module>parent</module>
     <module>cors</module>
     <module>httpclient</module>
+    <module>httpasyncclient</module>
     <module>jsonpath</module>
     <module>metrics</module>
     <module>performance</module>

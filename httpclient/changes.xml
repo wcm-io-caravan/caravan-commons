@@ -23,6 +23,15 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
 
+    <release version="1.0.0" date="not released">
+      <action type="update" dev="sseifert">
+        Split into two bundles: one for HttpClient and one for AsyncHttpClient.
+      </action>
+      <action type="update" dev="sseifert">
+        Lower HTTP Client dependencies to be compatbile with those included with AEM 6.1.
+      </action>
+    </release>
+
     <release version="0.2.0" date="2015-01-30">
       <action type="update" dev="sseifert">
         Initial release.

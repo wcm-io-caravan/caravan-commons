@@ -46,6 +46,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
 
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
 import org.junit.Rule;

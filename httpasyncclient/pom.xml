@@ -30,12 +30,12 @@
   </parent>
 
   <groupId>io.wcm.caravan</groupId>
-  <artifactId>io.wcm.caravan.commons.httpclient</artifactId>
+  <artifactId>io.wcm.caravan.commons.httpasyncclient</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
-  <name>Commons HTTP Client</name>
-  <description>Provides preconfigured Apache HTTP Client instances.</description>
+  <name>Commons HTTP Async Client</name>
+  <description>Provides preconfigured Apache HTTP Async Client instances.</description>
 
   <scm>
     <connection>scm:git:https://github.com/wcm-io-caravan/caravan-commons.git</connection>
@@ -45,34 +45,21 @@
   </scm>
 
   <properties>
-    <site.url.module.prefix>commons/httpclient</site.url.module.prefix>
+    <site.url.module.prefix>commons/httpclient-async</site.url.module.prefix>
   </properties>
 
   <dependencies>
-
-    <!-- OSGi -->
+  
     <dependency>
-      <groupId>org.apache.sling</groupId>
-      <artifactId>org.apache.sling.commons.osgi</artifactId>
-      <scope>compile</scope>
-    </dependency>
-
-    <!-- Commons -->
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-beanutils</groupId>
-      <artifactId>commons-beanutils</artifactId>
-      <scope>compile</scope>
+      <groupId>io.wcm.caravan</groupId>
+      <artifactId>io.wcm.caravan.commons.httpclient</artifactId>
+      <version>1.0.0-SNAPSHOT</version>
     </dependency>
 
     <!-- Apache HTTP Client -->
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
+      <artifactId>httpasyncclient</artifactId>
       <scope>compile</scope>
     </dependency>
 
@@ -90,6 +77,12 @@
       <plugin>
         <groupId>org.apache.felix</groupId>
         <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <!-- Embed implementation helper classes from io.wcm.caravan.commons.httpclient -->
+            <Conditional-Package>io.wcm.caravan.commons.httpclient.impl.helpers</Conditional-Package>
+          </instructions>
+        </configuration>
       </plugin>
 
       <plugin>

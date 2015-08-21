@@ -20,6 +20,8 @@
 package io.wcm.caravan.commons.httpclient.impl;
 
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.AbstractHttpClientconfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -49,65 +51,149 @@ configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
 @Property(name = "webconsole.configurationFactory.nameHint", value = "{hostPatterns} {wsAddressingToUris}")
 public class HttpClientConfigImpl extends AbstractHttpClientconfig {
 
+  /**
+   * Host pattern
+   */
   @Property(label = "Host pattern", description = "Regular expressions for matching the host name(s)",
       cardinality = Integer.MAX_VALUE)
-  static final String HOST_PATTERNS_PROPERTY = "hostPatterns";
+  public static final String HOST_PATTERNS_PROPERTY = "hostPatterns";
+
+  /**
+   * WS Uri
+   */
   @Property(label = "WS Uri", description = "List of WS Addressing To URIs for SOAP calls",
       cardinality = Integer.MAX_VALUE)
-  static final String WS_ADDRESSINGTO_URIS_PROPERTY = "wsAddressingToUris";
+  public static final String WS_ADDRESSINGTO_URIS_PROPERTY = "wsAddressingToUris";
 
+  /**
+   * Connect timeout
+   */
   @Property(label = "Connect timeout", description = "Max. timeout to wait for HTTP connection (ms)",
       intValue = HttpClientConfig.CONNECT_TIMEOUT_DEFAULT)
-  static final String CONNECT_TIMEOUT_PROPERTY = "connectTimeout";
+  public static final String CONNECT_TIMEOUT_PROPERTY = "connectTimeout";
+
+  /**
+   * Socket timeout
+   */
   @Property(label = "Socket timeout", description = "Max. timeout to wait for a HTTP response (ms)",
       intValue = HttpClientConfig.SOCKET_TIMEOUT_DEFAULT)
-  static final String SOCKET_TIMEOUT_PROPERTY = "socketTimeout";
+  public static final String SOCKET_TIMEOUT_PROPERTY = "socketTimeout";
+
+  /**
+   * Max per host
+   */
   @Property(label = "Max per host", description = "Max connections per host",
       intValue = HttpClientConfig.MAX_CONNECTIONS_PER_HOST_DEFAULT)
-  static final String MAX_CONNECTIONS_PER_HOST_PROPERTY = "maxConnectionsPerHost";
+  public static final String MAX_CONNECTIONS_PER_HOST_PROPERTY = "maxConnectionsPerHost";
+
+  /**
+   * Max total
+   */
   @Property(label = "Max total", description = "Max total connections",
       intValue = HttpClientConfig.MAX_TOTAL_CONNECTIONS_DEFAULT)
-  static final String MAX_TOTAL_CONNECTIONS_PROPERTY = "maxTotalConnections";
-  @Property(label = "Http user", description = "User name for basic HTTP authentication")
-  static final String HTTP_USER_PROPERTY = "httpUser";
-  @Property(label = "Http password", description = "Password for basic HTTP authentication")
-  static final String HTTP_PASSWORD_PROPERTY = "httpPassword";
-  @Property(label = "Proxy host", description = "Proxy hostname")
-  static final String PROXY_HOST_PROPERTY = "proxyHost";
-  @Property(label = "Proxy port", description = "Proxy port", intValue = 0)
-  static final String PROXY_PORT_PROPERTY = "proxyPort";
-  @Property(label = "Proxy user", description = "Proxy user name")
-  static final String PROXY_USER_PROPERTY = "proxyUser";
-  @Property(label = "Proxy password", description = "Proxy password")
-  static final String PROXY_PASSWORD_PROPERTY = "proxyPassword";
+  public static final String MAX_TOTAL_CONNECTIONS_PROPERTY = "maxTotalConnections";
 
+  /**
+   * Http user
+   */
+  @Property(label = "Http user", description = "User name for basic HTTP authentication")
+  public static final String HTTP_USER_PROPERTY = "httpUser";
+
+  /**
+   * Http password
+   */
+  @Property(label = "Http password", description = "Password for basic HTTP authentication")
+  public static final String HTTP_PASSWORD_PROPERTY = "httpPassword";
+
+  /**
+   * Proxy host
+   */
+  @Property(label = "Proxy host", description = "Proxy hostname")
+  public static final String PROXY_HOST_PROPERTY = "proxyHost";
+
+  /**
+   * Proxy port
+   */
+  @Property(label = "Proxy port", description = "Proxy port", intValue = 0)
+  public static final String PROXY_PORT_PROPERTY = "proxyPort";
+
+  /**
+   * Proxy user
+   */
+  @Property(label = "Proxy user", description = "Proxy user name")
+  public static final String PROXY_USER_PROPERTY = "proxyUser";
+
+  /**
+   * Proxy password
+   */
+  @Property(label = "Proxy password", description = "Proxy password")
+  public static final String PROXY_PASSWORD_PROPERTY = "proxyPassword";
+
+  /**
+   * SSL context type
+   */
   @Property(label = "SSL context type", description = "SSL context type",
       value = CertificateLoader.SSL_CONTEXT_TYPE_DEFAULT)
-  static final String SSL_CONTEXT_TYPE_PROPERTY = "sslContextType";
+  public static final String SSL_CONTEXT_TYPE_PROPERTY = "sslContextType";
+
+  /**
+   * KeyManager type
+   */
   @Property(label = "KeyManager type", description = "KeyManager type",
       value = CertificateLoader.KEY_MANAGER_TYPE_DEFAULT)
-  static final String KEYMANAGER_TYPE_PROPERTY = "keyManagerType";
+  public static final String KEYMANAGER_TYPE_PROPERTY = "keyManagerType";
+
+  /**
+   * KeyStore type
+   */
   @Property(label = "KeyStore type", description = "KeyStore type",
       value = CertificateLoader.KEY_STORE_TYPE_DEFAULT)
-  static final String KEYSTORE_TYPE_PROPERTY = "keyStoreType";
+  public static final String KEYSTORE_TYPE_PROPERTY = "keyStoreType";
+
+  /**
+   * KeyStore path
+   */
   @Property(label = "KeyStore path", description = "KeyStore path")
-  static final String KEYSTORE_PATH_PROPERTY = "keyStorePath";
+  public static final String KEYSTORE_PATH_PROPERTY = "keyStorePath";
+
+  /**
+   * KeyStore password
+   */
   @Property(label = "KeyStore password", description = "KeyStore password")
-  static final String KEYSTORE_PASSWORD_PROPERTY = "keyStorePassword";
+  public static final String KEYSTORE_PASSWORD_PROPERTY = "keyStorePassword";
+
+  /**
+   * TrustManager type
+   */
   @Property(label = "TrustManager type", description = "TrustManager type",
       value = CertificateLoader.TRUST_MANAGER_TYPE_DEFAULT)
-  static final String TRUSTMANAGER_TYPE_PROPERTY = "trustManagerType";
+  public static final String TRUSTMANAGER_TYPE_PROPERTY = "trustManagerType";
+
+  /**
+   * TrustStore type
+   */
   @Property(label = "TrustStore type", description = "TrustStore type",
       value = CertificateLoader.TRUST_STORE_TYPE_DEFAULT)
-  static final String TRUSTSTORE_TYPE_PROPERTY = "trustStoreType";
-  @Property(label = "TrustStore path", description = "TrustStore path")
-  static final String TRUSTSTORE_PATH_PROPERTY = "trustStorePath";
-  @Property(label = "TrustStore password", description = "TrustStore password")
-  static final String TRUSTSTORE_PASSWORD_PROPERTY = "trustStorePassword";
+  public static final String TRUSTSTORE_TYPE_PROPERTY = "trustStoreType";
 
+  /**
+   * TrustStore path
+   */
+  @Property(label = "TrustStore path", description = "TrustStore path")
+  public static final String TRUSTSTORE_PATH_PROPERTY = "trustStorePath";
+
+  /**
+   * TrustStore password
+   */
+  @Property(label = "TrustStore password", description = "TrustStore password")
+  public static final String TRUSTSTORE_PASSWORD_PROPERTY = "trustStorePassword";
+
+  /**
+   * Enabled
+   */
   @Property(label = "Enabled", description = "Enable this HTTP client configuration",
       boolValue = HttpClientConfigImpl.ENABLED_DEFAULT)
-  static final String ENABLED_PROPERTY = "enabled";
+  public static final String ENABLED_PROPERTY = "enabled";
   static final boolean ENABLED_DEFAULT = true;
   @Property(label = "Service Ranking", description = "Allows to define an order in which the HTTP client configurations are evaluated. Lower value = higher ranking.",
       propertyPrivate = false)
