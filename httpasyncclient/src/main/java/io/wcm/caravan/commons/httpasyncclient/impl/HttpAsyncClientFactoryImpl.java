@@ -17,10 +17,10 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.httpclient.impl;
+package io.wcm.caravan.commons.httpasyncclient.impl;
 
+import io.wcm.caravan.commons.httpasyncclient.HttpAsyncClientFactory;
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-import io.wcm.caravan.commons.httpclient.HttpClientFactory;
 import io.wcm.caravan.commons.httpclient.impl.helpers.DefaultHttpClientConfig;
 
 import java.net.URI;
@@ -37,31 +37,31 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.apache.felix.scr.annotations.Service;
-import org.apache.http.client.HttpClient;
+import org.apache.http.nio.client.HttpAsyncClient;
 import org.apache.sling.commons.osgi.ServiceUtil;
 import org.osgi.framework.BundleContext;
 
 /**
- * Default implementation of {@link HttpClientFactory}.
+ * Default implementation of {@link HttpAsyncClientFactory}.
  */
 @Component(immediate = true)
-@Service(HttpClientFactory.class)
-public class HttpClientFactoryImpl implements HttpClientFactory {
+@Service(HttpAsyncClientFactory.class)
+public class HttpAsyncClientFactoryImpl implements HttpAsyncClientFactory {
 
   @Reference(name = "httpClientConfig", referenceInterface = HttpClientConfig.class,
       cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, policy = ReferencePolicy.DYNAMIC)
-  private final ConcurrentMap<Comparable<Object>, HttpClientItem> factoryItems = new ConcurrentSkipListMap<>();
+  private final ConcurrentMap<Comparable<Object>, HttpAsyncClientItem> factoryItems = new ConcurrentSkipListMap<>();
 
-  private HttpClientItem defaultFactoryItem;
+  private HttpAsyncClientItem defaultFactoryItem;
 
   @Activate
   private void activate(BundleContext context) {
-    defaultFactoryItem = new HttpClientItem(DefaultHttpClientConfig.INSTANCE);
+    defaultFactoryItem = new HttpAsyncClientItem(DefaultHttpClientConfig.INSTANCE);
   }
 
   @Deactivate
   private void deactivate() {
-    for (HttpClientItem item : factoryItems.values()) {
+    for (HttpAsyncClientItem item : factoryItems.values()) {
       item.close();
     }
     factoryItems.clear();
@@ -70,38 +70,38 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
   }
 
   protected void bindHttpClientConfig(HttpClientConfig httpClientConfig, Map<String, Object> config) {
-    factoryItems.put(ServiceUtil.getComparableForServiceRanking(config), new HttpClientItem(httpClientConfig));
+    factoryItems.put(ServiceUtil.getComparableForServiceRanking(config), new HttpAsyncClientItem(httpClientConfig));
   }
 
   protected void unbindHttpClientConfig(HttpClientConfig httpClientConfig, Map<String, Object> config) {
-    HttpClientItem removed = factoryItems.remove(ServiceUtil.getComparableForServiceRanking(config));
+    HttpAsyncClientItem removed = factoryItems.remove(ServiceUtil.getComparableForServiceRanking(config));
     if (removed != null) {
       removed.close();
     }
   }
 
   @Override
-  public HttpClient get(String targetUrl) {
-    return getFactoryItem(toUri(targetUrl), null).getHttpClient();
+  public HttpAsyncClient get(String targetUrl) {
+    return getFactoryItem(toUri(targetUrl), null).getHttpAsyncClient();
   }
 
   @Override
-  public HttpClient get(URI targetUrl) {
-    return getFactoryItem(targetUrl, null).getHttpClient();
+  public HttpAsyncClient get(URI targetUrl) {
+    return getFactoryItem(targetUrl, null).getHttpAsyncClient();
   }
 
   @Override
-  public HttpClient getWs(String targetUrl, String wsAddressingToUri) {
-    return getFactoryItem(toUri(targetUrl), wsAddressingToUri).getHttpClient();
+  public HttpAsyncClient getWs(String targetUrl, String wsAddressingToUri) {
+    return getFactoryItem(toUri(targetUrl), wsAddressingToUri).getHttpAsyncClient();
   }
 
   @Override
-  public HttpClient getWs(URI targetUrl, URI wsAddressingToUri) {
-    return getFactoryItem(targetUrl, wsAddressingToUri.toString()).getHttpClient();
+  public HttpAsyncClient getWs(URI targetUrl, URI wsAddressingToUri) {
+    return getFactoryItem(targetUrl, wsAddressingToUri.toString()).getHttpAsyncClient();
   }
 
-  private HttpClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri) {
-    for (HttpClientItem item : factoryItems.values()) {
+  private HttpAsyncClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri) {
+    for (HttpAsyncClientItem item : factoryItems.values()) {
       if (item.matches(targetUrl.getHost(), wsAddressingToUri)) {
         return item;
       }

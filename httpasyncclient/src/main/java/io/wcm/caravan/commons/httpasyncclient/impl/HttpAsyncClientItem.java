@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.httpclient.impl;
+package io.wcm.caravan.commons.httpasyncclient.impl;
 
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
@@ -35,32 +35,36 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.ProxyAuthenticationStrategy;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
+import org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager;
+import org.apache.http.impl.nio.reactor.DefaultConnectingIOReactor;
+import org.apache.http.impl.nio.reactor.IOReactorConfig;
+import org.apache.http.nio.conn.NoopIOSessionStrategy;
+import org.apache.http.nio.conn.SchemeIOSessionStrategy;
+import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
+import org.apache.http.nio.reactor.ConnectingIOReactor;
+import org.apache.http.nio.reactor.IOReactorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Item for {@link HttpClientFactoryImpl} for each {@link HttpClientConfig} configured.
+ * Item for {@link HttpAsyncClientFactoryImpl} for each {@link HttpClientConfig} configured.
  */
-class HttpClientItem {
+class HttpAsyncClientItem {
 
   private final HttpClientConfig config;
-  private final PoolingHttpClientConnectionManager connectionManager;
-  private final CloseableHttpClient httpClient;
+  private final PoolingNHttpClientConnectionManager asyncConnectionManager;
+  private final CloseableHttpAsyncClient httpAsyncClient;
 
-  private static final Logger log = LoggerFactory.getLogger(HttpClientItem.class);
+  private static final Logger log = LoggerFactory.getLogger(HttpAsyncClientItem.class);
 
   /**
    * @param config Http client configuration
    */
-  public HttpClientItem(HttpClientConfig config) {
+  public HttpAsyncClientItem(HttpClientConfig config) {
     this.config = config;
 
     // optional SSL client certificate support
@@ -90,58 +94,68 @@ class HttpClientItem {
     }
 
     // build http clients
-    connectionManager = buildConnectionManager(config, sslContext);
-    httpClient = buildHttpClient(config, connectionManager, credentialsProvider);
+    asyncConnectionManager = buildAsyncConnectionManager(config, sslContext);
+    httpAsyncClient = buildHttpAsyncClient(config, asyncConnectionManager, credentialsProvider);
+
+    // start async client
+    httpAsyncClient.start();
   }
 
-  private static PoolingHttpClientConnectionManager buildConnectionManager(HttpClientConfig config,
+  private static PoolingNHttpClientConnectionManager buildAsyncConnectionManager(HttpClientConfig config,
       SSLContext sslContext) {
     // scheme configuration
-    ConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext);
-    Registry<ConnectionSocketFactory> schemeRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
-        .register("http", PlainConnectionSocketFactory.getSocketFactory())
+    SchemeIOSessionStrategy sslSocketFactory = new SSLIOSessionStrategy(sslContext);
+    Registry<SchemeIOSessionStrategy> asyncSchemeRegistry = RegistryBuilder.<SchemeIOSessionStrategy>create()
+        .register("http", NoopIOSessionStrategy.INSTANCE)
         .register("https", sslSocketFactory)
         .build();
 
     // pooling settings
-    PoolingHttpClientConnectionManager conmgr = new PoolingHttpClientConnectionManager(schemeRegistry);
+    ConnectingIOReactor ioreactor;
+    try {
+      ioreactor = new DefaultConnectingIOReactor(IOReactorConfig.DEFAULT);
+    }
+    catch (IOReactorException ex) {
+      throw new RuntimeException("Unable to initialize IO reactor.", ex);
+    }
+    PoolingNHttpClientConnectionManager conmgr = new PoolingNHttpClientConnectionManager(ioreactor, asyncSchemeRegistry);
     conmgr.setMaxTotal(config.getMaxTotalConnections());
     conmgr.setDefaultMaxPerRoute(config.getMaxConnectionsPerHost());
     return conmgr;
   }
 
-  private static CloseableHttpClient buildHttpClient(HttpClientConfig config,
-      PoolingHttpClientConnectionManager connectionManager, CredentialsProvider credentialsProvider) {
+  private static CloseableHttpAsyncClient buildHttpAsyncClient(HttpClientConfig config,
+      PoolingNHttpClientConnectionManager connectionManager, CredentialsProvider credentialsProvider) {
 
     // prepare HTTPClient builder
-    HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()
+    HttpAsyncClientBuilder httpClientAsyncBuilder = HttpAsyncClientBuilder.create()
         .setConnectionManager(connectionManager);
 
     // timeout settings
-    httpClientBuilder.setDefaultRequestConfig(RequestConfig.custom()
+    httpClientAsyncBuilder.setDefaultRequestConfig(RequestConfig.custom()
         .setConnectTimeout(config.getConnectTimeout())
         .setSocketTimeout(config.getSocketTimeout()).build());
 
-    httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+    httpClientAsyncBuilder.setDefaultCredentialsProvider(credentialsProvider);
 
     // optional proxy support
     if (StringUtils.isNotEmpty(config.getProxyHost())) {
-      httpClientBuilder.setProxy(new HttpHost(config.getProxyHost(), config.getProxyPort()));
+      httpClientAsyncBuilder.setProxy(new HttpHost(config.getProxyHost(), config.getProxyPort()));
 
       // optional proxy authentication
       if (StringUtils.isNotEmpty(config.getProxyUser())) {
-        httpClientBuilder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
+        httpClientAsyncBuilder.setProxyAuthenticationStrategy(new ProxyAuthenticationStrategy());
       }
     }
 
-    return httpClientBuilder.build();
+    return httpClientAsyncBuilder.build();
   }
 
   /**
-   * @return Http client instance (synchronous)
+   * @return Http client instance (asynchronous)
    */
-  public CloseableHttpClient getHttpClient() {
-    return httpClient;
+  public CloseableHttpAsyncClient getHttpAsyncClient() {
+    return httpAsyncClient;
   }
 
   /**
@@ -160,10 +174,10 @@ class HttpClientItem {
    */
   public void close() {
     try {
-      httpClient.close();
+      httpAsyncClient.close();
     }
     catch (IOException ex) {
-      log.warn("Error closing HTTP client.", ex);
+      log.warn("Error closing async HTTP client.", ex);
     }
   }
 

@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.httpclient.impl;
+package io.wcm.caravan.commons.httpclient.impl.helpers;
 
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 
@@ -27,18 +27,21 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.GeneralSecurityException;
+import java.security.KeyManagementException;
 import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.conn.ssl.SSLInitializationException;
 
 /**
  * Helper class for loading certificates for SSL communication.
  */
-final class CertificateLoader {
+public final class CertificateLoader {
 
   /**
    * Default SSL context type
@@ -247,6 +250,24 @@ final class CertificateLoader {
         && StringUtils.isNotEmpty(config.getTrustManagerType())
         && StringUtils.isNotEmpty(config.getTrustStoreType())
         && StringUtils.isNotEmpty(config.getTrustStorePath());
+  }
+
+  /**
+   * Creates default SSL context.
+   * @return SSL context
+   */
+  public static SSLContext createDefaultSSlContext() throws SSLInitializationException {
+    try {
+      final SSLContext sslcontext = SSLContext.getInstance(SSL_CONTEXT_TYPE_DEFAULT);
+      sslcontext.init(null, null, null);
+      return sslcontext;
+    }
+    catch (NoSuchAlgorithmException ex) {
+      throw new SSLInitializationException(ex.getMessage(), ex);
+    }
+    catch (KeyManagementException ex) {
+      throw new SSLInitializationException(ex.getMessage(), ex);
+    }
   }
 
 }

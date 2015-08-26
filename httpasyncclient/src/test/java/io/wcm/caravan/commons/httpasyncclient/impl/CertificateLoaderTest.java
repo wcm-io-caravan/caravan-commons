@@ -17,8 +17,17 @@
  * limitations under the License.
  * #L%
  */
-/**
- * HTTP Client Factory.
- */
-@org.osgi.annotation.versioning.Version("1.0.0")
-package io.wcm.caravan.commons.httpclient;
+package io.wcm.caravan.commons.httpasyncclient.impl;
+
+final class CertificateLoaderTest {
+
+  private CertificateLoaderTest() {
+    // constants only
+  }
+
+  static final String KEYSTORE_PATH = "/certificates/testcert.p12";
+  static final String KEYSTORE_PASSWORD = "test-certificate";
+  static final String TRUSTSTORE_PATH = "/certificates/trust.jks";
+  static final String TRUSTSTORE_PASSWORD = "test-keystore";
+
+}

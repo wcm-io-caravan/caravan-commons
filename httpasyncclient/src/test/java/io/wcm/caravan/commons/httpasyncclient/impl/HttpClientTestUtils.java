@@ -17,19 +17,19 @@
  * limitations under the License.
  * #L%
  */
-package io.wcm.caravan.commons.httpclient.impl;
+package io.wcm.caravan.commons.httpasyncclient.impl;
 
 import java.lang.reflect.Field;
 
 import org.apache.http.HttpHost;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.conn.routing.HttpRoutePlanner;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager;
+import org.apache.http.nio.client.HttpAsyncClient;
+import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 
 /**
  * Utility functions to get internal configuration settings from an HttpClient instance.
@@ -41,24 +41,25 @@ public final class HttpClientTestUtils {
     // static methods only
   }
 
-  public static RequestConfig getDefaultRequestConfig(HttpClient httpClient) {
+  public static RequestConfig getDefaultRequestConfig(HttpAsyncClient httpClient) {
     return (RequestConfig)getField(httpClient, "defaultConfig");
   }
 
-  public static int getConnectTimeout(HttpClient httpClient) {
+  public static int getConnectTimeout(HttpAsyncClient httpClient) {
     return getDefaultRequestConfig(httpClient).getConnectTimeout();
   }
 
-  public static PoolingHttpClientConnectionManager getConnectionManager(HttpClient httpClient) {
-    return (PoolingHttpClientConnectionManager)getField(httpClient, "connManager");
+  public static PoolingNHttpClientConnectionManager getConnectionManager(HttpAsyncClient httpClient) {
+    return (PoolingNHttpClientConnectionManager)getField(httpClient, "connmgr");
   }
 
-  public static CredentialsProvider getCredentialsProvider(HttpClient httpClient) {
+  public static CredentialsProvider getCredentialsProvider(HttpAsyncClient httpClient) {
     return (CredentialsProvider)getField(httpClient, "credentialsProvider");
   }
 
-  public static HttpHost getProxyHost(HttpClient httpClient) {
-    HttpRoutePlanner routePlanner = (HttpRoutePlanner)getField(httpClient, "routePlanner");
+  public static HttpHost getProxyHost(HttpAsyncClient httpClient) {
+    Object exec = getField(httpClient, "exec");
+    HttpRoutePlanner routePlanner = (HttpRoutePlanner)getField(exec, "routePlanner");
     if (routePlanner instanceof DefaultProxyRoutePlanner) {
       return (HttpHost)getField(routePlanner, "proxy");
     }
@@ -68,10 +69,9 @@ public final class HttpClientTestUtils {
   }
 
   @SuppressWarnings("unchecked")
-  public static Registry<ConnectionSocketFactory> getSchemeRegistry(HttpClient httpClient) {
-    PoolingHttpClientConnectionManager connManager = getConnectionManager(httpClient);
-    Object connectionOperator = getField(connManager, "connectionOperator");
-    return (Registry<ConnectionSocketFactory>)getField(connectionOperator, "socketFactoryRegistry");
+  public static Registry<SchemeIOSessionStrategy> getSchemeRegistry(HttpAsyncClient httpClient) {
+    PoolingNHttpClientConnectionManager connManager = getConnectionManager(httpClient);
+    return (Registry<SchemeIOSessionStrategy>)getField(connManager, "iosessionFactoryRegistry");
   }
 
   private static Object getField(Object object, String fieldName) {

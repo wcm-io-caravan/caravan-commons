@@ -9,7 +9,7 @@ Implements a tiny subset of the Java 8 stream API to use the basic features in J
 <dependency>
   <groupId>io.wcm.caravan</groupId>
   <artifactId>io.wcm.caravan.commons.stream</artifactId>
-  <version>0.5.0</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
