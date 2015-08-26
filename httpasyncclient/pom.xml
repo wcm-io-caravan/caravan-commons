@@ -45,7 +45,7 @@
   </scm>
 
   <properties>
-    <site.url.module.prefix>commons/httpclient-async</site.url.module.prefix>
+    <site.url.module.prefix>commons/httpasyncclient</site.url.module.prefix>
   </properties>
 
   <dependencies>

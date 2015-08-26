@@ -9,7 +9,7 @@ Provides preconfigured [Apache HTTP Client](http://hc.apache.org/) instances.
 <dependency>
   <groupId>io.wcm.caravan</groupId>
   <artifactId>io.wcm.caravan.commons.httpclient</artifactId>
-  <version>0.2.0</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
@@ -29,9 +29,8 @@ Provides preconfigured [Apache HTTP Client](http://hc.apache.org/) instances.
 * Supports configuration of timeouts, max. connections, proxy and proxy authentication
 * Supports mutual authentication with SSL client certificates
 
-This OSGi Bundle depends on further bundles:
+This OSGi Bundle depends on further bundles (or higher versions):
 
 * http://repo1.maven.org/maven2/commons-beanutils/commons-beanutils/1.9.2/
-* http://repo1.maven.org/maven2/org/apache/httpcomponents/httpcore-osgi/4.4.1/
-* http://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient-osgi/4.4.1/
-* http://repo1.maven.org/maven2/org/apache/httpcomponents/httpasyncclient-osgi/4.1/
+* http://repo1.maven.org/maven2/org/apache/httpcomponents/httpcore-osgi/4.3.2/
+* http://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient-osgi/4.3.4/
