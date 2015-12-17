@@ -22,7 +22,9 @@ package io.wcm.caravan.commons.stream.function;
 /**
  * Represents a supplier of results.
  * @param <T> the type of results supplied by this supplier.
+ * @deprecated Please use Java 8 API.
  */
+@Deprecated
 @FunctionalInterface
 public interface Supplier<T> {
 

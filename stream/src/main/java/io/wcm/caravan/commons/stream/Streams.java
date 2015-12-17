@@ -20,15 +20,18 @@
 package io.wcm.caravan.commons.stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import io.wcm.caravan.commons.stream.impl.StreamImpl;
 
 import java.util.Arrays;
 
 import org.osgi.annotation.versioning.ProviderType;
 
+import io.wcm.caravan.commons.stream.impl.StreamImpl;
+
 /**
  * Helper methods for creating stream.
+ * @deprecated Please use Java 8 API.
  */
+@Deprecated
 @ProviderType
 public final class Streams {
 

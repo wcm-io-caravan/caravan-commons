@@ -21,10 +21,6 @@ package io.wcm.caravan.commons.stream.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
-import io.wcm.caravan.commons.stream.Collectors;
-import io.wcm.caravan.commons.stream.Stream;
-import io.wcm.caravan.commons.stream.Streams;
-import io.wcm.caravan.commons.stream.function.Consumer;
 
 import java.util.List;
 
@@ -36,6 +32,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
+import io.wcm.caravan.commons.stream.Collectors;
+import io.wcm.caravan.commons.stream.Stream;
+import io.wcm.caravan.commons.stream.Streams;
+import io.wcm.caravan.commons.stream.function.Consumer;
+
+@SuppressWarnings("deprecation")
 @RunWith(MockitoJUnitRunner.class)
 public class StreamImplTest {
 

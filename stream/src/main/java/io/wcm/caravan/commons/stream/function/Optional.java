@@ -25,7 +25,9 @@ import java.util.Objects;
 /**
  * A container object which may or may not contain a non-null value.
  * If a value is present, {@code isPresent()} will return {@code true} and {@code get()} will return the value.
+ * @deprecated Please use Java 8 API.
  */
+@Deprecated
 public final class Optional<T> {
 
   private final T value;

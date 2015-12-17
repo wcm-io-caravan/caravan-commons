@@ -27,6 +27,7 @@ import java.util.NoSuchElementException;
 
 import org.junit.Test;
 
+@SuppressWarnings("deprecation")
 public class OptionalTest {
 
   @Test

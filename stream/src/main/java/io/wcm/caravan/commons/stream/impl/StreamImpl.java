@@ -20,20 +20,23 @@
 package io.wcm.caravan.commons.stream.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import io.wcm.caravan.commons.stream.Collector;
 import io.wcm.caravan.commons.stream.Stream;
 import io.wcm.caravan.commons.stream.function.Consumer;
 import io.wcm.caravan.commons.stream.function.Function;
 import io.wcm.caravan.commons.stream.function.Optional;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 /**
  * Implementation of {@link Stream}.
  * @param <T> Item type
+ * @deprecated Please use Java 8 API.
  */
+@Deprecated
 public final class StreamImpl<T> implements Stream<T> {
 
   private final Iterable<T> iterable;
