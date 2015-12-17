@@ -19,9 +19,6 @@
  */
 package io.wcm.caravan.commons.httpclient.impl;
 
-import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
-
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
@@ -46,6 +43,9 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.wcm.caravan.commons.httpclient.HttpClientConfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
+
 /**
  * Item for {@link HttpClientFactoryImpl} for each {@link HttpClientConfig} configured.
  */
@@ -60,7 +60,7 @@ class HttpClientItem {
   /**
    * @param config Http client configuration
    */
-  public HttpClientItem(HttpClientConfig config) {
+  HttpClientItem(HttpClientConfig config) {
     this.config = config;
 
     // optional SSL client certificate support
