@@ -19,12 +19,11 @@
  */
 package io.wcm.caravan.commons.cors.impl;
 
-import io.wcm.caravan.commons.stream.Collectors;
-import io.wcm.caravan.commons.stream.Streams;
-
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -93,12 +92,12 @@ public class CorsServletFilter implements Filter {
     allowAllHosts = PropertiesUtil.toBoolean(config.get(PROPERTY_ALLOW_ALL_HOSTS), DEFAULT_ALLOW_ALL_HOSTS);
 
     String[] whitelist = PropertiesUtil.toStringArray(config.get(PROPERTY_HOST_WHITELIST), new String[0]);
-    hostWhitelist = Streams.of(whitelist)
+    hostWhitelist = Arrays.stream(whitelist)
         .filter(StringUtils::isNotBlank)
         .collect(Collectors.toSet());
 
     String[] blacklist = PropertiesUtil.toStringArray(config.get(PROPERTY_HOST_BLACKLIST), new String[0]);
-    hostBlacklist = Streams.of(blacklist)
+    hostBlacklist = Arrays.stream(blacklist)
         .filter(StringUtils::isNotBlank)
         .collect(Collectors.toSet());
   }
