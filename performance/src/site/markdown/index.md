@@ -2,16 +2,8 @@
 
 Performance Metrics Framework.
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm.caravan/io.wcm.caravan.commons.performance/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm.caravan/io.wcm.caravan.commons.performance)
 
-### Maven Dependency
-
-```xml
-<dependency>
-  <groupId>io.wcm.caravan</groupId>
-  <artifactId>io.wcm.caravan.commons.performance</artifactId>
-  <version>0.5.0</version>
-</dependency>
-```
 
 ### Documentation
 

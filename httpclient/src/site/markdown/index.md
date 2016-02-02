@@ -2,16 +2,8 @@
 
 Provides preconfigured [Apache HTTP Client](http://hc.apache.org/) instances.
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm.caravan/io.wcm.caravan.commons.httpclient/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm.caravan/io.wcm.caravan.commons.httpclient)
 
-### Maven Dependency
-
-```xml
-<dependency>
-  <groupId>io.wcm.caravan</groupId>
-  <artifactId>io.wcm.caravan.commons.httpclient</artifactId>
-  <version>1.0.0</version>
-</dependency>
-```
 
 ### Documentation
 
