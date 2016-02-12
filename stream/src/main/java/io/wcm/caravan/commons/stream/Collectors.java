@@ -29,7 +29,9 @@ import com.google.common.collect.Sets;
 
 /**
  * Implementations of {@link Collector} interface.
+ * @deprecated Please use Java 8 API.
  */
+@Deprecated
 @ProviderType
 public final class Collectors {
 

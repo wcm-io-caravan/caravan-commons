@@ -19,19 +19,21 @@
  */
 package io.wcm.caravan.commons.stream;
 
-import io.wcm.caravan.commons.stream.function.Consumer;
-import io.wcm.caravan.commons.stream.function.Function;
-import io.wcm.caravan.commons.stream.function.Optional;
-
 import java.util.Iterator;
 
 import org.osgi.annotation.versioning.ProviderType;
+
+import io.wcm.caravan.commons.stream.function.Consumer;
+import io.wcm.caravan.commons.stream.function.Function;
+import io.wcm.caravan.commons.stream.function.Optional;
 
 /**
  * This is a (very) simplified version of Java 8 Stream API to use until the project can migrate to Java 8.
  * Use the static methods from {@link Streams} to create a stream instance.
  * @param <T> Item type
+ * @deprecated Please use Java 8 API.
  */
+@Deprecated
 @ProviderType
 public interface Stream<T> {
 

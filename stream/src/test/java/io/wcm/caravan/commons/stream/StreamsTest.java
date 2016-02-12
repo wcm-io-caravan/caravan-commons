@@ -27,6 +27,7 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
 
+@SuppressWarnings("deprecation")
 public class StreamsTest {
 
   private static final List<String> SAMPLE_LIST = ImmutableList.of("item1", "item2");

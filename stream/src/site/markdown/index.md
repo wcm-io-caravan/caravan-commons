@@ -2,16 +2,8 @@
 
 Implements a tiny subset of the Java 8 stream API to use the basic features in Java 7 as well.
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm.caravan/io.wcm.caravan.commons.stream/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm.caravan/io.wcm.caravan.commons.stream)
 
-### Maven Dependency
-
-```xml
-<dependency>
-  <groupId>io.wcm.caravan</groupId>
-  <artifactId>io.wcm.caravan.commons.stream</artifactId>
-  <version>1.0.0</version>
-</dependency>
-```
 
 ### Documentation
 
@@ -25,4 +17,6 @@ Implements a tiny subset of the Java 8 stream API to use the basic features in J
 
 ### Overview
 
-This is only an intermediate solution and will be removed when Java 7 support is dropped for wcm.io Caravan.
+This bundle is deprecated.
+
+It was an intermediate solution for supporting a Java 7 in wcm.io Caravan.

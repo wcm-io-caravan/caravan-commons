@@ -19,9 +19,6 @@
  */
 package io.wcm.caravan.commons.httpasyncclient.impl;
 
-import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
-
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
@@ -50,6 +47,9 @@ import org.apache.http.nio.reactor.IOReactorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.wcm.caravan.commons.httpclient.HttpClientConfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
+
 /**
  * Item for {@link HttpAsyncClientFactoryImpl} for each {@link HttpClientConfig} configured.
  */
@@ -64,7 +64,7 @@ class HttpAsyncClientItem {
   /**
    * @param config Http client configuration
    */
-  public HttpAsyncClientItem(HttpClientConfig config) {
+  HttpAsyncClientItem(HttpClientConfig config) {
     this.config = config;
 
     // optional SSL client certificate support

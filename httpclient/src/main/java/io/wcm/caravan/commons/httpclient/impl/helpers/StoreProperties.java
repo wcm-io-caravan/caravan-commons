@@ -28,7 +28,7 @@ class StoreProperties {
   private final String managerType;
   private final String type;
 
-  public StoreProperties(String password, String managerType, String type) {
+  StoreProperties(String password, String managerType, String type) {
     this.password = password;
     this.managerType = managerType;
     this.type = type;

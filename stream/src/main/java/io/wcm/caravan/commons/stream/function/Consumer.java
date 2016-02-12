@@ -24,7 +24,9 @@ import org.osgi.annotation.versioning.ConsumerType;
 /**
  * Represents an operation that accepts a single input argument and returns no result.
  * @param <T> the type of the input to the operation
+ * @deprecated Please use Java 8 API.
  */
+@Deprecated
 @ConsumerType
 public interface Consumer<T> {
 
