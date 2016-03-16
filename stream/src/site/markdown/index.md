@@ -17,6 +17,6 @@ Implements a tiny subset of the Java 8 stream API to use the basic features in J
 
 ### Overview
 
-This bundle is deprecated.
+_This bundle is deprecated._
 
-It was an intermediate solution for supporting a Java 7 in wcm.io Caravan.
+It was an intermediate solution for supporting Java 7 in wcm.io Caravan.
