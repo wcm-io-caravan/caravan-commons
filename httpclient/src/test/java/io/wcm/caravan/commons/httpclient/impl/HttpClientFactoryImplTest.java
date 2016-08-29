@@ -75,7 +75,6 @@ public class HttpClientFactoryImplTest {
     HttpClient client3 = underTest.get("http://host3/xyz");
     assertEquals("client3.timeout", HttpClientConfig.CONNECT_TIMEOUT_DEFAULT, HttpClientTestUtils.getConnectTimeout(client3));
 
-    MockOsgi.deactivate(underTest);
   }
 
   @Test
@@ -106,8 +105,6 @@ public class HttpClientFactoryImplTest {
 
     HttpClient client3 = underTest.get("http://host3/xyz");
     assertEquals("client3.timeout", 66, HttpClientTestUtils.getConnectTimeout(client3));
-
-    MockOsgi.deactivate(underTest);
   }
 
   @Test
@@ -153,8 +150,6 @@ public class HttpClientFactoryImplTest {
 
       HttpClient client2c = underTest.getWs("http://host2/xyz", null);
       assertEquals("client2c.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2c));
-
-      MockOsgi.deactivate(underTest);
     }
 
 }
