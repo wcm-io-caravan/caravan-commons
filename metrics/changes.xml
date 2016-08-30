@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert">
         Switch to Java 8.
       </action>
+      <action type="add" dev="gweng">
+        integrate metrics with graphite
+      </action>
     </release>
 
     <release version="0.5.0" date="2015-06-05">
