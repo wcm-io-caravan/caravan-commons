@@ -31,7 +31,7 @@
 
   <groupId>io.wcm.caravan</groupId>
   <artifactId>io.wcm.caravan.commons.metrics</artifactId>
-  <version>0.6.0-SNAPSHOT</version>
+  <version>0.6.0</version>
   <packaging>bundle</packaging>
 
   <name>Commons Metrics</name>
@@ -94,6 +94,10 @@
       <groupId>io.dropwizard.metrics</groupId>
       <artifactId>metrics-servlets</artifactId>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.dropwizard.metrics</groupId>
+      <artifactId>metrics-graphite</artifactId>
     </dependency>
 
   </dependencies>
