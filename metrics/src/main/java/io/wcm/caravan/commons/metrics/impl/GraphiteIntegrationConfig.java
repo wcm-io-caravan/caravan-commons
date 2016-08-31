@@ -41,34 +41,42 @@ public class GraphiteIntegrationConfig {
 
   @Property(label = "Graphite host name",
       description = "Send metrics to the graphite server, if the graphite server host and port is set. Otherwise do nothing.")
-  public static final String HOST_NAME = "hostName";
+  private static final String HOST_NAME = "hostName";
 
   @Property(label = "Carbon tcp port to receive the metrics",
       description = "Send metrics to the graphite server, if the graphite server host and port is set. Otherwise do nothing.",
-      intValue = 0)
-  public static final String PORT = "port";
+      intValue = GraphiteIntegrationConfig.DEFAULT_PORT)
+  private static final String PORT = "port";
+  private static final int DEFAULT_PORT = 0;
 
   @Property(label = "Time interval in seconds to push metrics to graphite server",
       description = "How often(in seconds) should the metrics be pushed to the graphite server.",
-      intValue = 5)
-  public static final String PUSH_METRICS_INTERVAL = "pushInterval";
+      intValue = GraphiteIntegrationConfig.DEFAULT_PUSH_INTERVAL)
+  private static final String PUSH_METRICS_INTERVAL = "pushInterval";
+  private static final int DEFAULT_PUSH_INTERVAL = 5;
 
   @Property(label = "Enable the graphte integration.",
       description = "Enable the graphte integration. Metrics will be send to the graphite server",
-      boolValue = false)
-  public static final String ENABLED = "enabled";
+      boolValue = GraphiteIntegrationConfig.DEFAULT_ENABLED)
+  private static final String ENABLED = "enabled";
+  private static final boolean DEFAULT_ENABLED = false;
+
+  @Property(label = "Prefix", description = "Prefix of metrics to differentiate server or environment.")
+  private static final String METRIC_PREFIX = "prefix";
 
   private String graphiteHostName;
   private int graphiteSocketPort;
   private int pushInterval;
   private boolean enabled;
+  private String prefix;
 
   @Activate
   void activate(Map<String, Object> config) {
+    enabled = PropertiesUtil.toBoolean(config.get(ENABLED), DEFAULT_ENABLED);
     graphiteHostName = PropertiesUtil.toString(config.get(HOST_NAME), null);
-    graphiteSocketPort = PropertiesUtil.toInteger(config.get(PORT), 0);
-    pushInterval = PropertiesUtil.toInteger(config.get(PUSH_METRICS_INTERVAL), 5);
-    enabled = PropertiesUtil.toBoolean(config.get(ENABLED), false);
+    prefix = PropertiesUtil.toString(config.get(METRIC_PREFIX), null);
+    graphiteSocketPort = PropertiesUtil.toInteger(config.get(PORT), DEFAULT_PORT);
+    pushInterval = PropertiesUtil.toInteger(config.get(PUSH_METRICS_INTERVAL), DEFAULT_PUSH_INTERVAL);
   }
 
   public boolean isEnabled() {
@@ -85,5 +93,9 @@ public class GraphiteIntegrationConfig {
 
   public int getPushInterval() {
     return pushInterval;
+  }
+
+  public String getPrefix() {
+    return prefix;
   }
 }
