@@ -46,7 +46,7 @@ public class GraphiteReporterMounter {
   @Reference
   private GraphiteIntegrationConfig graphiteIntegrationConfig;
 
-  GraphiteReporter reporter;
+  private GraphiteReporter reporter;
 
   @Activate
   protected void activate() {
@@ -71,6 +71,12 @@ public class GraphiteReporterMounter {
     }
   }
 
+  /**
+   * @return true when graphite reporter service was activated.
+   */
+  boolean isActive() {
+    return reporter != null;
+  }
 
   @Deactivate
   protected void deactivate() {

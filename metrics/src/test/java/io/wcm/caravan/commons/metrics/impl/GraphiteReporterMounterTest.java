@@ -19,9 +19,8 @@
  */
 package io.wcm.caravan.commons.metrics.impl;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
@@ -62,21 +61,21 @@ public class GraphiteReporterMounterTest {
   @Test
   public void graphiteReporterShouldBeRegistered() {
     mounter = osgiContext.registerInjectActivateService(new GraphiteReporterMounter());
-    assertThat(mounter.reporter, notNullValue());
+    assertTrue(mounter.isActive());
   }
 
   @Test
   public void graphiteReporterShouldNotBeRegistered() {
     when(graphiteIntegrationConfig.isEnabled()).thenReturn(false);
     mounter = osgiContext.registerInjectActivateService(new GraphiteReporterMounter());
-    assertThat(mounter.reporter, nullValue());
+    assertFalse(mounter.isActive());
   }
 
   @Test
   public void graphiteReporterShouldBeStoppedAfterDeactivate() {
     mounter = osgiContext.registerInjectActivateService(new GraphiteReporterMounter());
     mounter.deactivate();
-    assertThat(mounter.reporter, nullValue());
+    assertFalse(mounter.isActive());
   }
 
 }
