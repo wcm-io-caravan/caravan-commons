@@ -40,19 +40,15 @@ import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTS
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_PATH_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_TYPE_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.WS_ADDRESSINGTO_URIS_PROPERTY;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
+import static org.junit.Assert.*;
 
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 
 import com.google.common.collect.ImmutableMap;
+
+import io.wcm.caravan.commons.httpclient.HttpClientConfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
 
 public class HttpClientConfigImplTest {
 

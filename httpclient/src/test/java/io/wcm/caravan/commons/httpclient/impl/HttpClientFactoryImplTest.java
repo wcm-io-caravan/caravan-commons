@@ -21,21 +21,24 @@ package io.wcm.caravan.commons.httpclient.impl;
 
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECT_TIMEOUT_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HOST_PATTERNS_PROPERTY;
+import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.RESOURCE_PATH_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.WS_ADDRESSINGTO_URIS_PROPERTY;
-import static org.junit.Assert.assertEquals;
-import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-import io.wcm.caravan.commons.httpclient.HttpClientFactory;
+import static org.junit.Assert.*;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.apache.http.client.HttpClient;
-import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.*;
+import org.junit.runner.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.osgi.framework.Constants;
 
 import com.google.common.collect.ImmutableMap;
+
+import io.wcm.caravan.commons.httpclient.HttpClientConfig;
+import io.wcm.caravan.commons.httpclient.HttpClientFactory;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HttpClientFactoryImplTest {
@@ -151,5 +154,50 @@ public class HttpClientFactoryImplTest {
       HttpClient client2c = underTest.getWs("http://host2/xyz", null);
       assertEquals("client2c.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2c));
     }
+
+  @Test
+  public void testGetConfigForConfiguredResourcePath() throws URISyntaxException {
+
+    context.registerInjectActivateService(new HttpClientConfigImpl(),
+        ImmutableMap.<String, Object>builder()
+            .put(CONNECT_TIMEOUT_PROPERTY, 55)
+            .put(HOST_PATTERNS_PROPERTY, new String[] {
+                "host1"
+            })
+            .put(RESOURCE_PATH_PROPERTY, new String[] {
+                "/path1"
+            })
+            .put(Constants.SERVICE_RANKING, 10)
+            .build());
+
+    context.registerInjectActivateService(new HttpClientConfigImpl(),
+        ImmutableMap.<String, Object>builder()
+            .put(CONNECT_TIMEOUT_PROPERTY, 66)
+            .put(HOST_PATTERNS_PROPERTY, new String[] {
+                "host2"
+            })
+            .put(Constants.SERVICE_RANKING, 20)
+            .build());
+
+    HttpClientFactory underTest = context.registerInjectActivateService(new HttpClientFactoryImpl());
+
+    HttpClient client1a = underTest.get("http://host1/path1", "/path1");
+    assertEquals("client1a.timeout", 55, HttpClientTestUtils.getConnectTimeout(client1a));
+
+    HttpClient client1b = underTest.get("http://host1/path2", "/path2");
+    assertEquals("client1b.timeout", 15000, HttpClientTestUtils.getConnectTimeout(client1b));
+
+    HttpClient client1c = underTest.get(new URI("http://host1/path1"));
+    assertEquals("client1c.timeout", 55, HttpClientTestUtils.getConnectTimeout(client1c));
+
+    HttpClient client2a = underTest.get("http://host2/path1", "/path1");
+    assertEquals("client2a.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2a));
+
+    HttpClient client2b = underTest.get("http://host2/path2", "path2");
+    assertEquals("client2b.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2b));
+
+    HttpClient client2c = underTest.get(new URI("http://host2/xyz"));
+    assertEquals("client2c.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2c));
+  }
 
 }

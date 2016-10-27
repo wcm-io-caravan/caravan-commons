@@ -172,4 +172,10 @@ public interface HttpClientConfig {
    */
   String getTrustStorePassword();
 
+  /**
+   * Check if this configuration should be applied for a given Resource Path.
+   * @param resourcePath Rest resource path
+   * @return true if configuration matches
+   */
+  boolean matchesResourcePath(String resourcePath);
 }

@@ -145,4 +145,9 @@ public final class DefaultHttpClientConfig extends AbstractHttpClientconfig {
     return null;
   }
 
+  @Override
+  public boolean matchesResourcePath(final String resourcePath) {
+    return true;
+  }
+
 }

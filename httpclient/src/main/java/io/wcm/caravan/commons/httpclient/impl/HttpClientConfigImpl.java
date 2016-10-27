@@ -19,15 +19,13 @@
  */
 package io.wcm.caravan.commons.httpclient.impl;
 
-import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-import io.wcm.caravan.commons.httpclient.impl.helpers.AbstractHttpClientconfig;
-import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
-
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Activate;
@@ -40,15 +38,19 @@ import org.osgi.framework.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.wcm.caravan.commons.httpclient.HttpClientConfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.AbstractHttpClientconfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
+
 /**
  * Default implementation of {@link HttpClientConfig}.
  */
 @Component(metatype = true, immediate = true,
-label = "wcm.io Caravan HTTP Client Configuration",
-description = "Allows to configure special HTTP client settings for target hosts",
-configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
+    label = "wcm.io Caravan HTTP Client Configuration",
+    description = "Allows to configure special HTTP client settings for target hosts",
+    configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
 @Service(HttpClientConfig.class)
-@Property(name = "webconsole.configurationFactory.nameHint", value = "{hostPatterns} {wsAddressingToUris}")
+@Property(name = "webconsole.configurationFactory.nameHint", value = "{hostPatterns} {wsAddressingToUris} {resourcePath}")
 public class HttpClientConfigImpl extends AbstractHttpClientconfig {
 
   /**
@@ -64,6 +66,14 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
   @Property(label = "WS Uri", description = "List of WS Addressing To URIs for SOAP calls",
       cardinality = Integer.MAX_VALUE)
   public static final String WS_ADDRESSINGTO_URIS_PROPERTY = "wsAddressingToUris";
+
+  /**
+   * WS Uri
+   */
+  @Property(label = "Resource Path",
+      description = "List of resource paths for the http call, which has to be needed to identify the configuration item.",
+      cardinality = Integer.MAX_VALUE)
+  public static final String RESOURCE_PATH_PROPERTY = "resourcePath";
 
   /**
    * Connect timeout
@@ -213,6 +223,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
   private String proxyPassword;
   private Set<Pattern> hostPatterns;
   private Set<String> wsAddressingToUris;
+  private Set<String> resourcePaths;
 
   private String sslContextType;
   private String keyManagerType;
@@ -241,7 +252,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
     proxyUser = PropertiesUtil.toString(config.get(PROXY_USER_PROPERTY), null);
     proxyPassword = PropertiesUtil.toString(config.get(PROXY_PASSWORD_PROPERTY), null);
 
-    hostPatterns = new HashSet<Pattern>();
+    hostPatterns = new HashSet<>();
     String[] hostPatternsArray = PropertiesUtil.toStringArray(config.get(HOST_PATTERNS_PROPERTY), new String[0]);
     for (String hostPatternString : hostPatternsArray) {
       if (StringUtils.isNotBlank(hostPatternString)) {
@@ -255,13 +266,17 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
       }
     }
 
-    wsAddressingToUris = new HashSet<String>();
+    wsAddressingToUris = new HashSet<>();
     String[] wsAddressingToUrisArray = PropertiesUtil.toStringArray(config.get(WS_ADDRESSINGTO_URIS_PROPERTY), new String[0]);
     for (String wsAddressingToUriString : wsAddressingToUrisArray) {
       if (StringUtils.isNotBlank(wsAddressingToUriString)) {
         wsAddressingToUris.add(wsAddressingToUriString);
       }
     }
+
+    resourcePaths = new HashSet<>();
+    final String[] resourcePathsArray = PropertiesUtil.toStringArray(config.get(RESOURCE_PATH_PROPERTY), new String[0]);
+    Arrays.stream(resourcePathsArray).filter(StringUtils::isNotBlank).forEach(resourcePaths::add);
 
     sslContextType = PropertiesUtil.toString(config.get(SSL_CONTEXT_TYPE_PROPERTY), CertificateLoader.SSL_CONTEXT_TYPE_DEFAULT);
     keyManagerType = PropertiesUtil.toString(config.get(KEYMANAGER_TYPE_PROPERTY), CertificateLoader.KEY_MANAGER_TYPE_DEFAULT);
@@ -399,6 +414,17 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
   @Override
   public String getTrustStorePassword() {
     return trustStorePassword;
+  }
+
+  @Override
+  public boolean matchesResourcePath(final String resourcePath) {
+    if (resourcePaths.isEmpty()) {
+      return true;
+    }
+    if (StringUtils.isEmpty(resourcePath)) {
+      return false;
+    }
+    return !resourcePaths.stream().filter(path -> StringUtils.startsWith(resourcePath, path)).collect(Collectors.toList()).isEmpty();
   }
 
 }
