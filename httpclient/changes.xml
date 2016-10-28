@@ -27,7 +27,7 @@
       <action type="update" dev="sseifert">
         Switch to Java 8.
       </action>
-      <action>
+      <action type="add" dev="philipp-t">
         Enrich configuration and configuration service to use a resource path (optional) to match a configuration item
       </action>
     </release>
