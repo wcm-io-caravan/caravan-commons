@@ -27,6 +27,7 @@ import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTO
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTORE_PATH_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.MAX_CONNECTIONS_PER_HOST_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.MAX_TOTAL_CONNECTIONS_PROPERTY;
+import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PATH_PATTERNS_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_HOST_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_PASSWORD_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_PORT_PROPERTY;
@@ -41,7 +42,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoaderTest;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -58,6 +58,8 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 
+import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoaderTest;
+
 public class HttpClientItemTest {
 
   @Rule
@@ -73,9 +75,9 @@ public class HttpClientItemTest {
         .build());
 
     HttpClientItem item = new HttpClientItem(config);
-    assertTrue(item.matches("h1", null));
-    assertTrue(item.matches("h2", null));
-    assertFalse(item.matches("h3", null));
+    assertTrue(item.matches("h1", null, null, false));
+    assertTrue(item.matches("h2", null, null, false));
+    assertFalse(item.matches("h3", null, null, false));
     item.close();
   }
 
@@ -89,11 +91,11 @@ public class HttpClientItemTest {
         .build());
 
     HttpClientItem item = new HttpClientItem(config);
-    assertTrue(item.matches("h1", null));
-    assertTrue(item.matches("h2", null));
-    assertTrue(item.matches("h3", null));
-    assertFalse(item.matches("hx", null));
-    assertFalse(item.matches("xyz", null));
+    assertTrue(item.matches("h1", null, null, false));
+    assertTrue(item.matches("h2", null, null, false));
+    assertTrue(item.matches("h3", null, null, false));
+    assertFalse(item.matches("hx", null, null, false));
+    assertFalse(item.matches("xyz", null, null, false));
     item.close();
   }
 
@@ -102,9 +104,9 @@ public class HttpClientItemTest {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl());
 
     HttpClientItem item = new HttpClientItem(config);
-    assertTrue(item.matches("h1", null));
-    assertTrue(item.matches("h2", null));
-    assertTrue(item.matches("h3", null));
+    assertTrue(item.matches("h1", null, null, false));
+    assertTrue(item.matches("h2", null, null, false));
+    assertTrue(item.matches("h3", null, null, false));
     item.close();
   }
 
@@ -119,11 +121,11 @@ public class HttpClientItemTest {
         .build());
 
     HttpClientItem item = new HttpClientItem(config);
-    assertFalse(item.matches("h1", null));
-    assertFalse(item.matches("h2", null));
-    assertFalse(item.matches("h3", null));
-    assertFalse(item.matches("hx", null));
-    assertFalse(item.matches("xyz", null));
+    assertFalse(item.matches("h1", null, null, false));
+    assertFalse(item.matches("h2", null, null, false));
+    assertFalse(item.matches("h3", null, null, false));
+    assertFalse(item.matches("hx", null, null, false));
+    assertFalse(item.matches("xyz", null, null, false));
     item.close();
   }
 
@@ -138,10 +140,10 @@ public class HttpClientItemTest {
         .build());
 
     HttpClientItem item = new HttpClientItem(config);
-    assertTrue(item.matches("h1", "http://uri1"));
-    assertTrue(item.matches("h2", "http://uri2"));
-    assertFalse(item.matches("h3", "http://uri3"));
-    assertFalse(item.matches("h1", null));
+    assertTrue(item.matches("h1", "http://uri1", null, true));
+    assertTrue(item.matches("h2", "http://uri2", null, true));
+    assertFalse(item.matches("h3", "http://uri3", null, true));
+    assertFalse(item.matches("h1", null, null, true));
     item.close();
   }
 
@@ -150,10 +152,10 @@ public class HttpClientItemTest {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl());
 
     HttpClientItem item = new HttpClientItem(config);
-    assertTrue(item.matches("h1", "http://uri1"));
-    assertTrue(item.matches("h2", "http://uri2"));
-    assertTrue(item.matches("h3", "http://uri3"));
-    assertTrue(item.matches("h1", null));
+    assertTrue(item.matches("h1", "http://uri1", null, true));
+    assertTrue(item.matches("h2", "http://uri2", null, true));
+    assertTrue(item.matches("h3", "http://uri3", null, true));
+    assertTrue(item.matches("h1", null, null, true));
     item.close();
   }
 
@@ -172,16 +174,74 @@ public class HttpClientItemTest {
         .build());
 
     HttpClientItem item = new HttpClientItem(config);
-    assertTrue(item.matches("h1", "http://uri1"));
-    assertTrue(item.matches("h1", "http://uri2"));
-    assertFalse(item.matches("h1","http://uri3"));
-    assertFalse(item.matches("h1", null));
-    assertTrue(item.matches("h2", "http://uri1"));
-    assertTrue(item.matches("h2", "http://uri2"));
-    assertFalse(item.matches("h2", "http://uri3"));
-    assertFalse(item.matches("h3", "http://uri1"));
-    assertFalse(item.matches("h3", "http://uri2"));
-    assertFalse(item.matches("h3", "http://uri3"));
+    assertTrue(item.matches("h1", "http://uri1", null, true));
+    assertTrue(item.matches("h1", "http://uri2", null, true));
+    assertFalse(item.matches("h1","http://uri3", null, true));
+    assertFalse(item.matches("h1", null, null, true));
+    assertTrue(item.matches("h2", "http://uri1", null, true));
+    assertTrue(item.matches("h2", "http://uri2", null, true));
+    assertFalse(item.matches("h2", "http://uri3", null, true));
+    assertFalse(item.matches("h3", "http://uri1", null, true));
+    assertFalse(item.matches("h3", "http://uri2", null, true));
+    assertFalse(item.matches("h3", "http://uri3", null, true));
+    item.close();
+  }
+
+  @Test
+  public void testMatchesPath() {
+    HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
+        ImmutableMap.<String, Object>builder()
+        .put(PATH_PATTERNS_PROPERTY, new String[] {
+            "/path1",
+            "/path2"
+        })
+        .build());
+
+    HttpClientItem item = new HttpClientItem(config);
+    assertTrue(item.matches("h1", null, "/path1", false));
+    assertTrue(item.matches("h2", null, "/path2", false));
+    assertFalse(item.matches("h3", null, "/path3", false));
+    assertFalse(item.matches("h1", null, null, false));
+    item.close();
+  }
+
+  @Test
+  public void testMatchesPathEmptyConfigurationForPath() {
+    HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl());
+
+    HttpClientItem item = new HttpClientItem(config);
+    assertTrue(item.matches("h1", null, "/path1", false));
+    assertTrue(item.matches("h2", null, "/path2", false));
+    assertTrue(item.matches("h3", null, "/path3", false));
+    assertTrue(item.matches("h1", null, null, false));
+    item.close();
+  }
+
+  @Test
+  public void testMatchesHostnamesAndPath() {
+    HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
+        ImmutableMap.<String, Object>builder()
+        .put(HOST_PATTERNS_PROPERTY, new String[] {
+            "h1",
+            "h2"
+        })
+        .put(PATH_PATTERNS_PROPERTY, new String[] {
+            "/path1",
+            "/path2"
+        })
+        .build());
+
+    HttpClientItem item = new HttpClientItem(config);
+    assertTrue(item.matches("h1", null, "/path1", false));
+    assertTrue(item.matches("h1", null, "/path2", false));
+    assertFalse(item.matches("h1", null, "/path3", false));
+    assertFalse(item.matches("h1", null, null, false));
+    assertTrue(item.matches("h2", null, "/path1", false));
+    assertTrue(item.matches("h2", null, "/path2", false));
+    assertFalse(item.matches("h2", null, "/path3", false));
+    assertFalse(item.matches("h3", null, "/path1", false));
+    assertFalse(item.matches("h3", null, "/path2", false));
+    assertFalse(item.matches("h3", null, "/path3", false));
     item.close();
   }
 

@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert">
         Switch to Java 8.
       </action>
+      <action type="add" dev="ptolstych" issue="WCARAV-2">
+        Allow to filter HTTP client configurations by target URL path.
+      </action>
     </release>
 
     <release version="1.0.0" date="2015-08-26">

@@ -19,13 +19,11 @@
  */
 package io.wcm.caravan.commons.httpclient.impl.helpers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import io.wcm.caravan.commons.httpclient.HttpClientConfig;
+import static org.junit.Assert.*;
 
-import org.junit.Test;
+import org.junit.*;
+
+import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 
 public class DefaultHttpClientConfigTest {
 
