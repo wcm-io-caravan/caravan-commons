@@ -82,12 +82,9 @@ public class HttpAsyncClientFactoryImpl implements HttpAsyncClientFactory {
 
   @Override
   public HttpAsyncClient get(String targetUrl) {
-    return getFactoryItem(toUri(targetUrl), null, null, false).getHttpAsyncClient();
-  }
-
-  @Override
-  public HttpAsyncClient get(final String targetUrl, final String resourcePath) {
-    return getFactoryItem(toUri(targetUrl), null, resourcePath, false).getHttpAsyncClient();
+    final URI uri = toUri(targetUrl);
+    final String path = uri != null ? uri.getPath() : StringUtils.EMPTY;
+    return getFactoryItem(uri, null, path, false).getHttpAsyncClient();
   }
 
   @Override

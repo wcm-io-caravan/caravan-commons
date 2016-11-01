@@ -39,16 +39,6 @@ public interface HttpAsyncClientFactory {
   HttpAsyncClient get(String targetUrl);
 
   /**
-   * Returns a configured synchronous Http Client for the given target URL and a specific resource path.
-   * If a special configuration (e.g. timeout setting, proxy server, authentication) is configured it is
-   * applied in the factory.
-   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
-   * @param resourcePath Target Path to call (this is not called, but required to check for configuration)
-   * @return Http Client
-   */
-  HttpAsyncClient get(String targetUrl, String resourcePath);
-
-  /**
    * Returns a configured asynchronous Http Client for the given target URL. If a special configuration
    * (e.g. timeout setting, proxy server, authentication) is configured it is applied in the factory.
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)

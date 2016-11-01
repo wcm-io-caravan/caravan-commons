@@ -181,19 +181,19 @@ public class HttpClientFactoryImplTest {
 
     HttpClientFactory underTest = context.registerInjectActivateService(new HttpClientFactoryImpl());
 
-    HttpClient client1a = underTest.get("http://host1/path1", "/path1");
+    HttpClient client1a = underTest.get("http://host1/path1");
     assertEquals("client1a.timeout", 55, HttpClientTestUtils.getConnectTimeout(client1a));
 
-    HttpClient client1b = underTest.get("http://host1/path2", "/path2");
+    HttpClient client1b = underTest.get("http://host1/path2");
     assertEquals("client1b.timeout", 15000, HttpClientTestUtils.getConnectTimeout(client1b));
 
     HttpClient client1c = underTest.get(new URI("http://host1/path1"));
     assertEquals("client1c.timeout", 55, HttpClientTestUtils.getConnectTimeout(client1c));
 
-    HttpClient client2a = underTest.get("http://host2/path1", "/path1");
+    HttpClient client2a = underTest.get("http://host2/path1");
     assertEquals("client2a.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2a));
 
-    HttpClient client2b = underTest.get("http://host2/path2", "path2");
+    HttpClient client2b = underTest.get("http://host2/path2");
     assertEquals("client2b.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2b));
 
     HttpClient client2c = underTest.get(new URI("http://host2/xyz"));

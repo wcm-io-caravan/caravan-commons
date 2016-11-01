@@ -82,12 +82,9 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
 
   @Override
   public HttpClient get(String targetUrl) {
-    return getFactoryItem(toUri(targetUrl), null, null, false).getHttpClient();
-  }
-
-  @Override
-  public HttpClient get(final String targetUrl, final String resourcePath) {
-    return getFactoryItem(toUri(targetUrl), null, resourcePath, false).getHttpClient();
+    final URI uri = toUri(targetUrl);
+    final String path = uri != null ? uri.getPath() : StringUtils.EMPTY;
+    return getFactoryItem(uri, null, path, false).getHttpClient();
   }
 
   @Override
