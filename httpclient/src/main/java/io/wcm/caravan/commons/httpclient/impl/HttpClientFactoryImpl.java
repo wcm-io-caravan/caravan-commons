@@ -19,10 +19,6 @@
  */
 package io.wcm.caravan.commons.httpclient.impl;
 
-import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-import io.wcm.caravan.commons.httpclient.HttpClientFactory;
-import io.wcm.caravan.commons.httpclient.impl.helpers.DefaultHttpClientConfig;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
@@ -40,6 +36,10 @@ import org.apache.felix.scr.annotations.Service;
 import org.apache.http.client.HttpClient;
 import org.apache.sling.commons.osgi.ServiceUtil;
 import org.osgi.framework.BundleContext;
+
+import io.wcm.caravan.commons.httpclient.HttpClientConfig;
+import io.wcm.caravan.commons.httpclient.HttpClientFactory;
+import io.wcm.caravan.commons.httpclient.impl.helpers.DefaultHttpClientConfig;
 
 /**
  * Default implementation of {@link HttpClientFactory}.
@@ -82,27 +82,31 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
 
   @Override
   public HttpClient get(String targetUrl) {
-    return getFactoryItem(toUri(targetUrl), null).getHttpClient();
+    final URI uri = toUri(targetUrl);
+    final String path = uri != null ? uri.getPath() : null;
+    return getFactoryItem(uri, null, path, false).getHttpClient();
   }
 
   @Override
   public HttpClient get(URI targetUrl) {
-    return getFactoryItem(targetUrl, null).getHttpClient();
+    return getFactoryItem(targetUrl, null, targetUrl.getPath(), false).getHttpClient();
   }
 
   @Override
   public HttpClient getWs(String targetUrl, String wsAddressingToUri) {
-    return getFactoryItem(toUri(targetUrl), wsAddressingToUri).getHttpClient();
+    final URI uri = toUri(targetUrl);
+    final String path = uri != null ? uri.getPath() : null;
+    return getFactoryItem(uri, wsAddressingToUri, path, true).getHttpClient();
   }
 
   @Override
   public HttpClient getWs(URI targetUrl, URI wsAddressingToUri) {
-    return getFactoryItem(targetUrl, wsAddressingToUri.toString()).getHttpClient();
+    return getFactoryItem(targetUrl, wsAddressingToUri.toString(), targetUrl.getPath(), true).getHttpClient();
   }
 
-  private HttpClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri) {
+  private HttpClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri, String path, boolean isWsCall) {
     for (HttpClientItem item : factoryItems.values()) {
-      if (item.matches(targetUrl.getHost(), wsAddressingToUri)) {
+      if (item.matches(targetUrl.getHost(), wsAddressingToUri, path, isWsCall)) {
         return item;
       }
     }

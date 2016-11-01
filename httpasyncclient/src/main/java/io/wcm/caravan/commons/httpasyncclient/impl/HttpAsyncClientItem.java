@@ -161,12 +161,22 @@ class HttpAsyncClientItem {
   /**
    * @param hostName Host name
    * @param wsAddressingToURI WS addressing "to" URI
+   * @param path Path part of URI
+   * @param isWsCall indicates if the call is a soap webservice call
    * @return true if host name is associated with this http client config
    */
-  public boolean matches(String hostName, String wsAddressingToURI) {
-    return config.isEnabled()
-        && config.matchesHost(hostName)
-        && config.matchesWsAddressingToUri(wsAddressingToURI);
+  public boolean matches(String hostName, String wsAddressingToURI, String path, boolean isWsCall) {
+    if (isWsCall) {
+      return config.isEnabled()
+          && config.matchesHost(hostName)
+          && config.matchesPath(path)
+          && config.matchesWsAddressingToUri(wsAddressingToURI);
+    }
+    else {
+      return config.isEnabled()
+          && config.matchesHost(hostName)
+          && config.matchesPath(path);
+    }
   }
 
   /**

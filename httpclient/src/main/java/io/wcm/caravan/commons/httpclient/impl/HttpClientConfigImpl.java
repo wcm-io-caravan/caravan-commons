@@ -19,10 +19,6 @@
  */
 package io.wcm.caravan.commons.httpclient.impl;
 
-import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-import io.wcm.caravan.commons.httpclient.impl.helpers.AbstractHttpClientconfig;
-import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -40,6 +36,10 @@ import org.osgi.framework.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.wcm.caravan.commons.httpclient.HttpClientConfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.AbstractHttpClientconfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
+
 /**
  * Default implementation of {@link HttpClientConfig}.
  */
@@ -48,7 +48,7 @@ label = "wcm.io Caravan HTTP Client Configuration",
 description = "Allows to configure special HTTP client settings for target hosts",
 configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
 @Service(HttpClientConfig.class)
-@Property(name = "webconsole.configurationFactory.nameHint", value = "{hostPatterns} {wsAddressingToUris}")
+@Property(name = "webconsole.configurationFactory.nameHint", value = "{hostPatterns} {wsAddressingToUris} {pathPatterns}")
 public class HttpClientConfigImpl extends AbstractHttpClientconfig {
 
   /**
@@ -64,6 +64,13 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
   @Property(label = "WS Uri", description = "List of WS Addressing To URIs for SOAP calls",
       cardinality = Integer.MAX_VALUE)
   public static final String WS_ADDRESSINGTO_URIS_PROPERTY = "wsAddressingToUris";
+
+  /**
+   * Path pattern
+   */
+  @Property(label = "Path pattern", description = "Regular expressions for matching the path part of the target URLs",
+      cardinality = Integer.MAX_VALUE)
+  public static final String PATH_PATTERNS_PROPERTY = "pathPatterns";
 
   /**
    * Connect timeout
@@ -213,6 +220,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
   private String proxyPassword;
   private Set<Pattern> hostPatterns;
   private Set<String> wsAddressingToUris;
+  private Set<Pattern> pathPatterns;
 
   private String sslContextType;
   private String keyManagerType;
@@ -241,7 +249,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
     proxyUser = PropertiesUtil.toString(config.get(PROXY_USER_PROPERTY), null);
     proxyPassword = PropertiesUtil.toString(config.get(PROXY_PASSWORD_PROPERTY), null);
 
-    hostPatterns = new HashSet<Pattern>();
+    hostPatterns = new HashSet<>();
     String[] hostPatternsArray = PropertiesUtil.toStringArray(config.get(HOST_PATTERNS_PROPERTY), new String[0]);
     for (String hostPatternString : hostPatternsArray) {
       if (StringUtils.isNotBlank(hostPatternString)) {
@@ -255,11 +263,25 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
       }
     }
 
-    wsAddressingToUris = new HashSet<String>();
+    wsAddressingToUris = new HashSet<>();
     String[] wsAddressingToUrisArray = PropertiesUtil.toStringArray(config.get(WS_ADDRESSINGTO_URIS_PROPERTY), new String[0]);
     for (String wsAddressingToUriString : wsAddressingToUrisArray) {
       if (StringUtils.isNotBlank(wsAddressingToUriString)) {
         wsAddressingToUris.add(wsAddressingToUriString);
+      }
+    }
+
+    pathPatterns = new HashSet<>();
+    String[] pathPatternsArray = PropertiesUtil.toStringArray(config.get(PATH_PATTERNS_PROPERTY), new String[0]);
+    for (String pathPatternString : pathPatternsArray) {
+      if (StringUtils.isNotBlank(pathPatternString)) {
+        try {
+          pathPatterns.add(Pattern.compile(pathPatternString));
+        }
+        catch (PatternSyntaxException ex) {
+          log.warn("Invalid path pattern '" + pathPatternString + "': " + ex.getMessage(), ex);
+          this.enabled = false;
+        }
       }
     }
 
@@ -354,6 +376,22 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
       return false;
     }
     return wsAddressingToUris.contains(addressingToUri);
+  }
+
+  @Override
+  public boolean matchesPath(final String path) {
+    if (pathPatterns.isEmpty()) {
+      return true;
+    }
+    if (StringUtils.isEmpty(path)) {
+      return false;
+    }
+    for (Pattern pathPattern : pathPatterns) {
+      if (pathPattern.matcher(path).matches()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override

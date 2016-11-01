@@ -19,10 +19,6 @@
  */
 package io.wcm.caravan.commons.httpasyncclient.impl;
 
-import io.wcm.caravan.commons.httpasyncclient.HttpAsyncClientFactory;
-import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-import io.wcm.caravan.commons.httpclient.impl.helpers.DefaultHttpClientConfig;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
@@ -40,6 +36,10 @@ import org.apache.felix.scr.annotations.Service;
 import org.apache.http.nio.client.HttpAsyncClient;
 import org.apache.sling.commons.osgi.ServiceUtil;
 import org.osgi.framework.BundleContext;
+
+import io.wcm.caravan.commons.httpasyncclient.HttpAsyncClientFactory;
+import io.wcm.caravan.commons.httpclient.HttpClientConfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.DefaultHttpClientConfig;
 
 /**
  * Default implementation of {@link HttpAsyncClientFactory}.
@@ -82,27 +82,31 @@ public class HttpAsyncClientFactoryImpl implements HttpAsyncClientFactory {
 
   @Override
   public HttpAsyncClient get(String targetUrl) {
-    return getFactoryItem(toUri(targetUrl), null).getHttpAsyncClient();
+    final URI uri = toUri(targetUrl);
+    final String path = uri != null ? uri.getPath() : null;
+    return getFactoryItem(uri, null, path, false).getHttpAsyncClient();
   }
 
   @Override
   public HttpAsyncClient get(URI targetUrl) {
-    return getFactoryItem(targetUrl, null).getHttpAsyncClient();
+    return getFactoryItem(targetUrl, null, targetUrl.getPath(), false).getHttpAsyncClient();
   }
 
   @Override
   public HttpAsyncClient getWs(String targetUrl, String wsAddressingToUri) {
-    return getFactoryItem(toUri(targetUrl), wsAddressingToUri).getHttpAsyncClient();
+    final URI uri = toUri(targetUrl);
+    final String path = uri != null ? uri.getPath() : null;
+    return getFactoryItem(uri, wsAddressingToUri, path, true).getHttpAsyncClient();
   }
 
   @Override
   public HttpAsyncClient getWs(URI targetUrl, URI wsAddressingToUri) {
-    return getFactoryItem(targetUrl, wsAddressingToUri.toString()).getHttpAsyncClient();
+    return getFactoryItem(targetUrl, wsAddressingToUri.toString(), targetUrl.getPath(), true).getHttpAsyncClient();
   }
 
-  private HttpAsyncClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri) {
+  private HttpAsyncClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri, String path, boolean isWsCall) {
     for (HttpAsyncClientItem item : factoryItems.values()) {
-      if (item.matches(targetUrl.getHost(), wsAddressingToUri)) {
+      if (item.matches(targetUrl.getHost(), wsAddressingToUri, path, isWsCall)) {
         return item;
       }
     }
