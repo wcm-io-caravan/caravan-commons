@@ -177,5 +177,7 @@ public interface HttpClientConfig {
    * @param resourcePath Rest resource path
    * @return true if configuration matches
    */
-  boolean matchesResourcePath(String resourcePath);
+  default boolean matchesResourcePath(String resourcePath) {
+    return false;
+  }
 }
