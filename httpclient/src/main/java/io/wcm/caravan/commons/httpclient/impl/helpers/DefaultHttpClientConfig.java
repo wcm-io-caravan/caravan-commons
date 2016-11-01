@@ -101,6 +101,11 @@ public final class DefaultHttpClientConfig extends AbstractHttpClientconfig {
   }
 
   @Override
+  public boolean matchesPath(final String path) {
+    return true;
+  }
+
+  @Override
   public String getSslContextType() {
     return CertificateLoader.SSL_CONTEXT_TYPE_DEFAULT;
   }
@@ -143,11 +148,6 @@ public final class DefaultHttpClientConfig extends AbstractHttpClientconfig {
   @Override
   public String getTrustStorePassword() {
     return null;
-  }
-
-  @Override
-  public boolean matchesResourcePath(final String resourcePath) {
-    return true;
   }
 
 }

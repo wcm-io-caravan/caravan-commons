@@ -104,9 +104,9 @@ public class HttpAsyncClientFactoryImpl implements HttpAsyncClientFactory {
     return getFactoryItem(targetUrl, wsAddressingToUri.toString(), targetUrl.getPath(), true).getHttpAsyncClient();
   }
 
-  private HttpAsyncClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri, String resourcePath, boolean isWsCall) {
+  private HttpAsyncClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri, String path, boolean isWsCall) {
     for (HttpAsyncClientItem item : factoryItems.values()) {
-      if (item.matches(targetUrl.getHost(), wsAddressingToUri, resourcePath, isWsCall)) {
+      if (item.matches(targetUrl.getHost(), wsAddressingToUri, path, isWsCall)) {
         return item;
       }
     }

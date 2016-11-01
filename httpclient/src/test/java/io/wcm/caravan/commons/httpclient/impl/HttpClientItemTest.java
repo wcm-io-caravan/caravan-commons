@@ -27,16 +27,21 @@ import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTO
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTORE_PATH_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.MAX_CONNECTIONS_PER_HOST_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.MAX_TOTAL_CONNECTIONS_PROPERTY;
+import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PATH_PATTERNS_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_HOST_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_PASSWORD_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_PORT_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_USER_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.RESOURCE_PATH_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.SOCKET_TIMEOUT_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_PASSWORD_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_PATH_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.WS_ADDRESSINGTO_URIS_PROPERTY;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -48,7 +53,8 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
-import org.junit.*;
+import org.junit.Rule;
+import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -182,14 +188,14 @@ public class HttpClientItemTest {
   }
 
   @Test
-  public void testMatchesResourcePath() {
+  public void testMatchesPath() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-            .put(RESOURCE_PATH_PROPERTY, new String[] {
-                "/path1",
-                "/path2"
-            })
-            .build());
+        .put(PATH_PATTERNS_PROPERTY, new String[] {
+            "/path1",
+            "/path2"
+        })
+        .build());
 
     HttpClientItem item = new HttpClientItem(config);
     assertTrue(item.matches("h1", null, "/path1", false));
@@ -200,7 +206,7 @@ public class HttpClientItemTest {
   }
 
   @Test
-  public void testMatchesResourcePathEmptyConfigurationForPath() {
+  public void testMatchesPathEmptyConfigurationForPath() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl());
 
     HttpClientItem item = new HttpClientItem(config);
@@ -212,18 +218,18 @@ public class HttpClientItemTest {
   }
 
   @Test
-  public void testMatchesHostnamesAndResourcePath() {
+  public void testMatchesHostnamesAndPath() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-            .put(HOST_PATTERNS_PROPERTY, new String[] {
-                "h1",
-                "h2"
-            })
-            .put(RESOURCE_PATH_PROPERTY, new String[] {
-                "/path1",
-                "/path2"
-            })
-            .build());
+        .put(HOST_PATTERNS_PROPERTY, new String[] {
+            "h1",
+            "h2"
+        })
+        .put(PATH_PATTERNS_PROPERTY, new String[] {
+            "/path1",
+            "/path2"
+        })
+        .build());
 
     HttpClientItem item = new HttpClientItem(config);
     assertTrue(item.matches("h1", null, "/path1", false));

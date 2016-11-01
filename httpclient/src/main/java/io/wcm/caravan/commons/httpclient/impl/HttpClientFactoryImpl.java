@@ -104,9 +104,9 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
     return getFactoryItem(targetUrl, wsAddressingToUri.toString(), targetUrl.getPath(), true).getHttpClient();
   }
 
-  private HttpClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri, String resourcePath, boolean isWsCall) {
+  private HttpClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri, String path, boolean isWsCall) {
     for (HttpClientItem item : factoryItems.values()) {
-      if (item.matches(targetUrl.getHost(), wsAddressingToUri, resourcePath, isWsCall)) {
+      if (item.matches(targetUrl.getHost(), wsAddressingToUri, path, isWsCall)) {
         return item;
       }
     }

@@ -128,12 +128,12 @@ public interface HttpClientConfig {
   boolean matchesWsAddressingToUri(String addressingToUri);
 
   /**
-   * Check if this configuration should be applied for a given Resource Path.
-   * @param resourcePath Rest resource path
+   * Check if this configuration should be applied for a given path of the target URL
+   * @param path Path part
    * @return true if configuration matches
    */
-  default boolean matchesResourcePath(String resourcePath) {
-    return false;
+  default boolean matchesPath(String path) {
+    return true;
   }
 
   /**

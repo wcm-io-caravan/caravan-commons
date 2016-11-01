@@ -21,7 +21,7 @@ package io.wcm.caravan.commons.httpasyncclient.impl;
 
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECT_TIMEOUT_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HOST_PATTERNS_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.RESOURCE_PATH_PROPERTY;
+import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PATH_PATTERNS_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.WS_ADDRESSINGTO_URIS_PROPERTY;
 import static org.junit.Assert.assertEquals;
 
@@ -160,7 +160,7 @@ public class HttpClientFactoryImplAsyncTest {
   }
 
   @Test
-  public void testGetConfigForConfiguredResourcePath() throws URISyntaxException {
+  public void testGetConfigForConfiguredPath() throws URISyntaxException {
 
     context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
@@ -168,7 +168,7 @@ public class HttpClientFactoryImplAsyncTest {
         .put(HOST_PATTERNS_PROPERTY, new String[] {
             "host1"
         })
-        .put(RESOURCE_PATH_PROPERTY, new String[] {
+        .put(PATH_PATTERNS_PROPERTY, new String[] {
             "/path1"
         })
         .put(Constants.SERVICE_RANKING, 10)
@@ -185,18 +185,18 @@ public class HttpClientFactoryImplAsyncTest {
 
     context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-            .put(CONNECT_TIMEOUT_PROPERTY, 77)
-            .put(HOST_PATTERNS_PROPERTY, new String[] {
-                "host3"
-            })
-            .put(WS_ADDRESSINGTO_URIS_PROPERTY, new String[] {
-                "http://uri3"
-            })
-            .put(RESOURCE_PATH_PROPERTY, new String[] {
-                "/path1"
-            })
-            .put(Constants.SERVICE_RANKING, 30)
-            .build());
+        .put(CONNECT_TIMEOUT_PROPERTY, 77)
+        .put(HOST_PATTERNS_PROPERTY, new String[] {
+            "host3"
+        })
+        .put(WS_ADDRESSINGTO_URIS_PROPERTY, new String[] {
+            "http://uri3"
+        })
+        .put(PATH_PATTERNS_PROPERTY, new String[] {
+            "/path1"
+        })
+        .put(Constants.SERVICE_RANKING, 30)
+        .build());
 
     HttpAsyncClientFactory underTest = context.registerInjectActivateService(new HttpAsyncClientFactoryImpl());
 

@@ -19,13 +19,11 @@
  */
 package io.wcm.caravan.commons.httpclient.impl;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.felix.scr.annotations.Activate;
@@ -50,7 +48,7 @@ label = "wcm.io Caravan HTTP Client Configuration",
 description = "Allows to configure special HTTP client settings for target hosts",
 configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
 @Service(HttpClientConfig.class)
-@Property(name = "webconsole.configurationFactory.nameHint", value = "{hostPatterns} {wsAddressingToUris} {resourcePath}")
+@Property(name = "webconsole.configurationFactory.nameHint", value = "{hostPatterns} {wsAddressingToUris} {pathPatterns}")
 public class HttpClientConfigImpl extends AbstractHttpClientconfig {
 
   /**
@@ -68,12 +66,11 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
   public static final String WS_ADDRESSINGTO_URIS_PROPERTY = "wsAddressingToUris";
 
   /**
-   * WS Uri
+   * Path pattern
    */
-  @Property(label = "Resource Path",
-      description = "List of resource paths for the http call, which has to be needed to identify the configuration item.",
+  @Property(label = "Path pattern", description = "Regular expressions for matching the path part of the target URLs",
       cardinality = Integer.MAX_VALUE)
-  public static final String RESOURCE_PATH_PROPERTY = "resourcePath";
+  public static final String PATH_PATTERNS_PROPERTY = "pathPatterns";
 
   /**
    * Connect timeout
@@ -223,7 +220,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
   private String proxyPassword;
   private Set<Pattern> hostPatterns;
   private Set<String> wsAddressingToUris;
-  private Set<String> resourcePaths;
+  private Set<Pattern> pathPatterns;
 
   private String sslContextType;
   private String keyManagerType;
@@ -274,9 +271,19 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
       }
     }
 
-    resourcePaths = new HashSet<>();
-    final String[] resourcePathsArray = PropertiesUtil.toStringArray(config.get(RESOURCE_PATH_PROPERTY), new String[0]);
-    Arrays.stream(resourcePathsArray).filter(StringUtils::isNotBlank).forEach(resourcePaths::add);
+    pathPatterns = new HashSet<>();
+    String[] pathPatternsArray = PropertiesUtil.toStringArray(config.get(PATH_PATTERNS_PROPERTY), new String[0]);
+    for (String pathPatternString : pathPatternsArray) {
+      if (StringUtils.isNotBlank(pathPatternString)) {
+        try {
+          pathPatterns.add(Pattern.compile(pathPatternString));
+        }
+        catch (PatternSyntaxException ex) {
+          log.warn("Invalid path pattern '" + pathPatternString + "': " + ex.getMessage(), ex);
+          this.enabled = false;
+        }
+      }
+    }
 
     sslContextType = PropertiesUtil.toString(config.get(SSL_CONTEXT_TYPE_PROPERTY), CertificateLoader.SSL_CONTEXT_TYPE_DEFAULT);
     keyManagerType = PropertiesUtil.toString(config.get(KEYMANAGER_TYPE_PROPERTY), CertificateLoader.KEY_MANAGER_TYPE_DEFAULT);
@@ -372,14 +379,19 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
   }
 
   @Override
-  public boolean matchesResourcePath(final String resourcePath) {
-    if (resourcePaths.isEmpty()) {
+  public boolean matchesPath(final String path) {
+    if (pathPatterns.isEmpty()) {
       return true;
     }
-    if (StringUtils.isEmpty(resourcePath)) {
+    if (StringUtils.isEmpty(path)) {
       return false;
     }
-    return !resourcePaths.stream().filter(path -> StringUtils.startsWith(resourcePath, path)).collect(Collectors.toList()).isEmpty();
+    for (Pattern pathPattern : pathPatterns) {
+      if (pathPattern.matcher(path).matches()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override
