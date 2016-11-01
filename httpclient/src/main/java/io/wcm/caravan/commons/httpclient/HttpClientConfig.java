@@ -128,6 +128,15 @@ public interface HttpClientConfig {
   boolean matchesWsAddressingToUri(String addressingToUri);
 
   /**
+   * Check if this configuration should be applied for a given Resource Path.
+   * @param resourcePath Rest resource path
+   * @return true if configuration matches
+   */
+  default boolean matchesResourcePath(String resourcePath) {
+    return false;
+  }
+
+  /**
    * @return SSL context type (default: TLS)
    */
   String getSslContextType();
@@ -172,12 +181,4 @@ public interface HttpClientConfig {
    */
   String getTrustStorePassword();
 
-  /**
-   * Check if this configuration should be applied for a given Resource Path.
-   * @param resourcePath Rest resource path
-   * @return true if configuration matches
-   */
-  default boolean matchesResourcePath(String resourcePath) {
-    return false;
-  }
 }

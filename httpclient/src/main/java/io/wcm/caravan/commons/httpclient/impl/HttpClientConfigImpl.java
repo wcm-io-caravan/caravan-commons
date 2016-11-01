@@ -46,9 +46,9 @@ import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
  * Default implementation of {@link HttpClientConfig}.
  */
 @Component(metatype = true, immediate = true,
-    label = "wcm.io Caravan HTTP Client Configuration",
-    description = "Allows to configure special HTTP client settings for target hosts",
-    configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
+label = "wcm.io Caravan HTTP Client Configuration",
+description = "Allows to configure special HTTP client settings for target hosts",
+configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
 @Service(HttpClientConfig.class)
 @Property(name = "webconsole.configurationFactory.nameHint", value = "{hostPatterns} {wsAddressingToUris} {resourcePath}")
 public class HttpClientConfigImpl extends AbstractHttpClientconfig {
@@ -372,6 +372,17 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
   }
 
   @Override
+  public boolean matchesResourcePath(final String resourcePath) {
+    if (resourcePaths.isEmpty()) {
+      return true;
+    }
+    if (StringUtils.isEmpty(resourcePath)) {
+      return false;
+    }
+    return !resourcePaths.stream().filter(path -> StringUtils.startsWith(resourcePath, path)).collect(Collectors.toList()).isEmpty();
+  }
+
+  @Override
   public String getSslContextType() {
     return sslContextType;
   }
@@ -414,17 +425,6 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
   @Override
   public String getTrustStorePassword() {
     return trustStorePassword;
-  }
-
-  @Override
-  public boolean matchesResourcePath(final String resourcePath) {
-    if (resourcePaths.isEmpty()) {
-      return true;
-    }
-    if (StringUtils.isEmpty(resourcePath)) {
-      return false;
-    }
-    return !resourcePaths.stream().filter(path -> StringUtils.startsWith(resourcePath, path)).collect(Collectors.toList()).isEmpty();
   }
 
 }
