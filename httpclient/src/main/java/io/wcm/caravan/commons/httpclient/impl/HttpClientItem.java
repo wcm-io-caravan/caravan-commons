@@ -153,9 +153,10 @@ class HttpClientItem {
    */
   public boolean matches(String hostName, String wsAddressingToURI, String resourcePath, boolean isWsCall) {
     if (isWsCall) {
-    return config.isEnabled()
-        && config.matchesHost(hostName)
-        && config.matchesWsAddressingToUri(wsAddressingToURI);
+      return config.isEnabled()
+          && config.matchesHost(hostName)
+          && config.matchesResourcePath(resourcePath)
+          && config.matchesWsAddressingToUri(wsAddressingToURI);
     }
     else {
       return config.isEnabled()

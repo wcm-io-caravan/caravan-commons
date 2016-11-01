@@ -94,12 +94,14 @@ public class HttpAsyncClientFactoryImpl implements HttpAsyncClientFactory {
 
   @Override
   public HttpAsyncClient getWs(String targetUrl, String wsAddressingToUri) {
-    return getFactoryItem(toUri(targetUrl), wsAddressingToUri, null, true).getHttpAsyncClient();
+    final URI uri = toUri(targetUrl);
+    final String path = uri != null ? uri.getPath() : null;
+    return getFactoryItem(uri, wsAddressingToUri, path, true).getHttpAsyncClient();
   }
 
   @Override
   public HttpAsyncClient getWs(URI targetUrl, URI wsAddressingToUri) {
-    return getFactoryItem(targetUrl, wsAddressingToUri.toString(), null, true).getHttpAsyncClient();
+    return getFactoryItem(targetUrl, wsAddressingToUri.toString(), targetUrl.getPath(), true).getHttpAsyncClient();
   }
 
   private HttpAsyncClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri, String resourcePath, boolean isWsCall) {

@@ -169,6 +169,7 @@ class HttpAsyncClientItem {
     if (isWsCall) {
       return config.isEnabled()
           && config.matchesHost(hostName)
+          && config.matchesResourcePath(resourcePath)
           && config.matchesWsAddressingToUri(wsAddressingToURI);
     }
     else {

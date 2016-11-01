@@ -94,12 +94,14 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
 
   @Override
   public HttpClient getWs(String targetUrl, String wsAddressingToUri) {
-    return getFactoryItem(toUri(targetUrl), wsAddressingToUri, null, true).getHttpClient();
+    final URI uri = toUri(targetUrl);
+    final String path = uri != null ? uri.getPath() : null;
+    return getFactoryItem(uri, wsAddressingToUri, path, true).getHttpClient();
   }
 
   @Override
   public HttpClient getWs(URI targetUrl, URI wsAddressingToUri) {
-    return getFactoryItem(targetUrl, wsAddressingToUri.toString(), null, true).getHttpClient();
+    return getFactoryItem(targetUrl, wsAddressingToUri.toString(), targetUrl.getPath(), true).getHttpClient();
   }
 
   private HttpClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri, String resourcePath, boolean isWsCall) {
