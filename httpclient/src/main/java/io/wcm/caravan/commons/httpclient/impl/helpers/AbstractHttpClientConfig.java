@@ -19,17 +19,17 @@
  */
 package io.wcm.caravan.commons.httpclient.impl.helpers;
 
-import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import io.wcm.caravan.commons.httpclient.HttpClientConfig;
+
 /**
- * Common functionality for {@link HttpClientConfig} implememtations.
+ * Common functionality for {@link HttpClientConfig} implementations.
  */
-public abstract class AbstractHttpClientconfig implements HttpClientConfig {
+public abstract class AbstractHttpClientConfig implements HttpClientConfig {
 
   /**
    * List of properties of this class that contain sensitive information which should not be logged.

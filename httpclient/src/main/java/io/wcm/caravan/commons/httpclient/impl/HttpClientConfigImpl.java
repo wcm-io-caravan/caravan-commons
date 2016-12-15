@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-import io.wcm.caravan.commons.httpclient.impl.helpers.AbstractHttpClientconfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.AbstractHttpClientConfig;
 import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
 
 /**
@@ -49,7 +49,7 @@ description = "Allows to configure special HTTP client settings for target hosts
 configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
 @Service(HttpClientConfig.class)
 @Property(name = "webconsole.configurationFactory.nameHint", value = "{hostPatterns} {wsAddressingToUris} {pathPatterns}")
-public class HttpClientConfigImpl extends AbstractHttpClientconfig {
+public class HttpClientConfigImpl extends AbstractHttpClientConfig {
 
   /**
    * Host pattern

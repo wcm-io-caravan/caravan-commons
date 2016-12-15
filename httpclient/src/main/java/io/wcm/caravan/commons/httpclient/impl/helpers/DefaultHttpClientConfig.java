@@ -24,7 +24,7 @@ import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 /**
  * Default http client configuration.
  */
-public final class DefaultHttpClientConfig extends AbstractHttpClientconfig {
+public final class DefaultHttpClientConfig extends AbstractHttpClientConfig {
 
   /**
    * Holds the default HTTP client configuration that is used when no matching configuration was provided.
