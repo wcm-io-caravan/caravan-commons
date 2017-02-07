@@ -21,8 +21,6 @@ package io.wcm.caravan.commons.httpclient;
 
 import org.osgi.annotation.versioning.ConsumerType;
 
-import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
-
 /**
  * HTTP Client configuration.
  */
@@ -154,10 +152,10 @@ public interface HttpClientConfig {
   String getKeyStoreType();
 
   /**
-   * @return Key store provider (default: SunJSSE)
+   * @return Key store provider (default: null = use first matching security provider)
    */
   default String getKeyStoreProvider() {
-    return CertificateLoader.KEY_STORE_PROVIDER_DEFAULT;
+    return null;
   }
 
   /**
@@ -179,6 +177,13 @@ public interface HttpClientConfig {
    * @return Trust store type (default: JKS)
    */
   String getTrustStoreType();
+
+  /**
+   * @return Trust store provider (default: null = use first matching security provider)
+   */
+  default String getTrustStoreProvider() {
+    return null;
+  }
 
   /**
    * @return Trust store file path

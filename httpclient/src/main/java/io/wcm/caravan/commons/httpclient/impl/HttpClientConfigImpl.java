@@ -151,18 +151,17 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   public static final String KEYMANAGER_TYPE_PROPERTY = "keyManagerType";
 
   /**
-   * KeyStore provider
-   */
-  @Property(label = "KeyStore provider", description = "KeyStore provider",
-      value = CertificateLoader.KEY_STORE_PROVIDER_DEFAULT)
-  public static final String KEYSTORE_PROVIDER_PROPERTY = "keyStoreProvider";
-
-  /**
    * KeyStore type
    */
   @Property(label = "KeyStore type", description = "KeyStore type",
       value = CertificateLoader.KEY_STORE_TYPE_DEFAULT)
   public static final String KEYSTORE_TYPE_PROPERTY = "keyStoreType";
+
+  /**
+   * KeyStore provider
+   */
+  @Property(label = "KeyStore provider", description = "KeyStore provider. If not set the first matching security provider is used.")
+  public static final String KEYSTORE_PROVIDER_PROPERTY = "keyStoreProvider";
 
   /**
    * KeyStore path
@@ -189,6 +188,12 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   @Property(label = "TrustStore type", description = "TrustStore type",
       value = CertificateLoader.TRUST_STORE_TYPE_DEFAULT)
   public static final String TRUSTSTORE_TYPE_PROPERTY = "trustStoreType";
+
+  /**
+   * TrustStore provider
+   */
+  @Property(label = "TrustStore provider", description = "TrustStore provider. If not set the first matching security provider is used.")
+  public static final String TRUSTSTORE_PROVIDER_PROPERTY = "trustStoreProvider";
 
   /**
    * TrustStore path
@@ -232,13 +237,14 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   private String sslContextType;
   private String keyManagerType;
   private String keyStoreType;
+  private String keyStoreProvider;
   private String keyStorePath;
   private String keyStorePassword;
   private String trustManagerType;
   private String trustStoreType;
+  private String trustStoreProvider;
   private String trustStorePath;
   private String trustStorePassword;
-  private String keyStoreProvider;
 
   private static final Logger log = LoggerFactory.getLogger(HttpClientConfigImpl.class);
 
@@ -296,11 +302,12 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
     sslContextType = PropertiesUtil.toString(config.get(SSL_CONTEXT_TYPE_PROPERTY), CertificateLoader.SSL_CONTEXT_TYPE_DEFAULT);
     keyManagerType = PropertiesUtil.toString(config.get(KEYMANAGER_TYPE_PROPERTY), CertificateLoader.KEY_MANAGER_TYPE_DEFAULT);
     keyStoreType = PropertiesUtil.toString(config.get(KEYSTORE_TYPE_PROPERTY), CertificateLoader.KEY_STORE_TYPE_DEFAULT);
-    keyStoreProvider = PropertiesUtil.toString(config.get(KEYSTORE_PROVIDER_PROPERTY), CertificateLoader.KEY_STORE_PROVIDER_DEFAULT);
+    keyStoreProvider = PropertiesUtil.toString(config.get(KEYSTORE_PROVIDER_PROPERTY), null);
     keyStorePath = PropertiesUtil.toString(config.get(KEYSTORE_PATH_PROPERTY), null);
     keyStorePassword = PropertiesUtil.toString(config.get(KEYSTORE_PASSWORD_PROPERTY), null);
     trustManagerType = PropertiesUtil.toString(config.get(TRUSTMANAGER_TYPE_PROPERTY), CertificateLoader.TRUST_MANAGER_TYPE_DEFAULT);
     trustStoreType = PropertiesUtil.toString(config.get(TRUSTSTORE_TYPE_PROPERTY), CertificateLoader.TRUST_STORE_TYPE_DEFAULT);
+    trustStoreProvider = PropertiesUtil.toString(config.get(TRUSTSTORE_PROVIDER_PROPERTY), null);
     trustStorePath = PropertiesUtil.toString(config.get(TRUSTSTORE_PATH_PROPERTY), null);
     trustStorePassword = PropertiesUtil.toString(config.get(TRUSTSTORE_PASSWORD_PROPERTY), null);
   }
@@ -441,6 +448,11 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   @Override
   public String getTrustStoreType() {
     return trustStoreType;
+  }
+
+  @Override
+  public String getTrustStoreProvider() {
+    return trustStoreProvider;
   }
 
   @Override

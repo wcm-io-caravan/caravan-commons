@@ -59,11 +59,6 @@ public final class CertificateLoader {
   public static final String KEY_STORE_TYPE_DEFAULT = "PKCS12";
 
   /**
-   * Default key store provider
-   */
-  public static final String KEY_STORE_PROVIDER_DEFAULT = "SunJSSE";
-
-  /**
    * Default trust manager type
    */
   public static final String TRUST_MANAGER_TYPE_DEFAULT = "SunX509";
@@ -90,13 +85,13 @@ public final class CertificateLoader {
     KeyManagerFactory kmf = null;
     if (isSslKeyManagerEnabled(config)) {
       kmf = getKeyManagerFactory(config.getKeyStorePath(),
-          new StoreProperties(config.getKeyStorePassword(), config.getKeyManagerType(), config.getKeyStoreType(), config.getKeyStoreProvider()));
+          new StoreProperties(config.getKeyStorePassword(), config.getKeyManagerType(),
+              config.getKeyStoreType(), config.getKeyStoreProvider()));
     }
     TrustManagerFactory tmf = null;
     if (isSslTrustStoreEnbaled(config)) {
-      StoreProperties storeProperties = new StoreProperties(config.getTrustStorePassword(),
-          config.getTrustManagerType(), config.getTrustStoreType(), StringUtils.EMPTY);
-      tmf = getTrustManagerFactory(config.getTrustStorePath(), storeProperties);
+      tmf = getTrustManagerFactory(config.getTrustStorePath(), new StoreProperties(config.getTrustStorePassword(),
+          config.getTrustManagerType(), config.getTrustStoreType(), config.getTrustStoreProvider()));
     }
 
     SSLContext sslContext = SSLContext.getInstance(config.getSslContextType());
@@ -144,11 +139,8 @@ public final class CertificateLoader {
    */
   private static KeyManagerFactory getKeyManagerFactory(InputStream keyStoreStream, StoreProperties storeProperties)
       throws IOException, GeneralSecurityException {
+    // use provider if given, otherwise use the first matching security provider
     final KeyStore ks;
-    /**
-     * only the PKCS12 KeyStoreType needs a extra handling see:
-     * http://stackoverflow.com/questions/28764556/loading-a-pkcs-12-keystore-in-aem-6-0
-     */
     if (StringUtils.isNotBlank(storeProperties.getProvider())) {
       ks = KeyStore.getInstance(storeProperties.getType(), storeProperties.getProvider());
     }
@@ -198,10 +190,19 @@ public final class CertificateLoader {
    */
   private static TrustManagerFactory getTrustManagerFactory(InputStream trustStoreStream, StoreProperties storeProperties)
       throws IOException, GeneralSecurityException {
-    KeyStore jks = KeyStore.getInstance(storeProperties.getType());
-    jks.load(trustStoreStream, storeProperties.getPassword().toCharArray());
+
+    // use provider if given, otherwise use the first matching security provider
+    final KeyStore ks;
+    if (StringUtils.isNotBlank(storeProperties.getProvider())) {
+      ks = KeyStore.getInstance(storeProperties.getType(), storeProperties.getProvider());
+    }
+    else {
+      ks = KeyStore.getInstance(storeProperties.getType());
+    }
+
+    ks.load(trustStoreStream, storeProperties.getPassword().toCharArray());
     TrustManagerFactory tmf = TrustManagerFactory.getInstance(storeProperties.getManagerType());
-    tmf.init(jks);
+    tmf.init(ks);
     return tmf;
   }
 

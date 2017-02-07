@@ -122,7 +122,7 @@ public final class DefaultHttpClientConfig extends AbstractHttpClientConfig {
 
   @Override
   public String getKeyStoreProvider() {
-    return CertificateLoader.KEY_STORE_PROVIDER_DEFAULT;
+    return null;
   }
 
   @Override
@@ -143,6 +143,11 @@ public final class DefaultHttpClientConfig extends AbstractHttpClientConfig {
   @Override
   public String getTrustStoreType() {
     return CertificateLoader.TRUST_STORE_TYPE_DEFAULT;
+  }
+
+  @Override
+  public String getTrustStoreProvider() {
+    return null;
   }
 
   @Override
