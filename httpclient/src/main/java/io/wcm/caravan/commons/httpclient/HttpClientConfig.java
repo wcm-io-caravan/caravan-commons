@@ -21,6 +21,8 @@ package io.wcm.caravan.commons.httpclient;
 
 import org.osgi.annotation.versioning.ConsumerType;
 
+import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
+
 /**
  * HTTP Client configuration.
  */
@@ -150,6 +152,13 @@ public interface HttpClientConfig {
    * @return Key store type (default: PKCS12)
    */
   String getKeyStoreType();
+
+  /**
+   * @return Key store provider (default: SunJSSE)
+   */
+  default String getKeyStoreProvider() {
+    return CertificateLoader.KEY_STORE_PROVIDER_DEFAULT;
+  }
 
   /**
    * @return Key store file path

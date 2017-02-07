@@ -151,6 +151,13 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   public static final String KEYMANAGER_TYPE_PROPERTY = "keyManagerType";
 
   /**
+   * KeyStore provider
+   */
+  @Property(label = "KeyStore provider", description = "KeyStore provider",
+      value = CertificateLoader.KEY_STORE_PROVIDER_DEFAULT)
+  public static final String KEYSTORE_PROVIDER_PROPERTY = "keyStoreProvider";
+
+  /**
    * KeyStore type
    */
   @Property(label = "KeyStore type", description = "KeyStore type",
@@ -231,6 +238,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   private String trustStoreType;
   private String trustStorePath;
   private String trustStorePassword;
+  private String keyStoreProvider;
 
   private static final Logger log = LoggerFactory.getLogger(HttpClientConfigImpl.class);
 
@@ -288,6 +296,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
     sslContextType = PropertiesUtil.toString(config.get(SSL_CONTEXT_TYPE_PROPERTY), CertificateLoader.SSL_CONTEXT_TYPE_DEFAULT);
     keyManagerType = PropertiesUtil.toString(config.get(KEYMANAGER_TYPE_PROPERTY), CertificateLoader.KEY_MANAGER_TYPE_DEFAULT);
     keyStoreType = PropertiesUtil.toString(config.get(KEYSTORE_TYPE_PROPERTY), CertificateLoader.KEY_STORE_TYPE_DEFAULT);
+    keyStoreProvider = PropertiesUtil.toString(config.get(KEYSTORE_PROVIDER_PROPERTY), CertificateLoader.KEY_STORE_PROVIDER_DEFAULT);
     keyStorePath = PropertiesUtil.toString(config.get(KEYSTORE_PATH_PROPERTY), null);
     keyStorePassword = PropertiesUtil.toString(config.get(KEYSTORE_PASSWORD_PROPERTY), null);
     trustManagerType = PropertiesUtil.toString(config.get(TRUSTMANAGER_TYPE_PROPERTY), CertificateLoader.TRUST_MANAGER_TYPE_DEFAULT);
@@ -407,6 +416,11 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   @Override
   public String getKeyStoreType() {
     return keyStoreType;
+  }
+
+  @Override
+  public String getKeyStoreProvider() {
+    return keyStoreProvider;
   }
 
   @Override

@@ -19,8 +19,6 @@
  */
 package io.wcm.caravan.commons.httpclient.impl.helpers;
 
-import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -37,6 +35,8 @@ import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.conn.ssl.SSLInitializationException;
+
+import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 
 /**
  * Helper class for loading certificates for SSL communication.
@@ -57,6 +57,11 @@ public final class CertificateLoader {
    * Default key store type
    */
   public static final String KEY_STORE_TYPE_DEFAULT = "PKCS12";
+
+  /**
+   * Default key store provider
+   */
+  public static final String KEY_STORE_PROVIDER_DEFAULT = "SunJSSE";
 
   /**
    * Default trust manager type
@@ -85,19 +90,19 @@ public final class CertificateLoader {
     KeyManagerFactory kmf = null;
     if (isSslKeyManagerEnabled(config)) {
       kmf = getKeyManagerFactory(config.getKeyStorePath(),
-          new StoreProperties(config.getKeyStorePassword(), config.getKeyManagerType(), config.getKeyStoreType()));
+          new StoreProperties(config.getKeyStorePassword(), config.getKeyManagerType(), config.getKeyStoreType(), config.getKeyStoreProvider()));
     }
     TrustManagerFactory tmf = null;
     if (isSslTrustStoreEnbaled(config)) {
       StoreProperties storeProperties = new StoreProperties(config.getTrustStorePassword(),
-          config.getTrustManagerType(), config.getTrustStoreType());
+          config.getTrustManagerType(), config.getTrustStoreType(), StringUtils.EMPTY);
       tmf = getTrustManagerFactory(config.getTrustStorePath(), storeProperties);
     }
 
     SSLContext sslContext = SSLContext.getInstance(config.getSslContextType());
     sslContext.init(kmf != null ? kmf.getKeyManagers() : null,
         tmf != null ? tmf.getTrustManagers() : null,
-            null);
+        null);
 
     return sslContext;
   }
@@ -141,10 +146,11 @@ public final class CertificateLoader {
       throws IOException, GeneralSecurityException {
     final KeyStore ks;
     /**
-     * only the PKCS12 KeyStoreType needs a extra handling see: http://stackoverflow.com/questions/28764556/loading-a-pkcs-12-keystore-in-aem-6-0
+     * only the PKCS12 KeyStoreType needs a extra handling see:
+     * http://stackoverflow.com/questions/28764556/loading-a-pkcs-12-keystore-in-aem-6-0
      */
-    if (StringUtils.equals(storeProperties.getType(), "PKCS12")) {
-      ks = KeyStore.getInstance(storeProperties.getType(), "SunJSSE");
+    if (StringUtils.isNotBlank(storeProperties.getProvider())) {
+      ks = KeyStore.getInstance(storeProperties.getType(), storeProperties.getProvider());
     }
     else {
       ks = KeyStore.getInstance(storeProperties.getType());
