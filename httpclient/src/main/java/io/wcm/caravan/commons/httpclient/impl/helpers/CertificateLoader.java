@@ -19,8 +19,6 @@
  */
 package io.wcm.caravan.commons.httpclient.impl.helpers;
 
-import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -37,6 +35,8 @@ import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.conn.ssl.SSLInitializationException;
+
+import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 
 /**
  * Helper class for loading certificates for SSL communication.
@@ -85,19 +85,19 @@ public final class CertificateLoader {
     KeyManagerFactory kmf = null;
     if (isSslKeyManagerEnabled(config)) {
       kmf = getKeyManagerFactory(config.getKeyStorePath(),
-          new StoreProperties(config.getKeyStorePassword(), config.getKeyManagerType(), config.getKeyStoreType()));
+          new StoreProperties(config.getKeyStorePassword(), config.getKeyManagerType(),
+              config.getKeyStoreType(), config.getKeyStoreProvider()));
     }
     TrustManagerFactory tmf = null;
     if (isSslTrustStoreEnbaled(config)) {
-      StoreProperties storeProperties = new StoreProperties(config.getTrustStorePassword(),
-          config.getTrustManagerType(), config.getTrustStoreType());
-      tmf = getTrustManagerFactory(config.getTrustStorePath(), storeProperties);
+      tmf = getTrustManagerFactory(config.getTrustStorePath(), new StoreProperties(config.getTrustStorePassword(),
+          config.getTrustManagerType(), config.getTrustStoreType(), config.getTrustStoreProvider()));
     }
 
     SSLContext sslContext = SSLContext.getInstance(config.getSslContextType());
     sslContext.init(kmf != null ? kmf.getKeyManagers() : null,
         tmf != null ? tmf.getTrustManagers() : null,
-            null);
+        null);
 
     return sslContext;
   }
@@ -139,10 +139,17 @@ public final class CertificateLoader {
    */
   private static KeyManagerFactory getKeyManagerFactory(InputStream keyStoreStream, StoreProperties storeProperties)
       throws IOException, GeneralSecurityException {
-    KeyStore ts = KeyStore.getInstance(storeProperties.getType());
-    ts.load(keyStoreStream, storeProperties.getPassword().toCharArray());
+    // use provider if given, otherwise use the first matching security provider
+    final KeyStore ks;
+    if (StringUtils.isNotBlank(storeProperties.getProvider())) {
+      ks = KeyStore.getInstance(storeProperties.getType(), storeProperties.getProvider());
+    }
+    else {
+      ks = KeyStore.getInstance(storeProperties.getType());
+    }
+    ks.load(keyStoreStream, storeProperties.getPassword().toCharArray());
     KeyManagerFactory kmf = KeyManagerFactory.getInstance(storeProperties.getManagerType());
-    kmf.init(ts, storeProperties.getPassword().toCharArray());
+    kmf.init(ks, storeProperties.getPassword().toCharArray());
     return kmf;
   }
 
@@ -183,10 +190,19 @@ public final class CertificateLoader {
    */
   private static TrustManagerFactory getTrustManagerFactory(InputStream trustStoreStream, StoreProperties storeProperties)
       throws IOException, GeneralSecurityException {
-    KeyStore jks = KeyStore.getInstance(storeProperties.getType());
-    jks.load(trustStoreStream, storeProperties.getPassword().toCharArray());
+
+    // use provider if given, otherwise use the first matching security provider
+    final KeyStore ks;
+    if (StringUtils.isNotBlank(storeProperties.getProvider())) {
+      ks = KeyStore.getInstance(storeProperties.getType(), storeProperties.getProvider());
+    }
+    else {
+      ks = KeyStore.getInstance(storeProperties.getType());
+    }
+
+    ks.load(trustStoreStream, storeProperties.getPassword().toCharArray());
     TrustManagerFactory tmf = TrustManagerFactory.getInstance(storeProperties.getManagerType());
-    tmf.init(jks);
+    tmf.init(ks);
     return tmf;
   }
 
