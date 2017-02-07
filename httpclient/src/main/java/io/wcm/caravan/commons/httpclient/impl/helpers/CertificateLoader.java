@@ -139,10 +139,19 @@ public final class CertificateLoader {
    */
   private static KeyManagerFactory getKeyManagerFactory(InputStream keyStoreStream, StoreProperties storeProperties)
       throws IOException, GeneralSecurityException {
-    KeyStore ts = KeyStore.getInstance(storeProperties.getType());
-    ts.load(keyStoreStream, storeProperties.getPassword().toCharArray());
+    final KeyStore ks;
+    /**
+     * only the PKCS12 KeyStoreType needs a extra handling see: http://stackoverflow.com/questions/28764556/loading-a-pkcs-12-keystore-in-aem-6-0
+     */
+    if (StringUtils.equals(storeProperties.getType(), "PKCS12")) {
+      ks = KeyStore.getInstance(storeProperties.getType(), "SunJSSE");
+    }
+    else {
+      ks = KeyStore.getInstance(storeProperties.getType());
+    }
+    ks.load(keyStoreStream, storeProperties.getPassword().toCharArray());
     KeyManagerFactory kmf = KeyManagerFactory.getInstance(storeProperties.getManagerType());
-    kmf.init(ts, storeProperties.getPassword().toCharArray());
+    kmf.init(ks, storeProperties.getPassword().toCharArray());
     return kmf;
   }
 
