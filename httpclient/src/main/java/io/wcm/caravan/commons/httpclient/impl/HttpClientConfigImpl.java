@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
-import io.wcm.caravan.commons.httpclient.impl.helpers.AbstractHttpClientconfig;
+import io.wcm.caravan.commons.httpclient.impl.helpers.AbstractHttpClientConfig;
 import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
 
 /**
@@ -49,7 +49,7 @@ description = "Allows to configure special HTTP client settings for target hosts
 configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
 @Service(HttpClientConfig.class)
 @Property(name = "webconsole.configurationFactory.nameHint", value = "{hostPatterns} {wsAddressingToUris} {pathPatterns}")
-public class HttpClientConfigImpl extends AbstractHttpClientconfig {
+public class HttpClientConfigImpl extends AbstractHttpClientConfig {
 
   /**
    * Host pattern
@@ -158,6 +158,12 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
   public static final String KEYSTORE_TYPE_PROPERTY = "keyStoreType";
 
   /**
+   * KeyStore provider
+   */
+  @Property(label = "KeyStore provider", description = "KeyStore provider. If not set the first matching security provider is used.")
+  public static final String KEYSTORE_PROVIDER_PROPERTY = "keyStoreProvider";
+
+  /**
    * KeyStore path
    */
   @Property(label = "KeyStore path", description = "KeyStore path")
@@ -182,6 +188,12 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
   @Property(label = "TrustStore type", description = "TrustStore type",
       value = CertificateLoader.TRUST_STORE_TYPE_DEFAULT)
   public static final String TRUSTSTORE_TYPE_PROPERTY = "trustStoreType";
+
+  /**
+   * TrustStore provider
+   */
+  @Property(label = "TrustStore provider", description = "TrustStore provider. If not set the first matching security provider is used.")
+  public static final String TRUSTSTORE_PROVIDER_PROPERTY = "trustStoreProvider";
 
   /**
    * TrustStore path
@@ -225,10 +237,12 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
   private String sslContextType;
   private String keyManagerType;
   private String keyStoreType;
+  private String keyStoreProvider;
   private String keyStorePath;
   private String keyStorePassword;
   private String trustManagerType;
   private String trustStoreType;
+  private String trustStoreProvider;
   private String trustStorePath;
   private String trustStorePassword;
 
@@ -288,10 +302,12 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
     sslContextType = PropertiesUtil.toString(config.get(SSL_CONTEXT_TYPE_PROPERTY), CertificateLoader.SSL_CONTEXT_TYPE_DEFAULT);
     keyManagerType = PropertiesUtil.toString(config.get(KEYMANAGER_TYPE_PROPERTY), CertificateLoader.KEY_MANAGER_TYPE_DEFAULT);
     keyStoreType = PropertiesUtil.toString(config.get(KEYSTORE_TYPE_PROPERTY), CertificateLoader.KEY_STORE_TYPE_DEFAULT);
+    keyStoreProvider = PropertiesUtil.toString(config.get(KEYSTORE_PROVIDER_PROPERTY), null);
     keyStorePath = PropertiesUtil.toString(config.get(KEYSTORE_PATH_PROPERTY), null);
     keyStorePassword = PropertiesUtil.toString(config.get(KEYSTORE_PASSWORD_PROPERTY), null);
     trustManagerType = PropertiesUtil.toString(config.get(TRUSTMANAGER_TYPE_PROPERTY), CertificateLoader.TRUST_MANAGER_TYPE_DEFAULT);
     trustStoreType = PropertiesUtil.toString(config.get(TRUSTSTORE_TYPE_PROPERTY), CertificateLoader.TRUST_STORE_TYPE_DEFAULT);
+    trustStoreProvider = PropertiesUtil.toString(config.get(TRUSTSTORE_PROVIDER_PROPERTY), null);
     trustStorePath = PropertiesUtil.toString(config.get(TRUSTSTORE_PATH_PROPERTY), null);
     trustStorePassword = PropertiesUtil.toString(config.get(TRUSTSTORE_PASSWORD_PROPERTY), null);
   }
@@ -410,6 +426,11 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
   }
 
   @Override
+  public String getKeyStoreProvider() {
+    return keyStoreProvider;
+  }
+
+  @Override
   public String getKeyStorePath() {
     return keyStorePath;
   }
@@ -427,6 +448,11 @@ public class HttpClientConfigImpl extends AbstractHttpClientconfig {
   @Override
   public String getTrustStoreType() {
     return trustStoreType;
+  }
+
+  @Override
+  public String getTrustStoreProvider() {
+    return trustStoreProvider;
   }
 
   @Override

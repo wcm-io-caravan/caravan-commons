@@ -152,6 +152,13 @@ public interface HttpClientConfig {
   String getKeyStoreType();
 
   /**
+   * @return Key store provider (default: null = use first matching security provider)
+   */
+  default String getKeyStoreProvider() {
+    return null;
+  }
+
+  /**
    * @return Key store file path
    */
   String getKeyStorePath();
@@ -170,6 +177,13 @@ public interface HttpClientConfig {
    * @return Trust store type (default: JKS)
    */
   String getTrustStoreType();
+
+  /**
+   * @return Trust store provider (default: null = use first matching security provider)
+   */
+  default String getTrustStoreProvider() {
+    return null;
+  }
 
   /**
    * @return Trust store file path
