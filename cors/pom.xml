@@ -36,6 +36,7 @@
 
   <name>Commons CORS Filter</name>
   <description>Servlet filter for managing CORS header in HTTP responses.</description>
+  <url>${site.url}/${site.url.module.prefix}/</url>
 
   <scm>
     <connection>scm:git:https://github.com/wcm-io-caravan/caravan-commons.git</connection>

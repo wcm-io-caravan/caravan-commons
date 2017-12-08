@@ -36,6 +36,7 @@
 
   <name>Commons HTTP Async Client</name>
   <description>Provides preconfigured Apache HTTP Async Client instances.</description>
+  <url>${site.url}/${site.url.module.prefix}/</url>
 
   <scm>
     <connection>scm:git:https://github.com/wcm-io-caravan/caravan-commons.git</connection>
