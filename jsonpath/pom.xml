@@ -25,7 +25,7 @@
   <parent>
     <groupId>io.wcm.caravan</groupId>
     <artifactId>io.wcm.caravan.commons.parent</artifactId>
-    <version>1.1.2</version>
+    <version>1.1.3-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
@@ -36,6 +36,7 @@
 
   <name>Commons JsonPath</name>
   <description>Provides preconfigured JsonPath implementation.</description>
+  <url>${site.url}/${site.url.module.prefix}/</url>
 
   <scm>
     <connection>scm:git:https://github.com/wcm-io-caravan/caravan-commons.git</connection>
@@ -46,7 +47,7 @@
 
   <properties>
     <site.url.module.prefix>commons/jsonpath</site.url.module.prefix>
-    <jsonpath.version>2.1.0</jsonpath.version>
+    <jsonpath.version>2.0.0</jsonpath.version>
   </properties>
 
   <dependencies>

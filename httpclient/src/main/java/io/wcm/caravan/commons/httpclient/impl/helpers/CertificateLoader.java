@@ -223,7 +223,7 @@ public final class CertificateLoader {
       return new FileInputStream(file);
     }
 
-    // if not a file fallback to classloder resource
+    // if not a file fallback to classloader resource
     return CertificateLoader.class.getResourceAsStream(path);
   }
 
