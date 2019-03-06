@@ -118,11 +118,13 @@ class HttpClientItem {
     HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()
         .setConnectionManager(connectionManager);
 
-    // timeout settings
     httpClientBuilder.setDefaultRequestConfig(RequestConfig.custom()
-        .setCookieSpec(CookieSpecs.STANDARD)
+        // timeout settings
         .setConnectTimeout(config.getConnectTimeout())
-        .setSocketTimeout(config.getSocketTimeout()).build());
+        .setSocketTimeout(config.getSocketTimeout())
+        // apply standard cookie policy to support all expire headers (see https://issues.apache.org/jira/browse/HTTPCLIENT-1763)
+        .setCookieSpec(CookieSpecs.STANDARD)
+        .build());
 
     httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
 
