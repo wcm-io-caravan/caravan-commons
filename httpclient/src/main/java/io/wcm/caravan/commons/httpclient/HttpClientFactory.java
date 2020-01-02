@@ -22,6 +22,7 @@ package io.wcm.caravan.commons.httpclient;
 import java.net.URI;
 
 import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -36,7 +37,7 @@ public interface HttpClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Http Client
    */
-  HttpClient get(String targetUrl);
+  CloseableHttpClient get(String targetUrl);
 
   /**
    * Returns a configured synchronous Http Client for the given target URL. If a special configuration
@@ -44,7 +45,7 @@ public interface HttpClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Http Client
    */
-  HttpClient get(URI targetUrl);
+  CloseableHttpClient get(URI targetUrl);
 
   /**
    * Returns a configured synchronous Http Client for the given target URL. The Http Client is dedicated
@@ -55,7 +56,7 @@ public interface HttpClientFactory {
    * @param wsAddressingToUri WS Addressing "To" header
    * @return Http Client
    */
-  HttpClient getWs(String targetUrl, String wsAddressingToUri);
+  CloseableHttpClient getWs(String targetUrl, String wsAddressingToUri);
 
   /**
    * Returns a configured synchronous Http Client for the given target URL. The Http Client is dedicated
@@ -66,6 +67,6 @@ public interface HttpClientFactory {
    * @param wsAddressingToUri WS Addressing "To" header
    * @return Http Client
    */
-  HttpClient getWs(URI targetUrl, URI wsAddressingToUri);
+  CloseableHttpClient getWs(URI targetUrl, URI wsAddressingToUri);
 
 }

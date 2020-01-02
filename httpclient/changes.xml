@@ -23,6 +23,12 @@
     xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/plugins/maven-changes-plugin/xsd/changes-1.0.0.xsd">
   <body>
   
+    <release version="2.0.0" date="not released">
+      <action type="update" dev="cnagel" issue="WCARAV-14">
+        HttpClientFactory returns CloseableHttpClient
+      </action>
+    </release>
+
     <release version="1.2.2" date="2019-03-06">
       <action type="add" dev="skrieg">
         Apply standard cookie policy to support all expire headers (see https://issues.apache.org/jira/browse/HTTPCLIENT-1763).
