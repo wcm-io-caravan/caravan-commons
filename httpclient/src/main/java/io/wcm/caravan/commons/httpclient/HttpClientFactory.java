@@ -37,7 +37,7 @@ public interface HttpClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Http Client
    */
-  CloseableHttpClient get(String targetUrl);
+  HttpClient get(String targetUrl);
 
   /**
    * Returns a configured synchronous Http Client for the given target URL. If a special configuration
@@ -45,7 +45,23 @@ public interface HttpClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Http Client
    */
-  CloseableHttpClient get(URI targetUrl);
+  CloseableHttpClient getCloseable(String targetUrl);
+
+  /**
+   * Returns a configured synchronous Http Client for the given target URL. If a special configuration
+   * (e.g. timeout setting, proxy server, authentication) is configured it is applied in the factory.
+   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
+   * @return Http Client
+   */
+  HttpClient get(URI targetUrl);
+
+  /**
+   * Returns a configured synchronous Http Client for the given target URL. If a special configuration
+   * (e.g. timeout setting, proxy server, authentication) is configured it is applied in the factory.
+   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
+   * @return Http Client
+   */
+  CloseableHttpClient getCloseable(URI targetUrl);
 
   /**
    * Returns a configured synchronous Http Client for the given target URL. The Http Client is dedicated
@@ -56,7 +72,7 @@ public interface HttpClientFactory {
    * @param wsAddressingToUri WS Addressing "To" header
    * @return Http Client
    */
-  CloseableHttpClient getWs(String targetUrl, String wsAddressingToUri);
+  HttpClient getWs(String targetUrl, String wsAddressingToUri);
 
   /**
    * Returns a configured synchronous Http Client for the given target URL. The Http Client is dedicated
@@ -67,6 +83,28 @@ public interface HttpClientFactory {
    * @param wsAddressingToUri WS Addressing "To" header
    * @return Http Client
    */
-  CloseableHttpClient getWs(URI targetUrl, URI wsAddressingToUri);
+  CloseableHttpClient getCloseableWs(String targetUrl, String wsAddressingToUri);
+
+  /**
+   * Returns a configured synchronous Http Client for the given target URL. The Http Client is dedicated
+   * for SOAP access and supports filtering specific configuration via the "WS Addressing To" URI.
+   * If a special configuration (e.g. timeout setting, proxy server, authentication) is configured it is
+   * applied in the factory.
+   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
+   * @param wsAddressingToUri WS Addressing "To" header
+   * @return Http Client
+   */
+  HttpClient getWs(URI targetUrl, URI wsAddressingToUri);
+
+  /**
+   * Returns a configured synchronous Http Client for the given target URL. The Http Client is dedicated
+   * for SOAP access and supports filtering specific configuration via the "WS Addressing To" URI.
+   * If a special configuration (e.g. timeout setting, proxy server, authentication) is configured it is
+   * applied in the factory.
+   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
+   * @param wsAddressingToUri WS Addressing "To" header
+   * @return Http Client
+   */
+  CloseableHttpClient getCloseableWs(URI targetUrl, URI wsAddressingToUri);
 
 }

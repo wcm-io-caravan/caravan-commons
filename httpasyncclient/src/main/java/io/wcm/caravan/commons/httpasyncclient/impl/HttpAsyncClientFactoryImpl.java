@@ -33,6 +33,7 @@ import org.apache.felix.scr.annotations.Reference;
 import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.apache.felix.scr.annotations.Service;
+import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.nio.client.HttpAsyncClient;
 import org.apache.sling.commons.osgi.ServiceUtil;
 import org.osgi.framework.BundleContext;
@@ -82,6 +83,11 @@ public class HttpAsyncClientFactoryImpl implements HttpAsyncClientFactory {
 
   @Override
   public HttpAsyncClient get(String targetUrl) {
+    return getCloseable(targetUrl);
+  }
+
+  @Override
+  public CloseableHttpAsyncClient getCloseable(String targetUrl) {
     final URI uri = toUri(targetUrl);
     final String path = uri != null ? uri.getPath() : null;
     return getFactoryItem(uri, null, path, false).getHttpAsyncClient();
@@ -89,11 +95,21 @@ public class HttpAsyncClientFactoryImpl implements HttpAsyncClientFactory {
 
   @Override
   public HttpAsyncClient get(URI targetUrl) {
+    return getCloseable(targetUrl);
+  }
+
+  @Override
+  public CloseableHttpAsyncClient getCloseable(URI targetUrl) {
     return getFactoryItem(targetUrl, null, targetUrl.getPath(), false).getHttpAsyncClient();
   }
 
   @Override
   public HttpAsyncClient getWs(String targetUrl, String wsAddressingToUri) {
+    return getCloseableWs(targetUrl, wsAddressingToUri);
+  }
+
+  @Override
+  public CloseableHttpAsyncClient getCloseableWs(String targetUrl, String wsAddressingToUri) {
     final URI uri = toUri(targetUrl);
     final String path = uri != null ? uri.getPath() : null;
     return getFactoryItem(uri, wsAddressingToUri, path, true).getHttpAsyncClient();
@@ -101,6 +117,11 @@ public class HttpAsyncClientFactoryImpl implements HttpAsyncClientFactory {
 
   @Override
   public HttpAsyncClient getWs(URI targetUrl, URI wsAddressingToUri) {
+    return getCloseableWs(targetUrl, wsAddressingToUri);
+  }
+
+  @Override
+  public CloseableHttpAsyncClient getCloseableWs(URI targetUrl, URI wsAddressingToUri) {
     return getFactoryItem(targetUrl, wsAddressingToUri.toString(), targetUrl.getPath(), true).getHttpAsyncClient();
   }
 
