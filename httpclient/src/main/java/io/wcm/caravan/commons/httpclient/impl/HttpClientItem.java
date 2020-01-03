@@ -120,6 +120,7 @@ class HttpClientItem {
 
     httpClientBuilder.setDefaultRequestConfig(RequestConfig.custom()
         // timeout settings
+        .setConnectionRequestTimeout(config.getConnectionRequestTimeout())
         .setConnectTimeout(config.getConnectTimeout())
         .setSocketTimeout(config.getSocketTimeout())
         // apply standard cookie policy to support all expire headers (see https://issues.apache.org/jira/browse/HTTPCLIENT-1763)

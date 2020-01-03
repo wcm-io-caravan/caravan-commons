@@ -28,6 +28,11 @@ import org.osgi.annotation.versioning.ConsumerType;
 public interface HttpClientConfig {
 
   /**
+   * Default value for connection request timeout (in ms)
+   */
+  int CONNECTION_REQUEST_TIMEOUT_DEFAULT = 15000; // 15sec
+
+  /**
    * Default value for connection timeout (in ms)
    */
   int CONNECT_TIMEOUT_DEFAULT = 15000; // 15sec
@@ -52,6 +57,14 @@ public interface HttpClientConfig {
    * @return true if configuration is enabled.
    */
   boolean isEnabled();
+
+  /**
+   * Connection request timeout in ms.
+   * @return Connection request timeout in ms.
+   */
+  default int getConnectionRequestTimeout() {
+    return CONNECTION_REQUEST_TIMEOUT_DEFAULT;
+  }
 
   /**
    * Connection timeout in ms.

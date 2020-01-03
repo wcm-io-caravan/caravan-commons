@@ -41,6 +41,11 @@ public final class DefaultHttpClientConfig extends AbstractHttpClientConfig {
   }
 
   @Override
+  public int getConnectionRequestTimeout() {
+    return HttpClientConfig.CONNECTION_REQUEST_TIMEOUT_DEFAULT;
+  }
+
+  @Override
   public int getConnectTimeout() {
     return HttpClientConfig.CONNECT_TIMEOUT_DEFAULT;
   }

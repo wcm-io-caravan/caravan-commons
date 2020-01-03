@@ -19,6 +19,7 @@
  */
 package io.wcm.caravan.commons.httpclient.impl;
 
+import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECTION_REQUEST_TIMEOUT_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECT_TIMEOUT_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HOST_PATTERNS_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HTTP_PASSWORD_PROPERTY;
@@ -266,6 +267,7 @@ public class HttpClientItemTest {
   public void testTimeoutSettings() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
+        .put(CONNECTION_REQUEST_TIMEOUT_PROPERTY, 5)
         .put(CONNECT_TIMEOUT_PROPERTY, 9)
         .put(SOCKET_TIMEOUT_PROPERTY, 99)
         .build());
@@ -273,6 +275,7 @@ public class HttpClientItemTest {
     HttpClientItem item = new HttpClientItem(config);
     HttpClient client = item.getHttpClient();
     RequestConfig requestConfig = HttpClientTestUtils.getDefaultRequestConfig(client);
+    assertEquals(5, requestConfig.getConnectionRequestTimeout());
     assertEquals(9, requestConfig.getConnectTimeout());
     assertEquals(99, requestConfig.getSocketTimeout());
     item.close();

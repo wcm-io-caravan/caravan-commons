@@ -73,6 +73,13 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   public static final String PATH_PATTERNS_PROPERTY = "pathPatterns";
 
   /**
+   * Connection request timeout
+   */
+  @Property(label = "Connection request timeout", description = "Max. timeout to wait for getting a connection from the connection manager (ms)",
+      intValue = HttpClientConfig.CONNECTION_REQUEST_TIMEOUT_DEFAULT)
+  public static final String CONNECTION_REQUEST_TIMEOUT_PROPERTY = "connectionRequestTimeout";
+
+  /**
    * Connect timeout
    */
   @Property(label = "Connect timeout", description = "Max. timeout to wait for HTTP connection (ms)",
@@ -220,6 +227,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
 
   private boolean enabled;
 
+  private int connectionRequestTimeout;
   private int connectTimeout;
   private int socketTimeout;
   private int maxConnectionsPerHost;
@@ -252,6 +260,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   private void activate(Map<String, Object> config) {
     enabled = PropertiesUtil.toBoolean(config.get(ENABLED_PROPERTY), ENABLED_DEFAULT);
 
+    connectionRequestTimeout = PropertiesUtil.toInteger(config.get(CONNECTION_REQUEST_TIMEOUT_PROPERTY), HttpClientConfig.CONNECTION_REQUEST_TIMEOUT_DEFAULT);
     connectTimeout = PropertiesUtil.toInteger(config.get(CONNECT_TIMEOUT_PROPERTY), HttpClientConfig.CONNECT_TIMEOUT_DEFAULT);
     socketTimeout = PropertiesUtil.toInteger(config.get(SOCKET_TIMEOUT_PROPERTY), HttpClientConfig.SOCKET_TIMEOUT_DEFAULT);
     maxConnectionsPerHost = PropertiesUtil.toInteger(config.get(MAX_CONNECTIONS_PER_HOST_PROPERTY), HttpClientConfig.MAX_CONNECTIONS_PER_HOST_DEFAULT);
@@ -315,6 +324,11 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   @Override
   public boolean isEnabled() {
     return this.enabled;
+  }
+
+  @Override
+  public int getConnectionRequestTimeout() {
+    return connectionRequestTimeout;
   }
 
   @Override
