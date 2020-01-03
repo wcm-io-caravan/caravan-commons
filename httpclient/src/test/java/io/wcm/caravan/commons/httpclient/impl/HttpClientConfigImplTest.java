@@ -19,6 +19,7 @@
  */
 package io.wcm.caravan.commons.httpclient.impl;
 
+import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECTION_REQUEST_TIMEOUT_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECT_TIMEOUT_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HOST_PATTERNS_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HTTP_PASSWORD_PROPERTY;
@@ -59,6 +60,7 @@ public class HttpClientConfigImplTest {
   public void testDefaultValues() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl());
 
+    assertEquals(CONNECTION_REQUEST_TIMEOUT_PROPERTY, HttpClientConfig.CONNECTION_REQUEST_TIMEOUT_DEFAULT, config.getConnectionRequestTimeout());
     assertEquals(CONNECT_TIMEOUT_PROPERTY, HttpClientConfig.CONNECT_TIMEOUT_DEFAULT, config.getConnectTimeout());
     assertEquals(SOCKET_TIMEOUT_PROPERTY, HttpClientConfig.SOCKET_TIMEOUT_DEFAULT, config.getSocketTimeout());
     assertEquals(MAX_CONNECTIONS_PER_HOST_PROPERTY, HttpClientConfig.MAX_CONNECTIONS_PER_HOST_DEFAULT, config.getMaxConnectionsPerHost());
@@ -89,6 +91,7 @@ public class HttpClientConfigImplTest {
   public void testReadFromConfig() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
+        .put(CONNECTION_REQUEST_TIMEOUT_PROPERTY, 5)
         .put(CONNECT_TIMEOUT_PROPERTY, 1)
         .put(SOCKET_TIMEOUT_PROPERTY, 2)
         .put(MAX_CONNECTIONS_PER_HOST_PROPERTY, 3)
@@ -119,6 +122,7 @@ public class HttpClientConfigImplTest {
             .put(TRUSTSTORE_PASSWORD_PROPERTY, "trustpasswd")
         .build());
 
+    assertEquals(CONNECTION_REQUEST_TIMEOUT_PROPERTY, 5, config.getConnectionRequestTimeout());
     assertEquals(CONNECT_TIMEOUT_PROPERTY, 1, config.getConnectTimeout());
     assertEquals(SOCKET_TIMEOUT_PROPERTY, 2, config.getSocketTimeout());
     assertEquals(MAX_CONNECTIONS_PER_HOST_PROPERTY, 3, config.getMaxConnectionsPerHost());
