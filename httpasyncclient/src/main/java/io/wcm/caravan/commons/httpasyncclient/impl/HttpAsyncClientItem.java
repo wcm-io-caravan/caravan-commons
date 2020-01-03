@@ -133,6 +133,7 @@ class HttpAsyncClientItem {
 
     // timeout settings
     httpClientAsyncBuilder.setDefaultRequestConfig(RequestConfig.custom()
+        .setConnectionRequestTimeout(config.getConnectionRequestTimeout())
         .setConnectTimeout(config.getConnectTimeout())
         .setSocketTimeout(config.getSocketTimeout()).build());
 
