@@ -62,7 +62,9 @@ public interface HttpClientConfig {
    * Connection request timeout in ms.
    * @return Connection request timeout in ms.
    */
-  int getConnectionRequestTimeout();
+  default int getConnectionRequestTimeout() {
+    return CONNECTION_REQUEST_TIMEOUT_DEFAULT;
+  }
 
   /**
    * Connection timeout in ms.

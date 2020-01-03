@@ -27,6 +27,9 @@
       <action type="add" dev="cnagel" issue="WCARAV-14">
         HttpClientFactory: Add additional methods returning CloseableHttpClient instances.
       </action>
+      <action type="update" dev="cnagel" issue="WCARAV-15">
+        Make "Connection Request Timeout" configurable.
+      </action>
     </release>
 
     <release version="1.2.2" date="2019-03-06">
