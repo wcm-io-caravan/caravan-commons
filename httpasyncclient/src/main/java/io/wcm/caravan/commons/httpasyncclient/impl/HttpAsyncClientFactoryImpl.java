@@ -36,7 +36,6 @@ import org.apache.felix.scr.annotations.Service;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.nio.client.HttpAsyncClient;
 import org.apache.sling.commons.osgi.ServiceUtil;
-import org.osgi.framework.BundleContext;
 
 import io.wcm.caravan.commons.httpasyncclient.HttpAsyncClientFactory;
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
@@ -56,7 +55,7 @@ public class HttpAsyncClientFactoryImpl implements HttpAsyncClientFactory {
   private HttpAsyncClientItem defaultFactoryItem;
 
   @Activate
-  private void activate(BundleContext context) {
+  private void activate() {
     defaultFactoryItem = new HttpAsyncClientItem(DefaultHttpClientConfig.INSTANCE);
   }
 
@@ -74,6 +73,7 @@ public class HttpAsyncClientFactoryImpl implements HttpAsyncClientFactory {
     factoryItems.put(ServiceUtil.getComparableForServiceRanking(config), new HttpAsyncClientItem(httpClientConfig));
   }
 
+  @SuppressWarnings("unused")
   protected void unbindHttpClientConfig(HttpClientConfig httpClientConfig, Map<String, Object> config) {
     HttpAsyncClientItem removed = factoryItems.remove(ServiceUtil.getComparableForServiceRanking(config));
     if (removed != null) {

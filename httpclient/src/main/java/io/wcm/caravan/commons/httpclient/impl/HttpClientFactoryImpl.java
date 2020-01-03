@@ -36,7 +36,6 @@ import org.apache.felix.scr.annotations.Service;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.sling.commons.osgi.ServiceUtil;
-import org.osgi.framework.BundleContext;
 
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 import io.wcm.caravan.commons.httpclient.HttpClientFactory;
@@ -56,7 +55,7 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
   private HttpClientItem defaultFactoryItem;
 
   @Activate
-  private void activate(BundleContext context) {
+  private void activate() {
     defaultFactoryItem = new HttpClientItem(DefaultHttpClientConfig.INSTANCE);
   }
 
@@ -74,6 +73,7 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
     factoryItems.put(ServiceUtil.getComparableForServiceRanking(config), new HttpClientItem(httpClientConfig));
   }
 
+  @SuppressWarnings("unused")
   protected void unbindHttpClientConfig(HttpClientConfig httpClientConfig, Map<String, Object> config) {
     HttpClientItem removed = factoryItems.remove(ServiceUtil.getComparableForServiceRanking(config));
     if (removed != null) {
