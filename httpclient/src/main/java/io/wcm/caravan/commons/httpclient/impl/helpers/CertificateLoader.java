@@ -77,8 +77,8 @@ public final class CertificateLoader {
    * Build SSL Socket factory.
    * @param config Http client configuration
    * @return SSL socket factory.
-   * @throws IOException
-   * @throws GeneralSecurityException
+   * @throws IOException I/O exception
+   * @throws GeneralSecurityException General security exception
    */
   public static SSLContext buildSSLContext(HttpClientConfig config) throws IOException, GeneralSecurityException {
 
@@ -107,8 +107,8 @@ public final class CertificateLoader {
    * @param keyStoreFilename Keystore file name
    * @param storeProperties store properties
    * @return Key manager factory
-   * @throws IOException
-   * @throws GeneralSecurityException
+   * @throws IOException I/O exception
+   * @throws GeneralSecurityException General security exception
    */
   public static KeyManagerFactory getKeyManagerFactory(String keyStoreFilename, StoreProperties storeProperties)
       throws IOException, GeneralSecurityException {
@@ -134,8 +134,8 @@ public final class CertificateLoader {
    * @param keyStoreStream Keystore input stream
    * @param storeProperties store properties
    * @return Key manager factory
-   * @throws IOException
-   * @throws GeneralSecurityException
+   * @throws IOException I/O exception
+   * @throws GeneralSecurityException General security exception
    */
   private static KeyManagerFactory getKeyManagerFactory(InputStream keyStoreStream, StoreProperties storeProperties)
       throws IOException, GeneralSecurityException {
@@ -158,8 +158,8 @@ public final class CertificateLoader {
    * @param trustStoreFilename Truststore file name
    * @param storeProperties store properties
    * @return TrustManagerFactory
-   * @throws IOException
-   * @throws GeneralSecurityException
+   * @throws IOException I/O exception
+   * @throws GeneralSecurityException General security exception
    */
   public static TrustManagerFactory getTrustManagerFactory(String trustStoreFilename, StoreProperties storeProperties)
       throws IOException, GeneralSecurityException {
@@ -185,8 +185,8 @@ public final class CertificateLoader {
    * @param trustStoreStream Truststore input stream
    * @param storeProperties store properties
    * @return TrustManagerFactory
-   * @throws IOException
-   * @throws GeneralSecurityException
+   * @throws IOException I/O exception
+   * @throws GeneralSecurityException General security exception
    */
   private static TrustManagerFactory getTrustManagerFactory(InputStream trustStoreStream, StoreProperties storeProperties)
       throws IOException, GeneralSecurityException {
@@ -210,7 +210,7 @@ public final class CertificateLoader {
    * Tries to load the given resource as file, or if no file exists as classpath resource.
    * @param path Filesystem or classpath path
    * @return InputStream or null if neither file nor classpath resource is found
-   * @throws IOException
+   * @throws IOException I/O exception
    */
   private static InputStream getResourceAsStream(String path) throws IOException {
     if (StringUtils.isEmpty(path)) {

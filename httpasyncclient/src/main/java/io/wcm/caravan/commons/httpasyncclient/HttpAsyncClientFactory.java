@@ -21,6 +21,7 @@ package io.wcm.caravan.commons.httpasyncclient;
 
 import java.net.URI;
 
+import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.nio.client.HttpAsyncClient;
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -44,7 +45,23 @@ public interface HttpAsyncClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Http Client
    */
+  CloseableHttpAsyncClient getCloseable(String targetUrl);
+
+  /**
+   * Returns a configured asynchronous Http Client for the given target URL. If a special configuration
+   * (e.g. timeout setting, proxy server, authentication) is configured it is applied in the factory.
+   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
+   * @return Http Client
+   */
   HttpAsyncClient get(URI targetUrl);
+
+  /**
+   * Returns a configured asynchronous Http Client for the given target URL. If a special configuration
+   * (e.g. timeout setting, proxy server, authentication) is configured it is applied in the factory.
+   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
+   * @return Http Client
+   */
+  CloseableHttpAsyncClient getCloseable(URI targetUrl);
 
   /**
    * Returns a configured asynchronous Http Client for the given target URL. The Http Client is dedicated
@@ -66,6 +83,28 @@ public interface HttpAsyncClientFactory {
    * @param wsAddressingToUri WS Addressing "To" header
    * @return Http Client
    */
+  CloseableHttpAsyncClient getCloseableWs(String targetUrl, String wsAddressingToUri);
+
+  /**
+   * Returns a configured asynchronous Http Client for the given target URL. The Http Client is dedicated
+   * for SOAP access and supports filtering specific configuration via the "WS Addressing To" URI.
+   * If a special configuration (e.g. timeout setting, proxy server, authentication) is configured it is
+   * applied in the factory.
+   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
+   * @param wsAddressingToUri WS Addressing "To" header
+   * @return Http Client
+   */
   HttpAsyncClient getWs(URI targetUrl, URI wsAddressingToUri);
+
+  /**
+   * Returns a configured asynchronous Http Client for the given target URL. The Http Client is dedicated
+   * for SOAP access and supports filtering specific configuration via the "WS Addressing To" URI.
+   * If a special configuration (e.g. timeout setting, proxy server, authentication) is configured it is
+   * applied in the factory.
+   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
+   * @param wsAddressingToUri WS Addressing "To" header
+   * @return Http Client
+   */
+  CloseableHttpAsyncClient getCloseableWs(URI targetUrl, URI wsAddressingToUri);
 
 }

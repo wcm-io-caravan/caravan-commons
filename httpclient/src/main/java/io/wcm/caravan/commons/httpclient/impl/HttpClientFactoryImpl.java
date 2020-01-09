@@ -34,8 +34,8 @@ import org.apache.felix.scr.annotations.ReferenceCardinality;
 import org.apache.felix.scr.annotations.ReferencePolicy;
 import org.apache.felix.scr.annotations.Service;
 import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.sling.commons.osgi.ServiceUtil;
-import org.osgi.framework.BundleContext;
 
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 import io.wcm.caravan.commons.httpclient.HttpClientFactory;
@@ -55,7 +55,7 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
   private HttpClientItem defaultFactoryItem;
 
   @Activate
-  private void activate(BundleContext context) {
+  private void activate() {
     defaultFactoryItem = new HttpClientItem(DefaultHttpClientConfig.INSTANCE);
   }
 
@@ -73,6 +73,7 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
     factoryItems.put(ServiceUtil.getComparableForServiceRanking(config), new HttpClientItem(httpClientConfig));
   }
 
+  @SuppressWarnings("unused")
   protected void unbindHttpClientConfig(HttpClientConfig httpClientConfig, Map<String, Object> config) {
     HttpClientItem removed = factoryItems.remove(ServiceUtil.getComparableForServiceRanking(config));
     if (removed != null) {
@@ -81,7 +82,12 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
   }
 
   @Override
-  public HttpClient get(String targetUrl) {
+  public CloseableHttpClient get(String targetUrl) {
+    return getCloseable(targetUrl);
+  }
+
+  @Override
+  public CloseableHttpClient getCloseable(String targetUrl) {
     final URI uri = toUri(targetUrl);
     final String path = uri != null ? uri.getPath() : null;
     return getFactoryItem(uri, null, path, false).getHttpClient();
@@ -89,11 +95,21 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
 
   @Override
   public HttpClient get(URI targetUrl) {
+    return getCloseable(targetUrl);
+  }
+
+  @Override
+  public CloseableHttpClient getCloseable(URI targetUrl) {
     return getFactoryItem(targetUrl, null, targetUrl.getPath(), false).getHttpClient();
   }
 
   @Override
   public HttpClient getWs(String targetUrl, String wsAddressingToUri) {
+    return getCloseableWs(targetUrl, wsAddressingToUri);
+  }
+
+  @Override
+  public CloseableHttpClient getCloseableWs(String targetUrl, String wsAddressingToUri) {
     final URI uri = toUri(targetUrl);
     final String path = uri != null ? uri.getPath() : null;
     return getFactoryItem(uri, wsAddressingToUri, path, true).getHttpClient();
@@ -101,6 +117,11 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
 
   @Override
   public HttpClient getWs(URI targetUrl, URI wsAddressingToUri) {
+    return getCloseableWs(targetUrl, wsAddressingToUri);
+  }
+
+  @Override
+  public CloseableHttpClient getCloseableWs(URI targetUrl, URI wsAddressingToUri) {
     return getFactoryItem(targetUrl, wsAddressingToUri.toString(), targetUrl.getPath(), true).getHttpClient();
   }
 

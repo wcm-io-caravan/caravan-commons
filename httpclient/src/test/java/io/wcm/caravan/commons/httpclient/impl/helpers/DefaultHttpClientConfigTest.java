@@ -31,6 +31,7 @@ public class DefaultHttpClientConfigTest {
   public void testInstance() {
     HttpClientConfig config = DefaultHttpClientConfig.INSTANCE;
 
+    assertEquals("timeoutConnectionRequest", HttpClientConfig.CONNECTION_REQUEST_TIMEOUT_DEFAULT, config.getConnectionRequestTimeout());
     assertEquals("timeoutConnect", HttpClientConfig.CONNECT_TIMEOUT_DEFAULT, config.getConnectTimeout());
     assertEquals("timeoutResponse", HttpClientConfig.SOCKET_TIMEOUT_DEFAULT, config.getSocketTimeout());
     assertEquals("maxConnectionsPerHost", HttpClientConfig.MAX_CONNECTIONS_PER_HOST_DEFAULT, config.getMaxConnectionsPerHost());

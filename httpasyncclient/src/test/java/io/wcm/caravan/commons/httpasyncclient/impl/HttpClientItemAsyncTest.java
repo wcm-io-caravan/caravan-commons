@@ -19,6 +19,7 @@
  */
 package io.wcm.caravan.commons.httpasyncclient.impl;
 
+import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECTION_REQUEST_TIMEOUT_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECT_TIMEOUT_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HTTP_PASSWORD_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HTTP_USER_PROPERTY;
@@ -80,6 +81,7 @@ public class HttpClientItemAsyncTest {
   public void testTimeoutSettings() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
+        .put(CONNECTION_REQUEST_TIMEOUT_PROPERTY, 5)
         .put(CONNECT_TIMEOUT_PROPERTY, 9)
         .put(SOCKET_TIMEOUT_PROPERTY, 99)
         .build());
@@ -87,6 +89,7 @@ public class HttpClientItemAsyncTest {
     HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
     RequestConfig requestConfig = HttpClientTestUtils.getDefaultRequestConfig(client);
+    assertEquals(5, requestConfig.getConnectionRequestTimeout());
     assertEquals(9, requestConfig.getConnectTimeout());
     assertEquals(99, requestConfig.getSocketTimeout());
     item.close();
