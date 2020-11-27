@@ -1,6 +1,6 @@
 <img src="https://wcm.io/images/favicon-16@2x.png"/> wcm.io Caravan Commons
 ======
-[![Build Status](https://travis-ci.org/wcm-io-caravan/caravan-commons.png?branch=develop)](https://travis-ci.org/wcm-io-caravan/caravan-commons)
+[![Build Status](https://travis-ci.com/wcm-io-caravan/caravan-commons.png?branch=develop)](https://travis-ci.com/wcm-io-caravan/caravan-commons)
 [![Code Coverage](https://codecov.io/gh/wcm-io-caravan/caravan-commons/branch/develop/graph/badge.svg)](https://codecov.io/gh/wcm-io-caravan/caravan-commons)
 
 wcm.io Caravan - JSON Data Pipelining Infrastructure
@@ -12,7 +12,7 @@ Common libraries for OSGi-based RESTful micro services.
 Documentation: https://caravan.wcm.io/commons/<br/>
 Issues: https://wcm-io.atlassian.net/<br/>
 Wiki: https://wcm-io.atlassian.net/wiki/<br/>
-Continuous Integration: https://travis-ci.org/wcm-io-caravan/caravan-commons/<br/>
+Continuous Integration: https://travis-ci.com/wcm-io-caravan/caravan-commons/<br/>
 Commercial support: https://wcm.io/commercial-support.html
 
 
