@@ -31,7 +31,7 @@
 
   <groupId>io.wcm.caravan</groupId>
   <artifactId>io.wcm.caravan.commons.jsonpath</artifactId>
-  <version>0.6.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>Commons JsonPath</name>
@@ -47,7 +47,7 @@
 
   <properties>
     <site.url.module.prefix>commons/jsonpath</site.url.module.prefix>
-    <jsonpath.version>2.0.0</jsonpath.version>
+    <jsonpath.version>2.5.0</jsonpath.version>
   </properties>
 
   <dependencies>
@@ -97,13 +97,28 @@
             <Import-Package>
               com.google.gson.*;resolution:=optional,
               net.minidev.asm.*;resolution:=optional,
+              org.apache.tapestry5.*;resolution:=optional,
+              org.codehaus.jettison.*;resolution:=optional,
               *
             </Import-Package>
             <Bundle-Activator>io.wcm.caravan.commons.jsonpath.impl.BundleActivator</Bundle-Activator>
           </instructions>
         </configuration>
-      </plugin>
 
+        <!-- Skip baseline check temporarily until new version with jsonpath 2.5.0 is released (has slightly incompatible APIs) -->
+        <executions>
+          <execution>
+            <id>baseline</id>
+            <goals>
+              <goal>baseline</goal>
+            </goals>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </execution>
+        </executions>
+
+      </plugin>
     </plugins>
   </build>
 
