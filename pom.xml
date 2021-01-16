@@ -46,7 +46,6 @@
     <module>jsonpath</module>
     <module>metrics</module>
     <module>performance</module>
-    <module>stream</module>
   </modules>
 
   <build>
