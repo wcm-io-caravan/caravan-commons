@@ -48,16 +48,6 @@
     <site.url.module.prefix>commons</site.url.module.prefix>
   </properties>
   
-  <dependencies>
-
-    <dependency>
-      <groupId>org.apache.felix</groupId>
-      <artifactId>org.apache.felix.scr.annotations</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-  </dependencies>
-
   <distributionManagement>
     <site>
       <id>${site.deploy.id}</id>
