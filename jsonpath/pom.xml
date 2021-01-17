@@ -19,19 +19,19 @@
   #L%
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
     <groupId>io.wcm.caravan</groupId>
     <artifactId>io.wcm.caravan.commons.parent</artifactId>
-    <version>1.1.6</version>
+    <version>1.1.7-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm.caravan</groupId>
   <artifactId>io.wcm.caravan.commons.jsonpath</artifactId>
-  <version>0.6.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>Commons JsonPath</name>
@@ -47,10 +47,17 @@
 
   <properties>
     <site.url.module.prefix>commons/jsonpath</site.url.module.prefix>
-    <jsonpath.version>2.0.0</jsonpath.version>
+    <jsonpath.version>2.5.0</jsonpath.version>
   </properties>
 
   <dependencies>
+
+    <!-- OSGi -->
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.framework</artifactId>
+      <scope>compile</scope>
+    </dependency>
 
     <dependency>
       <groupId>com.jayway.jsonpath</groupId>
@@ -97,13 +104,28 @@
             <Import-Package>
               com.google.gson.*;resolution:=optional,
               net.minidev.asm.*;resolution:=optional,
+              org.apache.tapestry5.*;resolution:=optional,
+              org.codehaus.jettison.*;resolution:=optional,
               *
             </Import-Package>
             <Bundle-Activator>io.wcm.caravan.commons.jsonpath.impl.BundleActivator</Bundle-Activator>
           </instructions>
         </configuration>
-      </plugin>
 
+        <!-- Skip baseline check temporarily until new version with jsonpath 2.5.0 is released (has slightly incompatible APIs) -->
+        <executions>
+          <execution>
+            <id>baseline</id>
+            <goals>
+              <goal>baseline</goal>
+            </goals>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </execution>
+        </executions>
+
+      </plugin>
     </plugins>
   </build>
 
