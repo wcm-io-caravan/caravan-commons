@@ -112,19 +112,6 @@
           </instructions>
         </configuration>
 
-        <!-- Skip baseline check temporarily until new version with jsonpath 2.5.0 is released (has slightly incompatible APIs) -->
-        <executions>
-          <execution>
-            <id>baseline</id>
-            <goals>
-              <goal>baseline</goal>
-            </goals>
-            <configuration>
-              <skip>true</skip>
-            </configuration>
-          </execution>
-        </executions>
-
       </plugin>
     </plugins>
   </build>
