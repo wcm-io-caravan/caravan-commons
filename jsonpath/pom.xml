@@ -94,7 +94,7 @@
         <configuration>
           <instructions>
             <!-- Do not inline jars, include as jar files -->
-            <Embed-Dependency>*;scope=compile|runtime;inline=false</Embed-Dependency>
+            <Embed-Dependency>*;artifactId=!org.osgi.framework;scope=compile|runtime;inline=false</Embed-Dependency>
             <Embed-Transitive>true</Embed-Transitive>
             <!-- use _exportcontents instead of Export-Package to avoid conflict with Embed-Dependency an inline=true -->
             <_exportcontents>
