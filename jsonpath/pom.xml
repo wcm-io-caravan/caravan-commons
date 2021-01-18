@@ -31,7 +31,7 @@
 
   <groupId>io.wcm.caravan</groupId>
   <artifactId>io.wcm.caravan.commons.jsonpath</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.2</version>
   <packaging>bundle</packaging>
 
   <name>Commons JsonPath</name>
@@ -94,7 +94,7 @@
         <configuration>
           <instructions>
             <!-- Do not inline jars, include as jar files -->
-            <Embed-Dependency>*;scope=compile|runtime;inline=false</Embed-Dependency>
+            <Embed-Dependency>*;artifactId=!org.osgi.framework;scope=compile|runtime;inline=false</Embed-Dependency>
             <Embed-Transitive>true</Embed-Transitive>
             <!-- use _exportcontents instead of Export-Package to avoid conflict with Embed-Dependency an inline=true -->
             <_exportcontents>
@@ -111,19 +111,6 @@
             <Bundle-Activator>io.wcm.caravan.commons.jsonpath.impl.BundleActivator</Bundle-Activator>
           </instructions>
         </configuration>
-
-        <!-- Skip baseline check temporarily until new version with jsonpath 2.5.0 is released (has slightly incompatible APIs) -->
-        <executions>
-          <execution>
-            <id>baseline</id>
-            <goals>
-              <goal>baseline</goal>
-            </goals>
-            <configuration>
-              <skip>true</skip>
-            </configuration>
-          </execution>
-        </executions>
 
       </plugin>
     </plugins>
