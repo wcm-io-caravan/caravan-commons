@@ -7,6 +7,7 @@ Provides preconfigured [JsonPath][jsonpath] implementation based on [Jayway Json
 
 ### Documentation
 
+* [API documentation][jayway-jsonpath-apidocs]
 * [Changelog][changelog]
 
 
@@ -23,4 +24,5 @@ Provides preconfigured [JsonPath][jsonpath] implementation based on [Jayway Json
 
 [jsonpath]: http://goessner.net/articles/JsonPath/
 [jayway-jsonpath]: https://github.com/jayway/JsonPath
+[jayway-jsonpath-apidocs]: http://www.javadoc.io/doc/com.jayway.jsonpath/json-path
 [jackson]: https://github.com/FasterXML/jackson
