@@ -21,6 +21,7 @@ Provides preconfigured [Apache HTTP Async Client](http://hc.apache.org/) instanc
 * Supports configuration of timeouts, max. connections, proxy and proxy authentication
 * Supports mutual authentication with SSL client certificates
 * The configuration mechanisms are shared with [Commons HTTP Client](https://caravan.wcm.io/commons/httpclient/)
+* Also compatible with Adobe Experience Manager (AEM 6.3-6.5, AEMaaCS)
 
 This OSGi Bundle depends on further bundles (or higher versions):
 
