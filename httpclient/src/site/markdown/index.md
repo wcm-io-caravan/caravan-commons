@@ -20,6 +20,7 @@ Provides preconfigured [Apache HTTP Client](http://hc.apache.org/) instances.
 * Allows to configure pooled HTTP client instance for groups of host names identified by patterns
 * Supports configuration of timeouts, max. connections, proxy and proxy authentication
 * Supports mutual authentication with SSL client certificates
+* Also compatible with Adobe Experience Manager (AEM 6.3-6.5, AEMaaCS)
 
 This OSGi Bundle depends on further bundles (or higher versions):
 

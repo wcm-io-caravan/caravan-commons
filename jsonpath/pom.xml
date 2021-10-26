@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm.caravan</groupId>
     <artifactId>io.wcm.caravan.commons.parent</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1-SNAPSHOT</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm.caravan</groupId>
   <artifactId>io.wcm.caravan.commons.jsonpath</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3-SNAPSHOT</version>
   <packaging>bundle</packaging>
 
   <name>Commons JsonPath</name>
@@ -47,7 +47,7 @@
 
   <properties>
     <site.url.module.prefix>commons/jsonpath</site.url.module.prefix>
-    <jsonpath.version>2.5.0</jsonpath.version>
+    <jsonpath.version>2.6.0</jsonpath.version>
   </properties>
 
   <dependencies>
@@ -102,10 +102,11 @@
               com.jayway.jsonpath.spi.*;version=${jsonpath.version}
             </_exportcontents>
             <Import-Package>
-              com.google.gson.*;resolution:=optional,
-              net.minidev.asm.*;resolution:=optional,
-              org.apache.tapestry5.*;resolution:=optional,
-              org.codehaus.jettison.*;resolution:=optional,
+              <!-- dependency versions from https://repo1.maven.org/maven2/com/jayway/jsonpath/json-path/2.6.0/json-path-2.6.0.pom -->
+              com.google.gson.*;version=2.8.6;resolution:=optional,
+              org.apache.tapestry5.*;version=5.7.2;resolution:=optional,
+              org.codehaus.jettison.*;version=1.4.1;resolution:=optional,
+              org.json.*;version=20140107;resolution:=optional,
               *
             </Import-Package>
             <Bundle-Activator>io.wcm.caravan.commons.jsonpath.impl.BundleActivator</Bundle-Activator>
@@ -119,7 +120,7 @@
   <distributionManagement>
     <site>
       <id>${site.deploy.id}</id>
-      <url>${site.deploy.url}${site.url.module.prefix}</url>
+      <url>${site.deploy.url}/${site.url.module.prefix}</url>
     </site>
   </distributionManagement>
 
