@@ -29,7 +29,6 @@ import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
@@ -123,8 +122,7 @@ class HttpClientItem {
         .setConnectionRequestTimeout(config.getConnectionRequestTimeout())
         .setConnectTimeout(config.getConnectTimeout())
         .setSocketTimeout(config.getSocketTimeout())
-        // apply standard cookie policy to support all expire headers (see https://issues.apache.org/jira/browse/HTTPCLIENT-1763)
-        .setCookieSpec(CookieSpecs.STANDARD)
+        .setCookieSpec(config.getCookieSpec())
         .build());
 
     httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);

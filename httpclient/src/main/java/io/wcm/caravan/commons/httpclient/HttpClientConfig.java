@@ -19,6 +19,7 @@
  */
 package io.wcm.caravan.commons.httpclient;
 
+import org.apache.http.client.config.CookieSpecs;
 import org.osgi.annotation.versioning.ConsumerType;
 
 /**
@@ -51,6 +52,11 @@ public interface HttpClientConfig {
    * Default value for maximum total connections
    */
   int MAX_TOTAL_CONNECTIONS_DEFAULT = 50;
+
+  /**
+   * Default value for cookie specs.
+   */
+  String COOKIE_SPEC_DEFAULT = CookieSpecs.STANDARD;
 
   /**
    * Configuration enabled.
@@ -89,6 +95,12 @@ public interface HttpClientConfig {
    * @return Maximal total HTTP connections.
    */
   int getMaxTotalConnections();
+
+  /**
+   * Standard cookie specification for HttpClient.
+   * @return Cookie spec
+   */
+  String getCookieSpec();
 
   /**
    * Http basic authentication user (optional).

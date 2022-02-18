@@ -21,6 +21,7 @@ package io.wcm.caravan.commons.httpclient.impl;
 
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECTION_REQUEST_TIMEOUT_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECT_TIMEOUT_PROPERTY;
+import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.COOKIE_SPEC_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HOST_PATTERNS_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HTTP_PASSWORD_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HTTP_USER_PROPERTY;
@@ -41,10 +42,16 @@ import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTS
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_PATH_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_TYPE_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.WS_ADDRESSINGTO_URIS_PROPERTY;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
-import org.junit.*;
+import org.junit.Rule;
+import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -65,6 +72,7 @@ public class HttpClientConfigImplTest {
     assertEquals(SOCKET_TIMEOUT_PROPERTY, HttpClientConfig.SOCKET_TIMEOUT_DEFAULT, config.getSocketTimeout());
     assertEquals(MAX_CONNECTIONS_PER_HOST_PROPERTY, HttpClientConfig.MAX_CONNECTIONS_PER_HOST_DEFAULT, config.getMaxConnectionsPerHost());
     assertEquals(MAX_TOTAL_CONNECTIONS_PROPERTY, HttpClientConfig.MAX_TOTAL_CONNECTIONS_DEFAULT, config.getMaxTotalConnections());
+    assertEquals(COOKIE_SPEC_PROPERTY, HttpClientConfig.COOKIE_SPEC_DEFAULT, config.getCookieSpec());
     assertNull(HTTP_USER_PROPERTY, config.getHttpUser());
     assertNull(HTTP_PASSWORD_PROPERTY, config.getHttpPassword());
     assertNull(PROXY_HOST_PROPERTY, config.getProxyHost());
@@ -96,6 +104,7 @@ public class HttpClientConfigImplTest {
         .put(SOCKET_TIMEOUT_PROPERTY, 2)
         .put(MAX_CONNECTIONS_PER_HOST_PROPERTY, 3)
         .put(MAX_TOTAL_CONNECTIONS_PROPERTY, 4)
+            .put(COOKIE_SPEC_PROPERTY, CookieSpecs.IGNORE_COOKIES)
         .put(HTTP_USER_PROPERTY, "httpUsr")
         .put(HTTP_PASSWORD_PROPERTY, "httpPwd")
         .put(PROXY_HOST_PROPERTY, "abc")
@@ -127,6 +136,7 @@ public class HttpClientConfigImplTest {
     assertEquals(SOCKET_TIMEOUT_PROPERTY, 2, config.getSocketTimeout());
     assertEquals(MAX_CONNECTIONS_PER_HOST_PROPERTY, 3, config.getMaxConnectionsPerHost());
     assertEquals(MAX_TOTAL_CONNECTIONS_PROPERTY, 4, config.getMaxTotalConnections());
+    assertEquals(COOKIE_SPEC_PROPERTY, CookieSpecs.IGNORE_COOKIES, config.getCookieSpec());
     assertEquals(HTTP_USER_PROPERTY, "httpUsr", config.getHttpUser());
     assertEquals(HTTP_PASSWORD_PROPERTY, "httpPwd", config.getHttpPassword());
     assertEquals(PROXY_HOST_PROPERTY, "abc", config.getProxyHost());

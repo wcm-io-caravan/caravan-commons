@@ -30,7 +30,9 @@ import org.apache.felix.scr.annotations.Activate;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.ConfigurationPolicy;
 import org.apache.felix.scr.annotations.Property;
+import org.apache.felix.scr.annotations.PropertyOption;
 import org.apache.felix.scr.annotations.Service;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.sling.commons.osgi.PropertiesUtil;
 import org.osgi.framework.Constants;
 import org.slf4j.Logger;
@@ -106,6 +108,21 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   @Property(label = "Max total", description = "Max total connections",
       intValue = HttpClientConfig.MAX_TOTAL_CONNECTIONS_DEFAULT)
   public static final String MAX_TOTAL_CONNECTIONS_PROPERTY = "maxTotalConnections";
+
+  /**
+   * Cookie Specs
+   */
+  @Property(label = "Cookie Spec", description = "Standard cookie specification for HttpClient. "
+      + "See https://www.javadoc.io/static/org.apache.httpcomponents/httpclient/4.3.4/org/apache/http/client/config/CookieSpecs.html",
+      value = HttpClientConfig.COOKIE_SPEC_DEFAULT,
+      options = {
+          @PropertyOption(name = CookieSpecs.BROWSER_COMPATIBILITY, value = "BROWSER_COMPATIBILITY"),
+          @PropertyOption(name = CookieSpecs.NETSCAPE, value = "NETSCAPE"),
+          @PropertyOption(name = CookieSpecs.STANDARD, value = "STANDARD"),
+          @PropertyOption(name = CookieSpecs.BEST_MATCH, value = "BEST_MATCH"),
+          @PropertyOption(name = CookieSpecs.IGNORE_COOKIES, value = "IGNORE_COOKIES")
+      })
+  public static final String COOKIE_SPEC_PROPERTY = "cookieSpec";
 
   /**
    * Http user
@@ -232,6 +249,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   private int socketTimeout;
   private int maxConnectionsPerHost;
   private int maxTotalConnections;
+  private String cookieSpec;
   private String httpUser;
   private String httpPassword;
   private String proxyHost;
@@ -265,6 +283,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
     socketTimeout = PropertiesUtil.toInteger(config.get(SOCKET_TIMEOUT_PROPERTY), HttpClientConfig.SOCKET_TIMEOUT_DEFAULT);
     maxConnectionsPerHost = PropertiesUtil.toInteger(config.get(MAX_CONNECTIONS_PER_HOST_PROPERTY), HttpClientConfig.MAX_CONNECTIONS_PER_HOST_DEFAULT);
     maxTotalConnections = PropertiesUtil.toInteger(config.get(MAX_TOTAL_CONNECTIONS_PROPERTY), HttpClientConfig.MAX_TOTAL_CONNECTIONS_DEFAULT);
+    cookieSpec = PropertiesUtil.toString(config.get(COOKIE_SPEC_PROPERTY), HttpClientConfig.COOKIE_SPEC_DEFAULT);
     httpUser = PropertiesUtil.toString(config.get(HTTP_USER_PROPERTY), null);
     httpPassword = PropertiesUtil.toString(config.get(HTTP_PASSWORD_PROPERTY), null);
     proxyHost = PropertiesUtil.toString(config.get(PROXY_HOST_PROPERTY), null);
@@ -349,6 +368,11 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   @Override
   public int getMaxTotalConnections() {
     return maxTotalConnections;
+  }
+
+  @Override
+  public String getCookieSpec() {
+    return cookieSpec;
   }
 
   @Override

@@ -21,6 +21,7 @@ package io.wcm.caravan.commons.httpclient.impl;
 
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECTION_REQUEST_TIMEOUT_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECT_TIMEOUT_PROPERTY;
+import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.COOKIE_SPEC_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HOST_PATTERNS_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HTTP_PASSWORD_PROPERTY;
 import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HTTP_USER_PROPERTY;
@@ -48,6 +49,7 @@ import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
@@ -378,6 +380,19 @@ public class HttpClientItemTest {
 
     assertNotEquals(schemeSocketFactory, SSLConnectionSocketFactory.getSocketFactory());
     item.close();
+  }
+
+  @Test
+  public void testWithCookieSpec() {
+    HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
+        ImmutableMap.<String, Object>builder()
+            .put(COOKIE_SPEC_PROPERTY, CookieSpecs.IGNORE_COOKIES)
+            .build());
+
+    HttpClientItem item = new HttpClientItem(config);
+    HttpClient client = item.getHttpClient();
+    RequestConfig requestConfig = HttpClientTestUtils.getDefaultRequestConfig(client);
+    assertEquals(CookieSpecs.IGNORE_COOKIES, requestConfig.getCookieSpec());
   }
 
 }
