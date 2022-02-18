@@ -99,27 +99,27 @@ public class HttpClientConfigImplTest {
   public void testReadFromConfig() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(CONNECTION_REQUEST_TIMEOUT_PROPERTY, 5)
-        .put(CONNECT_TIMEOUT_PROPERTY, 1)
-        .put(SOCKET_TIMEOUT_PROPERTY, 2)
-        .put(MAX_CONNECTIONS_PER_HOST_PROPERTY, 3)
-        .put(MAX_TOTAL_CONNECTIONS_PROPERTY, 4)
+            .put(CONNECTION_REQUEST_TIMEOUT_PROPERTY, 5)
+            .put(CONNECT_TIMEOUT_PROPERTY, 1)
+            .put(SOCKET_TIMEOUT_PROPERTY, 2)
+            .put(MAX_CONNECTIONS_PER_HOST_PROPERTY, 3)
+            .put(MAX_TOTAL_CONNECTIONS_PROPERTY, 4)
             .put(COOKIE_SPEC_PROPERTY, CookieSpecs.IGNORE_COOKIES)
-        .put(HTTP_USER_PROPERTY, "httpUsr")
-        .put(HTTP_PASSWORD_PROPERTY, "httpPwd")
-        .put(PROXY_HOST_PROPERTY, "abc")
-        .put(PROXY_PORT_PROPERTY, 5)
-        .put(PROXY_USER_PROPERTY, "def")
-        .put(PROXY_PASSWORD_PROPERTY, "ghi")
-        .put(HOST_PATTERNS_PROPERTY, new String[] {
-            "h1",
-            "h2",
-            "h3"
-        })
-        .put(WS_ADDRESSINGTO_URIS_PROPERTY, new String[] {
-            "http://uri1",
-            "http://uri2"
-        })
+            .put(HTTP_USER_PROPERTY, "httpUsr")
+            .put(HTTP_PASSWORD_PROPERTY, "httpPwd")
+            .put(PROXY_HOST_PROPERTY, "abc")
+            .put(PROXY_PORT_PROPERTY, 5)
+            .put(PROXY_USER_PROPERTY, "def")
+            .put(PROXY_PASSWORD_PROPERTY, "ghi")
+            .put(HOST_PATTERNS_PROPERTY, new String[] {
+                "h1",
+                "h2",
+                "h3"
+            })
+            .put(WS_ADDRESSINGTO_URIS_PROPERTY, new String[] {
+                "http://uri1",
+                "http://uri2"
+            })
             .put(SSL_CONTEXT_TYPE_PROPERTY, "ssltype")
             .put(KEYMANAGER_TYPE_PROPERTY, "keymantype")
             .put(KEYSTORE_TYPE_PROPERTY, "keystoretype")
@@ -129,7 +129,7 @@ public class HttpClientConfigImplTest {
             .put(TRUSTSTORE_TYPE_PROPERTY, "truststoretype")
             .put(TRUSTSTORE_PATH_PROPERTY, "trustpath")
             .put(TRUSTSTORE_PASSWORD_PROPERTY, "trustpasswd")
-        .build());
+            .build());
 
     assertEquals(CONNECTION_REQUEST_TIMEOUT_PROPERTY, 5, config.getConnectionRequestTimeout());
     assertEquals(CONNECT_TIMEOUT_PROPERTY, 1, config.getConnectTimeout());
