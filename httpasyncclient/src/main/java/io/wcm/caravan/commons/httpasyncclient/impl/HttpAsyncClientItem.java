@@ -56,7 +56,6 @@ import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
 class HttpAsyncClientItem {
 
   private final HttpClientConfig config;
-  private final PoolingNHttpClientConnectionManager asyncConnectionManager;
   private final CloseableHttpAsyncClient httpAsyncClient;
 
   private static final Logger log = LoggerFactory.getLogger(HttpAsyncClientItem.class);
@@ -94,7 +93,7 @@ class HttpAsyncClientItem {
     }
 
     // build http clients
-    asyncConnectionManager = buildAsyncConnectionManager(config, sslContext);
+    PoolingNHttpClientConnectionManager asyncConnectionManager = buildAsyncConnectionManager(config, sslContext);
     httpAsyncClient = buildHttpAsyncClient(config, asyncConnectionManager, credentialsProvider);
 
     // start async client

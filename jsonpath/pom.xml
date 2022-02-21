@@ -112,7 +112,14 @@
             <Bundle-Activator>io.wcm.caravan.commons.jsonpath.impl.BundleActivator</Bundle-Activator>
           </instructions>
         </configuration>
-
+        <executions>
+          <execution>
+            <id>baseline</id>
+            <goals>
+              <goal>baseline</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

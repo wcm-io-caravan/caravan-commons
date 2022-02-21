@@ -28,6 +28,9 @@
         Make CookieSpecs configurable to be used for HttpAsyncClient. Defaults to STANDARD (RFC 2965 compliant policy).
       </action>
       <action type="update" dev="sseifert">
+        Switch to bnd-maven-plugin and OSGi annotations.
+      </action>
+      <action type="update" dev="sseifert">
         Switch to individual OSGI artifacts.
       </action>
     </release>
