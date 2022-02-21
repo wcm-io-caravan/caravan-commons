@@ -26,16 +26,15 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferenceCardinality;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.nio.client.HttpAsyncClient;
 import org.apache.sling.commons.osgi.ServiceUtil;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 import io.wcm.caravan.commons.httpasyncclient.HttpAsyncClientFactory;
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
@@ -44,12 +43,13 @@ import io.wcm.caravan.commons.httpclient.impl.helpers.DefaultHttpClientConfig;
 /**
  * Default implementation of {@link HttpAsyncClientFactory}.
  */
-@Component(immediate = true)
-@Service(HttpAsyncClientFactory.class)
+@Component(service = HttpAsyncClientFactory.class, immediate = true, reference = {
+    @Reference(name = "httpClientConfig", service = HttpClientConfig.class,
+        cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
+        bind = "bindHttpClientConfig", unbind = "unbindHttpClientConfig")
+})
 public class HttpAsyncClientFactoryImpl implements HttpAsyncClientFactory {
 
-  @Reference(name = "httpClientConfig", referenceInterface = HttpClientConfig.class,
-      cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, policy = ReferencePolicy.DYNAMIC)
   private final ConcurrentMap<Comparable<Object>, HttpAsyncClientItem> factoryItems = new ConcurrentSkipListMap<>();
 
   private HttpAsyncClientItem defaultFactoryItem;

@@ -25,6 +25,9 @@
   
     <release version="1.4.0" date="not released">
       <action type="update" dev="sseifert">
+        Switch to bnd-maven-plugin and OSGi annotations.
+      </action>
+      <action type="update" dev="sseifert">
         Switch to individual OSGI artifacts.
       </action>
     </release>
