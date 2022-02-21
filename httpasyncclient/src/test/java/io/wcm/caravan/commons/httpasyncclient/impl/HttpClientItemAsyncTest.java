@@ -19,26 +19,10 @@
  */
 package io.wcm.caravan.commons.httpasyncclient.impl;
 
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECTION_REQUEST_TIMEOUT_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECT_TIMEOUT_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HTTP_PASSWORD_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HTTP_USER_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTORE_PASSWORD_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTORE_PATH_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.MAX_CONNECTIONS_PER_HOST_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.MAX_TOTAL_CONNECTIONS_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_HOST_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_PASSWORD_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_PORT_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_USER_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.SOCKET_TIMEOUT_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_PASSWORD_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_PATH_PROPERTY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -55,6 +39,8 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 
+import io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl;
+
 public class HttpClientItemAsyncTest {
 
   @Rule
@@ -64,9 +50,9 @@ public class HttpClientItemAsyncTest {
   public void testClientConnectionManager() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(MAX_CONNECTIONS_PER_HOST_PROPERTY, 9)
-        .put(MAX_TOTAL_CONNECTIONS_PROPERTY, 99)
-        .build());
+            .put("maxConnectionsPerHost", 9)
+            .put("maxTotalConnections", 99)
+            .build());
 
     HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
@@ -81,10 +67,10 @@ public class HttpClientItemAsyncTest {
   public void testTimeoutSettings() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(CONNECTION_REQUEST_TIMEOUT_PROPERTY, 5)
-        .put(CONNECT_TIMEOUT_PROPERTY, 9)
-        .put(SOCKET_TIMEOUT_PROPERTY, 99)
-        .build());
+            .put("connectionRequestTimeout", 5)
+            .put("connectTimeout", 9)
+            .put("socketTimeout", 99)
+            .build());
 
     HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
@@ -99,16 +85,16 @@ public class HttpClientItemAsyncTest {
   public void testHttpAuthentication() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(HTTP_USER_PROPERTY, HTTP_USER_PROPERTY)
-        .put(HTTP_PASSWORD_PROPERTY, "httpPasswd")
-        .build());
+            .put("httpUser", "httpUsr")
+            .put("httpPassword", "httpPasswd")
+            .build());
 
     HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
 
     Credentials credentials = HttpClientTestUtils.getCredentialsProvider(client).getCredentials(AuthScope.ANY);
     assertNotNull(credentials);
-    assertEquals(HTTP_USER_PROPERTY, credentials.getUserPrincipal().getName());
+    assertEquals("httpUsr", credentials.getUserPrincipal().getName());
     assertEquals("httpPasswd", credentials.getPassword());
     item.close();
   }
@@ -132,9 +118,9 @@ public class HttpClientItemAsyncTest {
   public void testProxySettingsProxy() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(PROXY_HOST_PROPERTY, "hostname")
-        .put(PROXY_PORT_PROPERTY, 123)
-        .build());
+            .put("proxyHost", "hostname")
+            .put("proxyPort", 123)
+            .build());
 
     HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
@@ -153,11 +139,11 @@ public class HttpClientItemAsyncTest {
   public void testProxySettingsProxyWithAuthentication() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(PROXY_HOST_PROPERTY, "hostname")
-        .put(PROXY_PORT_PROPERTY, 123)
-        .put(PROXY_USER_PROPERTY, "proxyuser")
-        .put(PROXY_PASSWORD_PROPERTY, "proxypassword")
-        .build());
+            .put("proxyHost", "hostname")
+            .put("proxyPort", 123)
+            .put("proxyUser", "proxyuser")
+            .put("proxyPassword", "proxypassword")
+            .build());
 
     HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
@@ -178,11 +164,11 @@ public class HttpClientItemAsyncTest {
   public void testWithClientCertificate() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(KEYSTORE_PATH_PROPERTY, CertificateLoaderTest.KEYSTORE_PATH)
-        .put(KEYSTORE_PASSWORD_PROPERTY, CertificateLoaderTest.KEYSTORE_PASSWORD)
-        .put(TRUSTSTORE_PATH_PROPERTY, CertificateLoaderTest.TRUSTSTORE_PATH)
-        .put(TRUSTSTORE_PASSWORD_PROPERTY, CertificateLoaderTest.TRUSTSTORE_PASSWORD)
-        .build());
+            .put("keyStorePath", CertificateLoaderTest.KEYSTORE_PATH)
+            .put("keyStorePassword", CertificateLoaderTest.KEYSTORE_PASSWORD)
+            .put("trustStorePath", CertificateLoaderTest.TRUSTSTORE_PATH)
+            .put("trustStorePassword", CertificateLoaderTest.TRUSTSTORE_PASSWORD)
+            .build());
 
     HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();

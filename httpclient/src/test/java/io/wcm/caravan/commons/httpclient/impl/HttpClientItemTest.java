@@ -19,24 +19,6 @@
  */
 package io.wcm.caravan.commons.httpclient.impl;
 
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECTION_REQUEST_TIMEOUT_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.CONNECT_TIMEOUT_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HOST_PATTERNS_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HTTP_PASSWORD_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.HTTP_USER_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTORE_PASSWORD_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.KEYSTORE_PATH_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.MAX_CONNECTIONS_PER_HOST_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.MAX_TOTAL_CONNECTIONS_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PATH_PATTERNS_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_HOST_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_PASSWORD_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_PORT_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.PROXY_USER_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.SOCKET_TIMEOUT_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_PASSWORD_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.TRUSTSTORE_PATH_PROPERTY;
-import static io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl.WS_ADDRESSINGTO_URIS_PROPERTY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -70,10 +52,10 @@ public class HttpClientItemTest {
   public void testMatchesHostnames() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(HOST_PATTERNS_PROPERTY, new String[] {
-            "h1", "h2"
-        })
-        .build());
+            .put("hostPatterns", new String[] {
+                "h1", "h2"
+            })
+            .build());
 
     HttpClientItem item = new HttpClientItem(config);
     assertTrue(item.matches("h1", null, null, false));
@@ -86,10 +68,10 @@ public class HttpClientItemTest {
   public void testMatchesHostnamesRegExp() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(HOST_PATTERNS_PROPERTY, new String[] {
-            "h(\\d*)"
-        })
-        .build());
+            .put("hostPatterns", new String[] {
+                "h(\\d*)"
+            })
+            .build());
 
     HttpClientItem item = new HttpClientItem(config);
     assertTrue(item.matches("h1", null, null, false));
@@ -115,11 +97,11 @@ public class HttpClientItemTest {
   public void testMatchesHostnamesWithInvalidPattern() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(HOST_PATTERNS_PROPERTY, new String[] {
-            "h(\\d*)",
-            "(aaa"
-        })
-        .build());
+            .put("hostPatterns", new String[] {
+                "h(\\d*)",
+                "(aaa"
+            })
+            .build());
 
     HttpClientItem item = new HttpClientItem(config);
     assertFalse(item.matches("h1", null, null, false));
@@ -134,11 +116,11 @@ public class HttpClientItemTest {
   public void testMatchesWSAddressingToUris() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(WS_ADDRESSINGTO_URIS_PROPERTY, new String[] {
-            "http://uri1",
-            "http://uri2"
-        })
-        .build());
+            .put("wsAddressingToUris", new String[] {
+                "http://uri1",
+                "http://uri2"
+            })
+            .build());
 
     HttpClientItem item = new HttpClientItem(config);
     assertTrue(item.matches("h1", "http://uri1", null, true));
@@ -164,20 +146,20 @@ public class HttpClientItemTest {
   public void testMatchesHostnamesAndWSAddressintToUri() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(HOST_PATTERNS_PROPERTY, new String[] {
-            "h1",
-            "h2"
-        })
-        .put(WS_ADDRESSINGTO_URIS_PROPERTY, new String[] {
-            "http://uri1",
-            "http://uri2"
-        })
-        .build());
+            .put("hostPatterns", new String[] {
+                "h1",
+                "h2"
+            })
+            .put("wsAddressingToUris", new String[] {
+                "http://uri1",
+                "http://uri2"
+            })
+            .build());
 
     HttpClientItem item = new HttpClientItem(config);
     assertTrue(item.matches("h1", "http://uri1", null, true));
     assertTrue(item.matches("h1", "http://uri2", null, true));
-    assertFalse(item.matches("h1","http://uri3", null, true));
+    assertFalse(item.matches("h1", "http://uri3", null, true));
     assertFalse(item.matches("h1", null, null, true));
     assertTrue(item.matches("h2", "http://uri1", null, true));
     assertTrue(item.matches("h2", "http://uri2", null, true));
@@ -192,11 +174,11 @@ public class HttpClientItemTest {
   public void testMatchesPath() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(PATH_PATTERNS_PROPERTY, new String[] {
-            "/path1",
-            "/path2"
-        })
-        .build());
+            .put("pathPatterns", new String[] {
+                "/path1",
+                "/path2"
+            })
+            .build());
 
     HttpClientItem item = new HttpClientItem(config);
     assertTrue(item.matches("h1", null, "/path1", false));
@@ -222,15 +204,15 @@ public class HttpClientItemTest {
   public void testMatchesHostnamesAndPath() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(HOST_PATTERNS_PROPERTY, new String[] {
-            "h1",
-            "h2"
-        })
-        .put(PATH_PATTERNS_PROPERTY, new String[] {
-            "/path1",
-            "/path2"
-        })
-        .build());
+            .put("hostPatterns", new String[] {
+                "h1",
+                "h2"
+            })
+            .put("pathPatterns", new String[] {
+                "/path1",
+                "/path2"
+            })
+            .build());
 
     HttpClientItem item = new HttpClientItem(config);
     assertTrue(item.matches("h1", null, "/path1", false));
@@ -250,9 +232,9 @@ public class HttpClientItemTest {
   public void testClientConnectionManager() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(MAX_CONNECTIONS_PER_HOST_PROPERTY, 9)
-        .put(MAX_TOTAL_CONNECTIONS_PROPERTY, 99)
-        .build());
+            .put("maxConnectionsPerHost", 9)
+            .put("maxTotalConnections", 99)
+            .build());
 
     HttpClientItem item = new HttpClientItem(config);
     HttpClient client = item.getHttpClient();
@@ -267,10 +249,10 @@ public class HttpClientItemTest {
   public void testTimeoutSettings() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(CONNECTION_REQUEST_TIMEOUT_PROPERTY, 5)
-        .put(CONNECT_TIMEOUT_PROPERTY, 9)
-        .put(SOCKET_TIMEOUT_PROPERTY, 99)
-        .build());
+            .put("connectionRequestTimeout", 5)
+            .put("connectTimeout", 9)
+            .put("socketTimeout", 99)
+            .build());
 
     HttpClientItem item = new HttpClientItem(config);
     HttpClient client = item.getHttpClient();
@@ -285,16 +267,16 @@ public class HttpClientItemTest {
   public void testHttpAuthentication() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(HTTP_USER_PROPERTY, HTTP_USER_PROPERTY)
-        .put(HTTP_PASSWORD_PROPERTY, "httpPasswd")
-        .build());
+            .put("httpUser", "httpUsr")
+            .put("httpPassword", "httpPasswd")
+            .build());
 
     HttpClientItem item = new HttpClientItem(config);
     HttpClient client = item.getHttpClient();
 
     Credentials credentials = HttpClientTestUtils.getCredentialsProvider(client).getCredentials(AuthScope.ANY);
     assertNotNull(credentials);
-    assertEquals(HTTP_USER_PROPERTY, credentials.getUserPrincipal().getName());
+    assertEquals("httpUsr", credentials.getUserPrincipal().getName());
     assertEquals("httpPasswd", credentials.getPassword());
     item.close();
   }
@@ -318,9 +300,9 @@ public class HttpClientItemTest {
   public void testProxySettingsProxy() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-        .put(PROXY_HOST_PROPERTY, "hostname")
-        .put(PROXY_PORT_PROPERTY, 123)
-        .build());
+            .put("proxyHost", "hostname")
+            .put("proxyPort", 123)
+            .build());
 
     HttpClientItem item = new HttpClientItem(config);
     HttpClient client = item.getHttpClient();
@@ -337,12 +319,11 @@ public class HttpClientItemTest {
 
   @Test
   public void testProxySettingsProxyWithAuthentication() {
-    HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-        .put(PROXY_HOST_PROPERTY, "hostname")
-        .put(PROXY_PORT_PROPERTY, 123)
-        .put(PROXY_USER_PROPERTY, "proxyuser")
-        .put(PROXY_PASSWORD_PROPERTY, "proxypassword")
+    HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(), ImmutableMap.<String, Object>builder()
+        .put("proxyHost", "hostname")
+        .put("proxyPort", 123)
+        .put("proxyUser", "proxyuser")
+        .put("proxyPassword", "proxypassword")
         .build());
 
     HttpClientItem item = new HttpClientItem(config);
@@ -362,12 +343,11 @@ public class HttpClientItemTest {
 
   @Test
   public void testWithClientCertificate() {
-    HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-        .put(KEYSTORE_PATH_PROPERTY, CertificateLoaderTest.KEYSTORE_PATH)
-        .put(KEYSTORE_PASSWORD_PROPERTY, CertificateLoaderTest.KEYSTORE_PASSWORD)
-        .put(TRUSTSTORE_PATH_PROPERTY, CertificateLoaderTest.TRUSTSTORE_PATH)
-        .put(TRUSTSTORE_PASSWORD_PROPERTY, CertificateLoaderTest.TRUSTSTORE_PASSWORD)
+    HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(), ImmutableMap.<String, Object>builder()
+        .put("keyStorePath", CertificateLoaderTest.KEYSTORE_PATH)
+        .put("keyStorePassword", CertificateLoaderTest.KEYSTORE_PASSWORD)
+        .put("trustStorePath", CertificateLoaderTest.TRUSTSTORE_PATH)
+        .put("trustStorePassword", CertificateLoaderTest.TRUSTSTORE_PASSWORD)
         .build());
 
     HttpClientItem item = new HttpClientItem(config);
