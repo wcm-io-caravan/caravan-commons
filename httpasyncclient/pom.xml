@@ -92,6 +92,14 @@
             <Conditional-Package>io.wcm.caravan.commons.httpclient.impl.helpers</Conditional-Package>
           </instructions>
         </configuration>
+        <executions>
+          <execution>
+            <id>baseline</id>
+            <goals>
+              <goal>baseline</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
 
     </plugins>
