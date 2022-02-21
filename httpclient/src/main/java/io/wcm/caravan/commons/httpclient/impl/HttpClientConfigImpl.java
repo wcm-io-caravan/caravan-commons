@@ -106,11 +106,11 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
     @AttributeDefinition(name = "Cookie Spec", description = "Standard cookie specification for HttpClient. "
         + "See https://www.javadoc.io/static/org.apache.httpcomponents/httpclient/4.3.4/org/apache/http/client/config/CookieSpecs.html",
         options = {
-            @Option(label = CookieSpecs.BROWSER_COMPATIBILITY, value = "BROWSER_COMPATIBILITY"),
-            @Option(label = CookieSpecs.NETSCAPE, value = "NETSCAPE"),
-            @Option(label = CookieSpecs.STANDARD, value = "STANDARD"),
-            @Option(label = CookieSpecs.BEST_MATCH, value = "BEST_MATCH"),
-            @Option(label = CookieSpecs.IGNORE_COOKIES, value = "IGNORE_COOKIES")
+            @Option(value = CookieSpecs.BROWSER_COMPATIBILITY, label = "BROWSER_COMPATIBILITY"),
+            @Option(value = CookieSpecs.NETSCAPE, label = "NETSCAPE"),
+            @Option(value = CookieSpecs.STANDARD, label = "STANDARD"),
+            @Option(value = CookieSpecs.BEST_MATCH, label = "BEST_MATCH"),
+            @Option(value = CookieSpecs.IGNORE_COOKIES, label = "IGNORE_COOKIES")
         })
     String cookieSpec() default HttpClientConfig.COOKIE_SPEC_DEFAULT;
 
