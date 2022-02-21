@@ -53,7 +53,6 @@ import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
 class HttpClientItem {
 
   private final HttpClientConfig config;
-  private final PoolingHttpClientConnectionManager connectionManager;
   private final CloseableHttpClient httpClient;
 
   private static final Logger log = LoggerFactory.getLogger(HttpClientItem.class);
@@ -91,7 +90,7 @@ class HttpClientItem {
     }
 
     // build http clients
-    connectionManager = buildConnectionManager(config, sslContext);
+    PoolingHttpClientConnectionManager connectionManager = buildConnectionManager(config, sslContext);
     httpClient = buildHttpClient(config, connectionManager, credentialsProvider);
   }
 

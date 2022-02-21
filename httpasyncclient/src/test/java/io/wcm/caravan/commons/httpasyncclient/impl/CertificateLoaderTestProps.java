@@ -19,9 +19,9 @@
  */
 package io.wcm.caravan.commons.httpasyncclient.impl;
 
-final class CertificateLoaderTest {
+final class CertificateLoaderTestProps {
 
-  private CertificateLoaderTest() {
+  private CertificateLoaderTestProps() {
     // constants only
   }
 

@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.sling.commons.osgi.Order;
 import org.apache.sling.commons.osgi.ServiceUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -70,12 +71,12 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
   }
 
   protected void bindHttpClientConfig(HttpClientConfig httpClientConfig, Map<String, Object> config) {
-    factoryItems.put(ServiceUtil.getComparableForServiceRanking(config), new HttpClientItem(httpClientConfig));
+    factoryItems.put(ServiceUtil.getComparableForServiceRanking(config, Order.ASCENDING), new HttpClientItem(httpClientConfig));
   }
 
   @SuppressWarnings("unused")
   protected void unbindHttpClientConfig(HttpClientConfig httpClientConfig, Map<String, Object> config) {
-    HttpClientItem removed = factoryItems.remove(ServiceUtil.getComparableForServiceRanking(config));
+    HttpClientItem removed = factoryItems.remove(ServiceUtil.getComparableForServiceRanking(config, Order.ASCENDING));
     if (removed != null) {
       removed.close();
     }

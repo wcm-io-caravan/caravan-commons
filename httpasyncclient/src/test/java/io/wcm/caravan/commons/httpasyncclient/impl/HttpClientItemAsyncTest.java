@@ -164,10 +164,10 @@ public class HttpClientItemAsyncTest {
   public void testWithClientCertificate() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
         ImmutableMap.<String, Object>builder()
-            .put("keyStorePath", CertificateLoaderTest.KEYSTORE_PATH)
-            .put("keyStorePassword", CertificateLoaderTest.KEYSTORE_PASSWORD)
-            .put("trustStorePath", CertificateLoaderTest.TRUSTSTORE_PATH)
-            .put("trustStorePassword", CertificateLoaderTest.TRUSTSTORE_PASSWORD)
+            .put("keyStorePath", CertificateLoaderTestProps.KEYSTORE_PATH)
+            .put("keyStorePassword", CertificateLoaderTestProps.KEYSTORE_PASSWORD)
+            .put("trustStorePath", CertificateLoaderTestProps.TRUSTSTORE_PATH)
+            .put("trustStorePassword", CertificateLoaderTestProps.TRUSTSTORE_PASSWORD)
             .build());
 
     HttpAsyncClientItem item = new HttpAsyncClientItem(config);

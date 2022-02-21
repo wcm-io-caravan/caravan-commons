@@ -40,7 +40,7 @@ public class BeanUtilTest {
     assertEquals("***", properties.get("attribute2"));
   }
 
-  public final class SampleBean {
+  public static final class SampleBean {
 
     private final String mAttribute1;
     private final String mAttribute2;
