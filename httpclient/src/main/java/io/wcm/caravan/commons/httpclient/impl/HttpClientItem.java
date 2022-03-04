@@ -53,6 +53,7 @@ class HttpClientItem {
 
   private final HttpClientConfig config;
   private final CloseableHttpClient httpClient;
+  private final RequestConfig defaultRequestConfig;
 
   private static final Logger log = LoggerFactory.getLogger(HttpClientItem.class);
 
@@ -88,9 +89,22 @@ class HttpClientItem {
           new UsernamePasswordCredentials(config.getHttpUser(), config.getHttpPassword()));
     }
 
+    // build request config
+    defaultRequestConfig = buildDefaultRequestConfig(config);
+
     // build http clients
     PoolingHttpClientConnectionManager connectionManager = buildConnectionManager(config, sslContext);
-    httpClient = buildHttpClient(config, connectionManager, credentialsProvider);
+    httpClient = buildHttpClient(config, connectionManager, credentialsProvider, defaultRequestConfig);
+  }
+
+  private static RequestConfig buildDefaultRequestConfig(HttpClientConfig config) {
+    return RequestConfig.custom()
+        // timeout settings
+        .setConnectionRequestTimeout(config.getConnectionRequestTimeout())
+        .setConnectTimeout(config.getConnectTimeout())
+        .setSocketTimeout(config.getSocketTimeout())
+        .setCookieSpec(config.getCookieSpec())
+        .build();
   }
 
   private static PoolingHttpClientConnectionManager buildConnectionManager(HttpClientConfig config,
@@ -110,19 +124,14 @@ class HttpClientItem {
   }
 
   private static CloseableHttpClient buildHttpClient(HttpClientConfig config,
-      PoolingHttpClientConnectionManager connectionManager, CredentialsProvider credentialsProvider) {
+      PoolingHttpClientConnectionManager connectionManager, CredentialsProvider credentialsProvider,
+      RequestConfig defaultRequestConfig) {
 
     // prepare HTTPClient builder
     HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()
         .setConnectionManager(connectionManager);
 
-    httpClientBuilder.setDefaultRequestConfig(RequestConfig.custom()
-        // timeout settings
-        .setConnectionRequestTimeout(config.getConnectionRequestTimeout())
-        .setConnectTimeout(config.getConnectTimeout())
-        .setSocketTimeout(config.getSocketTimeout())
-        .setCookieSpec(config.getCookieSpec())
-        .build());
+    httpClientBuilder.setDefaultRequestConfig(defaultRequestConfig);
 
     httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
 
@@ -144,6 +153,13 @@ class HttpClientItem {
    */
   public CloseableHttpClient getHttpClient() {
     return httpClient;
+  }
+
+  /**
+   * @return Default request config
+   */
+  public RequestConfig getDefaultRequestConfig() {
+    return defaultRequestConfig;
   }
 
   /**
@@ -183,5 +199,4 @@ class HttpClientItem {
   public String toString() {
     return "HttpClientItem[" + config.toString() + "]";
   }
-
 }
