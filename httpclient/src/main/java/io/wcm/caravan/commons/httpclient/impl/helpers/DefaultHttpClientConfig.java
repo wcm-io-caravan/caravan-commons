@@ -66,6 +66,11 @@ public final class DefaultHttpClientConfig extends AbstractHttpClientConfig {
   }
 
   @Override
+  public String getCookieSpec() {
+    return HttpClientConfig.COOKIE_SPEC_DEFAULT;
+  }
+
+  @Override
   public String getHttpUser() {
     return null;
   }

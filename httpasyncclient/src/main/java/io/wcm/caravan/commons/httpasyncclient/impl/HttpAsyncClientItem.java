@@ -134,7 +134,9 @@ class HttpAsyncClientItem {
     httpClientAsyncBuilder.setDefaultRequestConfig(RequestConfig.custom()
         .setConnectionRequestTimeout(config.getConnectionRequestTimeout())
         .setConnectTimeout(config.getConnectTimeout())
-        .setSocketTimeout(config.getSocketTimeout()).build());
+        .setSocketTimeout(config.getSocketTimeout())
+        .setCookieSpec(config.getCookieSpec())
+        .build());
 
     httpClientAsyncBuilder.setDefaultCredentialsProvider(credentialsProvider);
 

@@ -30,6 +30,7 @@ import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
@@ -358,6 +359,19 @@ public class HttpClientItemTest {
 
     assertNotEquals(schemeSocketFactory, SSLConnectionSocketFactory.getSocketFactory());
     item.close();
+  }
+
+  @Test
+  public void testWithCookieSpec() {
+    HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
+        ImmutableMap.<String, Object>builder()
+            .put("cookieSpec", CookieSpecs.IGNORE_COOKIES)
+            .build());
+
+    HttpClientItem item = new HttpClientItem(config);
+    HttpClient client = item.getHttpClient();
+    RequestConfig requestConfig = HttpClientTestUtils.getDefaultRequestConfig(client);
+    assertEquals(CookieSpecs.IGNORE_COOKIES, requestConfig.getCookieSpec());
   }
 
 }

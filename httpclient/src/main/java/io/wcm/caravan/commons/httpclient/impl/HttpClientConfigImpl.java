@@ -25,12 +25,14 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.config.CookieSpecs;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
+import org.osgi.service.metatype.annotations.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,6 +99,20 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
      */
     @AttributeDefinition(name = "Max total", description = "Max total connections")
     int maxTotalConnections() default HttpClientConfig.MAX_TOTAL_CONNECTIONS_DEFAULT;
+
+    /**
+     * Cookie Specs
+     */
+    @AttributeDefinition(name = "Cookie Spec", description = "Standard cookie specification for HttpClient. "
+        + "See https://www.javadoc.io/static/org.apache.httpcomponents/httpclient/4.3.4/org/apache/http/client/config/CookieSpecs.html",
+        options = {
+            @Option(value = CookieSpecs.BROWSER_COMPATIBILITY, label = "BROWSER_COMPATIBILITY"),
+            @Option(value = CookieSpecs.NETSCAPE, label = "NETSCAPE"),
+            @Option(value = CookieSpecs.STANDARD, label = "STANDARD"),
+            @Option(value = CookieSpecs.BEST_MATCH, label = "BEST_MATCH"),
+            @Option(value = CookieSpecs.IGNORE_COOKIES, label = "IGNORE_COOKIES")
+        })
+    String cookieSpec() default HttpClientConfig.COOKIE_SPEC_DEFAULT;
 
     /**
      * Http user
@@ -224,6 +240,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   private int socketTimeout;
   private int maxConnectionsPerHost;
   private int maxTotalConnections;
+  private String cookieSpec;
   private String httpUser;
   private String httpPassword;
   private String proxyHost;
@@ -257,6 +274,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
     socketTimeout = config.socketTimeout();
     maxConnectionsPerHost = config.maxConnectionsPerHost();
     maxTotalConnections = config.maxTotalConnections();
+    cookieSpec = config.cookieSpec();
     httpUser = config.httpUser();
     httpPassword = config.httpPassword();
     proxyHost = config.proxyHost();
@@ -341,6 +359,11 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   @Override
   public int getMaxTotalConnections() {
     return maxTotalConnections;
+  }
+
+  @Override
+  public String getCookieSpec() {
+    return cookieSpec;
   }
 
   @Override

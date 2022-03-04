@@ -25,6 +25,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
 import org.junit.Rule;
 import org.junit.Test;
@@ -48,6 +49,7 @@ public class HttpClientConfigImplTest {
     assertEquals("socketTimeout", HttpClientConfig.SOCKET_TIMEOUT_DEFAULT, config.getSocketTimeout());
     assertEquals("maxConnectionsPerHost", HttpClientConfig.MAX_CONNECTIONS_PER_HOST_DEFAULT, config.getMaxConnectionsPerHost());
     assertEquals("maxTotalConnections", HttpClientConfig.MAX_TOTAL_CONNECTIONS_DEFAULT, config.getMaxTotalConnections());
+    assertEquals("cookieSpec", HttpClientConfig.COOKIE_SPEC_DEFAULT, config.getCookieSpec());
     assertNull("httpUser", config.getHttpUser());
     assertNull("httpPassword", config.getHttpPassword());
     assertNull("proxyHost", config.getProxyHost());
@@ -81,6 +83,7 @@ public class HttpClientConfigImplTest {
             .put("socketTimeout", 2)
             .put("maxConnectionsPerHost", 3)
             .put("maxTotalConnections", 4)
+            .put("cookieSpec", CookieSpecs.IGNORE_COOKIES)
             .put("httpUser", "httpUsr")
             .put("httpPassword", "httpPwd")
             .put("proxyHost", "abc")
@@ -114,12 +117,14 @@ public class HttpClientConfigImplTest {
     assertEquals("socketTimeout", 2, config.getSocketTimeout());
     assertEquals("maxConnectionsPerHost", 3, config.getMaxConnectionsPerHost());
     assertEquals("maxTotalConnections", 4, config.getMaxTotalConnections());
+    assertEquals("cookieSpec", CookieSpecs.IGNORE_COOKIES, config.getCookieSpec());
     assertEquals("httpUser", "httpUsr", config.getHttpUser());
     assertEquals("httpPassword", "httpPwd", config.getHttpPassword());
     assertEquals("proxyHost", "abc", config.getProxyHost());
     assertEquals("proxyPort", 5, config.getProxyPort());
     assertEquals("proxyUser", "def", config.getProxyUser());
     assertEquals("proxyPassword", "ghi", config.getProxyPassword());
+
     assertTrue("hostNames.0", config.matchesHost("h1"));
     assertTrue("hostNames.1", config.matchesHost("h2"));
     assertTrue("hostNames.2", config.matchesHost("h3"));
