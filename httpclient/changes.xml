@@ -27,7 +27,7 @@
       <action type="add" dev="cnagel" issue="WCARAV-22">
         Make Default Request Config accessible.
       </action>
-      <action type="add" dev="sseifert">
+      <action type="add" dev="sseifert" issue="WCARAV-21">
         Make CookieSpecs configurable to be used for HttpClient. Defaults to STANDARD (RFC 2965 compliant policy).
       </action>
       <action type="update" dev="sseifert">
