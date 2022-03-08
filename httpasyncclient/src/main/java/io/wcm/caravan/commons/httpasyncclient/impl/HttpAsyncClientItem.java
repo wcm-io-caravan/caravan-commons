@@ -57,6 +57,7 @@ class HttpAsyncClientItem {
 
   private final HttpClientConfig config;
   private final CloseableHttpAsyncClient httpAsyncClient;
+  private final RequestConfig defaultRequestConfig;
 
   private static final Logger log = LoggerFactory.getLogger(HttpAsyncClientItem.class);
 
@@ -92,12 +93,24 @@ class HttpAsyncClientItem {
           new UsernamePasswordCredentials(config.getHttpUser(), config.getHttpPassword()));
     }
 
+    // build request config
+    defaultRequestConfig = buildDefaultRequestConfig(config);
+
     // build http clients
     PoolingNHttpClientConnectionManager asyncConnectionManager = buildAsyncConnectionManager(config, sslContext);
-    httpAsyncClient = buildHttpAsyncClient(config, asyncConnectionManager, credentialsProvider);
+    httpAsyncClient = buildHttpAsyncClient(config, asyncConnectionManager, credentialsProvider, defaultRequestConfig);
 
     // start async client
     httpAsyncClient.start();
+  }
+
+  private static RequestConfig buildDefaultRequestConfig(HttpClientConfig config) {
+    return RequestConfig.custom()
+            .setConnectionRequestTimeout(config.getConnectionRequestTimeout())
+            .setConnectTimeout(config.getConnectTimeout())
+            .setSocketTimeout(config.getSocketTimeout())
+            .setCookieSpec(config.getCookieSpec())
+            .build();
   }
 
   private static PoolingNHttpClientConnectionManager buildAsyncConnectionManager(HttpClientConfig config,
@@ -124,19 +137,15 @@ class HttpAsyncClientItem {
   }
 
   private static CloseableHttpAsyncClient buildHttpAsyncClient(HttpClientConfig config,
-      PoolingNHttpClientConnectionManager connectionManager, CredentialsProvider credentialsProvider) {
+      PoolingNHttpClientConnectionManager connectionManager, CredentialsProvider credentialsProvider,
+      RequestConfig defaultRequestConfig) {
 
     // prepare HTTPClient builder
     HttpAsyncClientBuilder httpClientAsyncBuilder = HttpAsyncClientBuilder.create()
         .setConnectionManager(connectionManager);
 
     // timeout settings
-    httpClientAsyncBuilder.setDefaultRequestConfig(RequestConfig.custom()
-        .setConnectionRequestTimeout(config.getConnectionRequestTimeout())
-        .setConnectTimeout(config.getConnectTimeout())
-        .setSocketTimeout(config.getSocketTimeout())
-        .setCookieSpec(config.getCookieSpec())
-        .build());
+    httpClientAsyncBuilder.setDefaultRequestConfig(defaultRequestConfig);
 
     httpClientAsyncBuilder.setDefaultCredentialsProvider(credentialsProvider);
 
@@ -158,6 +167,13 @@ class HttpAsyncClientItem {
    */
   public CloseableHttpAsyncClient getHttpAsyncClient() {
     return httpAsyncClient;
+  }
+
+  /**
+   * @return Default request config
+   */
+  public RequestConfig getDefaultRequestConfig() {
+    return defaultRequestConfig;
   }
 
   /**

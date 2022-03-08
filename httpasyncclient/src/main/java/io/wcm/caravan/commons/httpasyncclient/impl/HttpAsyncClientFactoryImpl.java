@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.nio.client.HttpAsyncClient;
 import org.apache.sling.commons.osgi.Order;
@@ -124,6 +125,18 @@ public class HttpAsyncClientFactoryImpl implements HttpAsyncClientFactory {
   @Override
   public CloseableHttpAsyncClient getCloseableWs(URI targetUrl, URI wsAddressingToUri) {
     return getFactoryItem(targetUrl, wsAddressingToUri.toString(), targetUrl.getPath(), true).getHttpAsyncClient();
+  }
+
+  @Override
+  public RequestConfig getDefaultRequestConfig(String targetUrl) {
+    final URI uri = toUri(targetUrl);
+    final String path = uri != null ? uri.getPath() : null;
+    return uri == null ? null : getFactoryItem(uri, null, path, false).getDefaultRequestConfig();
+  }
+
+  @Override
+  public RequestConfig getDefaultRequestConfig(URI targetUrl) {
+    return getFactoryItem(targetUrl, null, targetUrl.getPath(), false).getDefaultRequestConfig();
   }
 
   private HttpAsyncClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri, String path, boolean isWsCall) {
