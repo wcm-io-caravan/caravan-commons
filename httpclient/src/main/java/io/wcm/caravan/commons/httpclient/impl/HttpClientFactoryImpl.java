@@ -131,7 +131,7 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
   public RequestConfig getDefaultRequestConfig(String targetUrl) {
     final URI uri = toUri(targetUrl);
     final String path = uri != null ? uri.getPath() : null;
-    return getFactoryItem(uri, null, path, false).getDefaultRequestConfig();
+    return uri == null ? null : getFactoryItem(uri, null, path, false).getDefaultRequestConfig();
   }
 
   @Override
