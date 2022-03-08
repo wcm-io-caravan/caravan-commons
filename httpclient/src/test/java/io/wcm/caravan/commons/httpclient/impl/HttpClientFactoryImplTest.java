@@ -219,7 +219,7 @@ public class HttpClientFactoryImplTest {
     HttpClient client1c = underTest.get(new URI("http://host1/path1"));
     assertEquals("client1c.timeout", 55, HttpClientTestUtils.getConnectTimeout(client1c));
     RequestConfig config1c = underTest.getDefaultRequestConfig("http://host1/path1");
-    assertEquals("client1c.timeout", 55, config1a.getConnectTimeout());
+    assertEquals("client1c.timeout", 55, config1c.getConnectTimeout());
 
     HttpClient client2a = underTest.get("http://host2/path1");
     assertEquals("client2a.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2a));
