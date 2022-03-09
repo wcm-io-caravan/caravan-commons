@@ -261,6 +261,10 @@ public class HttpClientItemTest {
     assertEquals(5, requestConfig.getConnectionRequestTimeout());
     assertEquals(9, requestConfig.getConnectTimeout());
     assertEquals(99, requestConfig.getSocketTimeout());
+    RequestConfig itemRequestConfig = item.getDefaultRequestConfig();
+    assertEquals(5, itemRequestConfig.getConnectionRequestTimeout());
+    assertEquals(9, itemRequestConfig.getConnectTimeout());
+    assertEquals(99, itemRequestConfig.getSocketTimeout());
     item.close();
   }
 
@@ -372,6 +376,8 @@ public class HttpClientItemTest {
     HttpClient client = item.getHttpClient();
     RequestConfig requestConfig = HttpClientTestUtils.getDefaultRequestConfig(client);
     assertEquals(CookieSpecs.IGNORE_COOKIES, requestConfig.getCookieSpec());
+    RequestConfig itemRequestConfig = item.getDefaultRequestConfig();
+    assertEquals(CookieSpecs.IGNORE_COOKIES, itemRequestConfig.getCookieSpec());
   }
 
 }

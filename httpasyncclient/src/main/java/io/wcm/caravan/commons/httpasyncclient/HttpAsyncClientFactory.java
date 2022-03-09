@@ -21,6 +21,7 @@ package io.wcm.caravan.commons.httpasyncclient;
 
 import java.net.URI;
 
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.nio.client.HttpAsyncClient;
 import org.osgi.annotation.versioning.ProviderType;
@@ -106,5 +107,21 @@ public interface HttpAsyncClientFactory {
    * @return Http Client
    */
   CloseableHttpAsyncClient getCloseableWs(URI targetUrl, URI wsAddressingToUri);
+
+  /**
+   * Returns the default Request Configuration for the given target URL. If a special configuration
+   * (e.g. timeout setting, proxy server, authentication) is configured it is applied in the factory.
+   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
+   * @return Default Request Config
+   */
+  RequestConfig getDefaultRequestConfig(String targetUrl);
+
+  /**
+   * Returns the default Request Configuration for the given target URL. If a special configuration
+   * (e.g. timeout setting, proxy server, authentication) is configured it is applied in the factory.
+   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
+   * @return Default Request Config
+   */
+  RequestConfig getDefaultRequestConfig(URI targetUrl);
 
 }

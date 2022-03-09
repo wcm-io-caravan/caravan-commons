@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.sling.commons.osgi.Order;
 import org.apache.sling.commons.osgi.ServiceUtil;
@@ -124,6 +125,18 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
   @Override
   public CloseableHttpClient getCloseableWs(URI targetUrl, URI wsAddressingToUri) {
     return getFactoryItem(targetUrl, wsAddressingToUri.toString(), targetUrl.getPath(), true).getHttpClient();
+  }
+
+  @Override
+  public RequestConfig getDefaultRequestConfig(String targetUrl) {
+    final URI uri = toUri(targetUrl);
+    final String path = uri != null ? uri.getPath() : null;
+    return uri == null ? null : getFactoryItem(uri, null, path, false).getDefaultRequestConfig();
+  }
+
+  @Override
+  public RequestConfig getDefaultRequestConfig(URI targetUrl) {
+    return getFactoryItem(targetUrl, null, targetUrl.getPath(), false).getDefaultRequestConfig();
   }
 
   private HttpClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri, String path, boolean isWsCall) {

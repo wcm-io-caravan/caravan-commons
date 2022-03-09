@@ -24,6 +24,9 @@
   <body>
 
     <release version="1.4.0" date="not released">
+      <action type="add" dev="cnagel" issue="WCARAV-22">
+        Make Default Request Config accessible.
+      </action>
       <action type="add" dev="sseifert" issue="WCARAV-21">
         Make CookieSpecs configurable to be used for HttpAsyncClient. Defaults to STANDARD (RFC 2965 compliant policy).
       </action>

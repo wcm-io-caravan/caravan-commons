@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.nio.client.HttpAsyncClient;
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
 import org.junit.Rule;
@@ -69,12 +70,18 @@ public class HttpClientFactoryImplAsyncTest {
 
     HttpAsyncClient client1 = underTest.get("http://host1/xyz");
     assertEquals("client1.timeout", 55, HttpClientTestUtils.getConnectTimeout(client1));
+    RequestConfig config1 = underTest.getDefaultRequestConfig("http://host1/xyz");
+    assertEquals("client1.timeout", 55, config1.getConnectTimeout());
 
     HttpAsyncClient client2 = underTest.get("http://host2/xyz");
     assertEquals("client2.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2));
+    RequestConfig config2 = underTest.getDefaultRequestConfig("http://host2/xyz");
+    assertEquals("client2.timeout", 66, config2.getConnectTimeout());
 
     HttpAsyncClient client3 = underTest.get("http://host3/xyz");
     assertEquals("client3.timeout", HttpClientConfig.CONNECT_TIMEOUT_DEFAULT, HttpClientTestUtils.getConnectTimeout(client3));
+    RequestConfig config3 = underTest.getDefaultRequestConfig("http://host3/xyz");
+    assertEquals("client3.timeout", HttpClientConfig.CONNECT_TIMEOUT_DEFAULT, config3.getConnectTimeout());
 
   }
 
@@ -100,12 +107,18 @@ public class HttpClientFactoryImplAsyncTest {
 
     HttpAsyncClient client1 = underTest.get("http://host1/xyz");
     assertEquals("client1.timeout", 55, HttpClientTestUtils.getConnectTimeout(client1));
+    RequestConfig config1 = underTest.getDefaultRequestConfig("http://host1/xyz");
+    assertEquals("client1.timeout", 55, config1.getConnectTimeout());
 
     HttpAsyncClient client2 = underTest.get("http://host2/xyz");
     assertEquals("client2.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2));
+    RequestConfig config2 = underTest.getDefaultRequestConfig("http://host2/xyz");
+    assertEquals("client2.timeout", 66, config2.getConnectTimeout());
 
     HttpAsyncClient client3 = underTest.get("http://host3/xyz");
     assertEquals("client3.timeout", 66, HttpClientTestUtils.getConnectTimeout(client3));
+    RequestConfig config3 = underTest.getDefaultRequestConfig("http://host3/xyz");
+    assertEquals("client3.timeout", 66, config3.getConnectTimeout());
 
   }
 
@@ -198,21 +211,33 @@ public class HttpClientFactoryImplAsyncTest {
 
     HttpAsyncClient client1a = underTest.get("http://host1/path1");
     assertEquals("client1a.timeout", 55, HttpClientTestUtils.getConnectTimeout(client1a));
+    RequestConfig config1a = underTest.getDefaultRequestConfig("http://host1/path1");
+    assertEquals("client1a.timeout", 55, config1a.getConnectTimeout());
 
     HttpAsyncClient client1b = underTest.get("http://host1/path2");
     assertEquals("client1b.timeout", 15000, HttpClientTestUtils.getConnectTimeout(client1b));
+    RequestConfig config1b = underTest.getDefaultRequestConfig("http://host1/path2");
+    assertEquals("client1b.timeout", 15000, config1b.getConnectTimeout());
 
     HttpAsyncClient client1c = underTest.get(new URI("http://host1/path1"));
     assertEquals("client1c.timeout", 55, HttpClientTestUtils.getConnectTimeout(client1c));
+    RequestConfig config1c = underTest.getDefaultRequestConfig("http://host1/path1");
+    assertEquals("client1c.timeout", 55, config1c.getConnectTimeout());
 
     HttpAsyncClient client2a = underTest.get("http://host2/path1");
     assertEquals("client2a.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2a));
+    RequestConfig config2a = underTest.getDefaultRequestConfig("http://host2/path1");
+    assertEquals("client2a.timeout", 66, config2a.getConnectTimeout());
 
     HttpAsyncClient client2b = underTest.get("http://host2/path2");
     assertEquals("client2b.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2b));
+    RequestConfig config2b = underTest.getDefaultRequestConfig("http://host2/path2");
+    assertEquals("client2a.timeout", 66, config2b.getConnectTimeout());
 
     HttpAsyncClient client2c = underTest.get(new URI("http://host2/xyz"));
     assertEquals("client2c.timeout", 66, HttpClientTestUtils.getConnectTimeout(client2c));
+    RequestConfig config2c = underTest.getDefaultRequestConfig("http://host2/xyz");
+    assertEquals("client2c.timeout", 66, config2c.getConnectTimeout());
 
     HttpAsyncClient client3a = underTest.getWs("http://host3/path1", "http://uri3");
     assertEquals("client3a.timeout", 77, HttpClientTestUtils.getConnectTimeout(client3a));
