@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.jetbrains.annotations.NotNull;
 
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 
@@ -42,7 +43,7 @@ public abstract class AbstractHttpClientConfig implements HttpClientConfig {
   };
 
   @Override
-  public String toString() {
+  public @NotNull String toString() {
     ToStringBuilder builder = new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE);
     Map<String, Object> properties = BeanUtil.getMaskedBeanProperties(this, SENSITIVE_PROPERTY_NAMES);
     for (Map.Entry<String, Object> entry : properties.entrySet()) {

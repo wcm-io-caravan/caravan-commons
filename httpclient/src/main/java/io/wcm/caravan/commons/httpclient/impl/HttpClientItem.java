@@ -40,6 +40,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.ProxyAuthenticationStrategy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +62,7 @@ class HttpClientItem {
   /**
    * @param config Http client configuration
    */
-  HttpClientItem(HttpClientConfig config) {
+  HttpClientItem(@NotNull HttpClientConfig config) {
     this.config = config;
 
     // optional SSL client certificate support
@@ -97,7 +99,7 @@ class HttpClientItem {
     httpClient = buildHttpClient(config, connectionManager, credentialsProvider, defaultRequestConfig);
   }
 
-  private static RequestConfig buildDefaultRequestConfig(HttpClientConfig config) {
+  private static @NotNull RequestConfig buildDefaultRequestConfig(@NotNull HttpClientConfig config) {
     return RequestConfig.custom()
         // timeout settings
         .setConnectionRequestTimeout(config.getConnectionRequestTimeout())
@@ -107,8 +109,8 @@ class HttpClientItem {
         .build();
   }
 
-  private static PoolingHttpClientConnectionManager buildConnectionManager(HttpClientConfig config,
-      SSLContext sslContext) {
+  private static @NotNull PoolingHttpClientConnectionManager buildConnectionManager(@NotNull HttpClientConfig config,
+      @NotNull SSLContext sslContext) {
     // scheme configuration
     ConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext);
     Registry<ConnectionSocketFactory> schemeRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
@@ -123,9 +125,9 @@ class HttpClientItem {
     return conmgr;
   }
 
-  private static CloseableHttpClient buildHttpClient(HttpClientConfig config,
-      PoolingHttpClientConnectionManager connectionManager, CredentialsProvider credentialsProvider,
-      RequestConfig defaultRequestConfig) {
+  private static @NotNull CloseableHttpClient buildHttpClient(@NotNull HttpClientConfig config,
+      @NotNull PoolingHttpClientConnectionManager connectionManager, @NotNull CredentialsProvider credentialsProvider,
+      @NotNull RequestConfig defaultRequestConfig) {
 
     // prepare HTTPClient builder
     HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()
@@ -151,14 +153,14 @@ class HttpClientItem {
   /**
    * @return Http client instance (synchronous)
    */
-  public CloseableHttpClient getHttpClient() {
+  public @NotNull CloseableHttpClient getHttpClient() {
     return httpClient;
   }
 
   /**
    * @return Default request config
    */
-  public RequestConfig getDefaultRequestConfig() {
+  public @NotNull RequestConfig getDefaultRequestConfig() {
     return defaultRequestConfig;
   }
 
@@ -169,7 +171,7 @@ class HttpClientItem {
    * @param isWsCall indicates if the call is a soap webservice call
    * @return true if host name is associated with this http client config
    */
-  public boolean matches(String hostName, String wsAddressingToURI, String path, boolean isWsCall) {
+  public boolean matches(@Nullable String hostName, @Nullable String wsAddressingToURI, @Nullable String path, boolean isWsCall) {
     if (isWsCall) {
       return config.isEnabled()
           && config.matchesHost(hostName)
@@ -196,7 +198,8 @@ class HttpClientItem {
   }
 
   @Override
-  public String toString() {
+  public @NotNull String toString() {
     return "HttpClientItem[" + config.toString() + "]";
   }
+
 }

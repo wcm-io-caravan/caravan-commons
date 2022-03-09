@@ -26,6 +26,8 @@ import java.util.regex.PatternSyntaxException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.config.CookieSpecs;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
@@ -362,22 +364,22 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   }
 
   @Override
-  public String getCookieSpec() {
+  public @NotNull String getCookieSpec() {
     return cookieSpec;
   }
 
   @Override
-  public String getHttpUser() {
+  public @Nullable String getHttpUser() {
     return httpUser;
   }
 
   @Override
-  public String getHttpPassword() {
+  public @Nullable String getHttpPassword() {
     return httpPassword;
   }
 
   @Override
-  public String getProxyHost() {
+  public @Nullable String getProxyHost() {
     return proxyHost;
   }
 
@@ -387,17 +389,17 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   }
 
   @Override
-  public String getProxyUser() {
+  public @Nullable String getProxyUser() {
     return proxyUser;
   }
 
   @Override
-  public String getProxyPassword() {
+  public @Nullable String getProxyPassword() {
     return proxyPassword;
   }
 
   @Override
-  public boolean matchesHost(String host) {
+  public boolean matchesHost(@Nullable String host) {
     if (hostPatterns.isEmpty()) {
       return true;
     }
@@ -413,7 +415,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   }
 
   @Override
-  public boolean matchesWsAddressingToUri(String addressingToUri) {
+  public boolean matchesWsAddressingToUri(@Nullable String addressingToUri) {
     if (wsAddressingToUris.isEmpty()) {
       return true;
     }
@@ -424,7 +426,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   }
 
   @Override
-  public boolean matchesPath(final String path) {
+  public boolean matchesPath(@Nullable String path) {
     if (pathPatterns.isEmpty()) {
       return true;
     }
@@ -440,57 +442,57 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   }
 
   @Override
-  public String getSslContextType() {
+  public @NotNull String getSslContextType() {
     return sslContextType;
   }
 
   @Override
-  public String getKeyManagerType() {
+  public @NotNull String getKeyManagerType() {
     return keyManagerType;
   }
 
   @Override
-  public String getKeyStoreType() {
+  public @NotNull String getKeyStoreType() {
     return keyStoreType;
   }
 
   @Override
-  public String getKeyStoreProvider() {
+  public @Nullable String getKeyStoreProvider() {
     return keyStoreProvider;
   }
 
   @Override
-  public String getKeyStorePath() {
+  public @Nullable String getKeyStorePath() {
     return keyStorePath;
   }
 
   @Override
-  public String getKeyStorePassword() {
+  public @Nullable String getKeyStorePassword() {
     return keyStorePassword;
   }
 
   @Override
-  public String getTrustManagerType() {
+  public @NotNull String getTrustManagerType() {
     return trustManagerType;
   }
 
   @Override
-  public String getTrustStoreType() {
+  public @NotNull String getTrustStoreType() {
     return trustStoreType;
   }
 
   @Override
-  public String getTrustStoreProvider() {
+  public @Nullable String getTrustStoreProvider() {
     return trustStoreProvider;
   }
 
   @Override
-  public String getTrustStorePath() {
+  public @Nullable String getTrustStorePath() {
     return trustStorePath;
   }
 
   @Override
-  public String getTrustStorePassword() {
+  public @Nullable String getTrustStorePassword() {
     return trustStorePassword;
   }
 

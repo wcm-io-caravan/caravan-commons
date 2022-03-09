@@ -24,6 +24,8 @@ import java.net.URI;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.nio.client.HttpAsyncClient;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -38,7 +40,8 @@ public interface HttpAsyncClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Http Client
    */
-  HttpAsyncClient get(String targetUrl);
+  @NotNull
+  HttpAsyncClient get(@Nullable String targetUrl);
 
   /**
    * Returns a configured asynchronous Http Client for the given target URL. If a special configuration
@@ -46,7 +49,8 @@ public interface HttpAsyncClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Http Client
    */
-  CloseableHttpAsyncClient getCloseable(String targetUrl);
+  @NotNull
+  CloseableHttpAsyncClient getCloseable(@Nullable String targetUrl);
 
   /**
    * Returns a configured asynchronous Http Client for the given target URL. If a special configuration
@@ -54,7 +58,8 @@ public interface HttpAsyncClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Http Client
    */
-  HttpAsyncClient get(URI targetUrl);
+  @NotNull
+  HttpAsyncClient get(@Nullable URI targetUrl);
 
   /**
    * Returns a configured asynchronous Http Client for the given target URL. If a special configuration
@@ -62,7 +67,8 @@ public interface HttpAsyncClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Http Client
    */
-  CloseableHttpAsyncClient getCloseable(URI targetUrl);
+  @NotNull
+  CloseableHttpAsyncClient getCloseable(@Nullable URI targetUrl);
 
   /**
    * Returns a configured asynchronous Http Client for the given target URL. The Http Client is dedicated
@@ -73,7 +79,8 @@ public interface HttpAsyncClientFactory {
    * @param wsAddressingToUri WS Addressing "To" header
    * @return Http Client
    */
-  HttpAsyncClient getWs(String targetUrl, String wsAddressingToUri);
+  @NotNull
+  HttpAsyncClient getWs(@Nullable String targetUrl, @Nullable String wsAddressingToUri);
 
   /**
    * Returns a configured asynchronous Http Client for the given target URL. The Http Client is dedicated
@@ -84,7 +91,8 @@ public interface HttpAsyncClientFactory {
    * @param wsAddressingToUri WS Addressing "To" header
    * @return Http Client
    */
-  CloseableHttpAsyncClient getCloseableWs(String targetUrl, String wsAddressingToUri);
+  @NotNull
+  CloseableHttpAsyncClient getCloseableWs(@Nullable String targetUrl, @Nullable String wsAddressingToUri);
 
   /**
    * Returns a configured asynchronous Http Client for the given target URL. The Http Client is dedicated
@@ -95,7 +103,8 @@ public interface HttpAsyncClientFactory {
    * @param wsAddressingToUri WS Addressing "To" header
    * @return Http Client
    */
-  HttpAsyncClient getWs(URI targetUrl, URI wsAddressingToUri);
+  @NotNull
+  HttpAsyncClient getWs(@Nullable URI targetUrl, @Nullable URI wsAddressingToUri);
 
   /**
    * Returns a configured asynchronous Http Client for the given target URL. The Http Client is dedicated
@@ -106,7 +115,8 @@ public interface HttpAsyncClientFactory {
    * @param wsAddressingToUri WS Addressing "To" header
    * @return Http Client
    */
-  CloseableHttpAsyncClient getCloseableWs(URI targetUrl, URI wsAddressingToUri);
+  @NotNull
+  CloseableHttpAsyncClient getCloseableWs(@Nullable URI targetUrl, @Nullable URI wsAddressingToUri);
 
   /**
    * Returns the default Request Configuration for the given target URL. If a special configuration
@@ -114,7 +124,8 @@ public interface HttpAsyncClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Default Request Config
    */
-  RequestConfig getDefaultRequestConfig(String targetUrl);
+  @NotNull
+  RequestConfig getDefaultRequestConfig(@Nullable String targetUrl);
 
   /**
    * Returns the default Request Configuration for the given target URL. If a special configuration
@@ -122,6 +133,7 @@ public interface HttpAsyncClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Default Request Config
    */
-  RequestConfig getDefaultRequestConfig(URI targetUrl);
+  @NotNull
+  RequestConfig getDefaultRequestConfig(@Nullable URI targetUrl);
 
 }
