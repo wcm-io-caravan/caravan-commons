@@ -69,6 +69,7 @@ public class CertificateLoaderTest {
   }
 
   @Test(expected = FileNotFoundException.class)
+  @SuppressWarnings("null")
   public void testGetKeyManagerFactoryNullPath() throws IOException, GeneralSecurityException {
     CertificateLoader.getKeyManagerFactory(null, new StoreProperties(KEYSTORE_PASSWORD, CertificateLoader.KEY_MANAGER_TYPE_DEFAULT,
         CertificateLoader.KEY_STORE_TYPE_DEFAULT, null));
@@ -86,6 +87,7 @@ public class CertificateLoaderTest {
   }
 
   @Test(expected = FileNotFoundException.class)
+  @SuppressWarnings("null")
   public void testGetTrustManagerFactoryNullPath() throws IOException, GeneralSecurityException {
     CertificateLoader.getTrustManagerFactory(null, STORE_PROPERTIES);
   }
