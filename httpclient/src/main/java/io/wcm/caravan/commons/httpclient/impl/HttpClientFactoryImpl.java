@@ -26,16 +26,19 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Reference;
-import org.apache.felix.scr.annotations.ReferenceCardinality;
-import org.apache.felix.scr.annotations.ReferencePolicy;
-import org.apache.felix.scr.annotations.Service;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.sling.commons.osgi.Order;
 import org.apache.sling.commons.osgi.ServiceUtil;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 import io.wcm.caravan.commons.httpclient.HttpClientFactory;
@@ -44,12 +47,13 @@ import io.wcm.caravan.commons.httpclient.impl.helpers.DefaultHttpClientConfig;
 /**
  * Default implementation of {@link HttpClientFactory}.
  */
-@Component(immediate = true)
-@Service(HttpClientFactory.class)
+@Component(service = HttpClientFactory.class, immediate = true, reference = {
+    @Reference(name = "httpClientConfig", service = HttpClientConfig.class,
+        cardinality = ReferenceCardinality.MULTIPLE, policy = ReferencePolicy.DYNAMIC,
+        bind = "bindHttpClientConfig", unbind = "unbindHttpClientConfig")
+})
 public class HttpClientFactoryImpl implements HttpClientFactory {
 
-  @Reference(name = "httpClientConfig", referenceInterface = HttpClientConfig.class,
-      cardinality = ReferenceCardinality.OPTIONAL_MULTIPLE, policy = ReferencePolicy.DYNAMIC)
   private final ConcurrentMap<Comparable<Object>, HttpClientItem> factoryItems = new ConcurrentSkipListMap<>();
 
   private HttpClientItem defaultFactoryItem;
@@ -70,71 +74,87 @@ public class HttpClientFactoryImpl implements HttpClientFactory {
   }
 
   protected void bindHttpClientConfig(HttpClientConfig httpClientConfig, Map<String, Object> config) {
-    factoryItems.put(ServiceUtil.getComparableForServiceRanking(config), new HttpClientItem(httpClientConfig));
+    factoryItems.put(ServiceUtil.getComparableForServiceRanking(config, Order.ASCENDING), new HttpClientItem(httpClientConfig));
   }
 
   @SuppressWarnings("unused")
   protected void unbindHttpClientConfig(HttpClientConfig httpClientConfig, Map<String, Object> config) {
-    HttpClientItem removed = factoryItems.remove(ServiceUtil.getComparableForServiceRanking(config));
+    HttpClientItem removed = factoryItems.remove(ServiceUtil.getComparableForServiceRanking(config, Order.ASCENDING));
     if (removed != null) {
       removed.close();
     }
   }
 
   @Override
-  public CloseableHttpClient get(String targetUrl) {
+  public @NotNull CloseableHttpClient get(@Nullable String targetUrl) {
     return getCloseable(targetUrl);
   }
 
   @Override
-  public CloseableHttpClient getCloseable(String targetUrl) {
+  public @NotNull CloseableHttpClient getCloseable(@Nullable String targetUrl) {
     final URI uri = toUri(targetUrl);
     final String path = uri != null ? uri.getPath() : null;
     return getFactoryItem(uri, null, path, false).getHttpClient();
   }
 
   @Override
-  public HttpClient get(URI targetUrl) {
+  public @NotNull HttpClient get(@Nullable URI targetUrl) {
     return getCloseable(targetUrl);
   }
 
   @Override
-  public CloseableHttpClient getCloseable(URI targetUrl) {
-    return getFactoryItem(targetUrl, null, targetUrl.getPath(), false).getHttpClient();
+  public @NotNull CloseableHttpClient getCloseable(@Nullable URI targetUrl) {
+    String path = targetUrl != null ? targetUrl.getPath() : null;
+    return getFactoryItem(targetUrl, null, path, false).getHttpClient();
   }
 
   @Override
-  public HttpClient getWs(String targetUrl, String wsAddressingToUri) {
+  public @NotNull HttpClient getWs(@Nullable String targetUrl, @Nullable String wsAddressingToUri) {
     return getCloseableWs(targetUrl, wsAddressingToUri);
   }
 
   @Override
-  public CloseableHttpClient getCloseableWs(String targetUrl, String wsAddressingToUri) {
+  public @NotNull CloseableHttpClient getCloseableWs(@Nullable String targetUrl, @Nullable String wsAddressingToUri) {
     final URI uri = toUri(targetUrl);
     final String path = uri != null ? uri.getPath() : null;
     return getFactoryItem(uri, wsAddressingToUri, path, true).getHttpClient();
   }
 
   @Override
-  public HttpClient getWs(URI targetUrl, URI wsAddressingToUri) {
+  public @NotNull HttpClient getWs(@Nullable URI targetUrl, @Nullable URI wsAddressingToUri) {
     return getCloseableWs(targetUrl, wsAddressingToUri);
   }
 
   @Override
-  public CloseableHttpClient getCloseableWs(URI targetUrl, URI wsAddressingToUri) {
-    return getFactoryItem(targetUrl, wsAddressingToUri.toString(), targetUrl.getPath(), true).getHttpClient();
+  public @NotNull CloseableHttpClient getCloseableWs(@Nullable URI targetUrl, @Nullable URI wsAddressingToUri) {
+    String wsAddressingToUriString = wsAddressingToUri != null ? wsAddressingToUri.toString() : null;
+    String path = targetUrl != null ? targetUrl.getPath() : null;
+    return getFactoryItem(targetUrl, wsAddressingToUriString, path, true).getHttpClient();
   }
 
-  private HttpClientItem getFactoryItem(URI targetUrl, String wsAddressingToUri, String path, boolean isWsCall) {
+  @Override
+  public @NotNull RequestConfig getDefaultRequestConfig(@Nullable String targetUrl) {
+    final URI uri = toUri(targetUrl);
+    return getDefaultRequestConfig(uri);
+  }
+
+  @Override
+  public @NotNull RequestConfig getDefaultRequestConfig(@Nullable URI targetUrl) {
+    String path = targetUrl != null ? targetUrl.getPath() : null;
+    return getFactoryItem(targetUrl, null, path, false).getDefaultRequestConfig();
+  }
+
+  private @NotNull HttpClientItem getFactoryItem(@Nullable URI targetUrl, @Nullable String wsAddressingToUri, @Nullable String path, boolean isWsCall) {
     for (HttpClientItem item : factoryItems.values()) {
-      if (item.matches(targetUrl.getHost(), wsAddressingToUri, path, isWsCall)) {
+      String host = targetUrl != null ? targetUrl.getHost() : null;
+      if (item.matches(host, wsAddressingToUri, path, isWsCall)) {
         return item;
       }
     }
     return defaultFactoryItem;
   }
 
-  private URI toUri(String uri) {
+  private @Nullable URI toUri(@Nullable String uri) {
     if (StringUtils.isEmpty(uri)) {
       return null;
     }

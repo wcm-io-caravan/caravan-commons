@@ -20,19 +20,21 @@
 package io.wcm.caravan.commons.httpclient.impl;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.ConfigurationPolicy;
-import org.apache.felix.scr.annotations.Property;
-import org.apache.felix.scr.annotations.Service;
-import org.apache.sling.commons.osgi.PropertiesUtil;
-import org.osgi.framework.Constants;
+import org.apache.http.client.config.CookieSpecs;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
+import org.osgi.service.metatype.annotations.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,187 +45,195 @@ import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
 /**
  * Default implementation of {@link HttpClientConfig}.
  */
-@Component(metatype = true, immediate = true,
-label = "wcm.io Caravan HTTP Client Configuration",
-description = "Allows to configure special HTTP client settings for target hosts",
-configurationFactory = true, policy = ConfigurationPolicy.REQUIRE)
-@Service(HttpClientConfig.class)
-@Property(name = "webconsole.configurationFactory.nameHint", value = "{hostPatterns} {wsAddressingToUris} {pathPatterns}")
+@Component(service = HttpClientConfig.class, immediate = true, configurationPolicy = ConfigurationPolicy.REQUIRE,
+    property = "webconsole.configurationFactory.nameHint={hostPatterns} {wsAddressingToUris} {pathPatterns}")
+@Designate(ocd = HttpClientConfigImpl.Config.class, factory = true)
 public class HttpClientConfigImpl extends AbstractHttpClientConfig {
 
-  /**
-   * Host pattern
-   */
-  @Property(label = "Host pattern", description = "Regular expressions for matching the host name(s)",
-      cardinality = Integer.MAX_VALUE)
-  public static final String HOST_PATTERNS_PROPERTY = "hostPatterns";
+  @ObjectClassDefinition(name = "wcm.io Caravan HTTP Client Configuration",
+      description = "Allows to configure special HTTP client settings for target hosts.")
+  static @interface Config {
 
-  /**
-   * WS Uri
-   */
-  @Property(label = "WS Uri", description = "List of WS Addressing To URIs for SOAP calls",
-      cardinality = Integer.MAX_VALUE)
-  public static final String WS_ADDRESSINGTO_URIS_PROPERTY = "wsAddressingToUris";
+    /**
+     * Host pattern
+     */
+    @AttributeDefinition(name = "Host pattern", description = "Regular expressions for matching the host name(s)")
+    String[] hostPatterns();
 
-  /**
-   * Path pattern
-   */
-  @Property(label = "Path pattern", description = "Regular expressions for matching the path part of the target URLs",
-      cardinality = Integer.MAX_VALUE)
-  public static final String PATH_PATTERNS_PROPERTY = "pathPatterns";
+    /**
+     * WS Uri
+     */
+    @AttributeDefinition(name = "WS Uri", description = "List of WS Addressing To URIs for SOAP calls")
+    String[] wsAddressingToUris();
 
-  /**
-   * Connection request timeout
-   */
-  @Property(label = "Connection request timeout", description = "Max. timeout to wait for getting a connection from the connection manager (ms)",
-      intValue = HttpClientConfig.CONNECTION_REQUEST_TIMEOUT_DEFAULT)
-  public static final String CONNECTION_REQUEST_TIMEOUT_PROPERTY = "connectionRequestTimeout";
+    /**
+     * Path pattern
+     */
+    @AttributeDefinition(name = "Path pattern", description = "Regular expressions for matching the path part of the target URLs")
+    String[] pathPatterns();
 
-  /**
-   * Connect timeout
-   */
-  @Property(label = "Connect timeout", description = "Max. timeout to wait for HTTP connection (ms)",
-      intValue = HttpClientConfig.CONNECT_TIMEOUT_DEFAULT)
-  public static final String CONNECT_TIMEOUT_PROPERTY = "connectTimeout";
+    /**
+     * Connection request timeout
+     */
+    @AttributeDefinition(name = "Connection request timeout", description = "Max. timeout to wait for getting a connection from the connection manager (ms)")
+    int connectionRequestTimeout() default HttpClientConfig.CONNECTION_REQUEST_TIMEOUT_DEFAULT;
 
-  /**
-   * Socket timeout
-   */
-  @Property(label = "Socket timeout", description = "Max. timeout to wait for a HTTP response (ms)",
-      intValue = HttpClientConfig.SOCKET_TIMEOUT_DEFAULT)
-  public static final String SOCKET_TIMEOUT_PROPERTY = "socketTimeout";
+    /**
+     * Connect timeout
+     */
+    @AttributeDefinition(name = "Connect timeout", description = "Max. timeout to wait for HTTP connection (ms)")
+    int connectTimeout() default HttpClientConfig.CONNECT_TIMEOUT_DEFAULT;
 
-  /**
-   * Max per host
-   */
-  @Property(label = "Max per host", description = "Max connections per host",
-      intValue = HttpClientConfig.MAX_CONNECTIONS_PER_HOST_DEFAULT)
-  public static final String MAX_CONNECTIONS_PER_HOST_PROPERTY = "maxConnectionsPerHost";
+    /**
+     * Socket timeout
+     */
+    @AttributeDefinition(name = "Socket timeout", description = "Max. timeout to wait for a HTTP response (ms)")
+    int socketTimeout() default HttpClientConfig.SOCKET_TIMEOUT_DEFAULT;
 
-  /**
-   * Max total
-   */
-  @Property(label = "Max total", description = "Max total connections",
-      intValue = HttpClientConfig.MAX_TOTAL_CONNECTIONS_DEFAULT)
-  public static final String MAX_TOTAL_CONNECTIONS_PROPERTY = "maxTotalConnections";
+    /**
+     * Max per host
+     */
+    @AttributeDefinition(name = "Max per host", description = "Max connections per host")
+    int maxConnectionsPerHost() default HttpClientConfig.MAX_CONNECTIONS_PER_HOST_DEFAULT;
 
-  /**
-   * Http user
-   */
-  @Property(label = "Http user", description = "User name for basic HTTP authentication")
-  public static final String HTTP_USER_PROPERTY = "httpUser";
+    /**
+     * Max total
+     */
+    @AttributeDefinition(name = "Max total", description = "Max total connections")
+    int maxTotalConnections() default HttpClientConfig.MAX_TOTAL_CONNECTIONS_DEFAULT;
 
-  /**
-   * Http password
-   */
-  @Property(label = "Http password", description = "Password for basic HTTP authentication")
-  public static final String HTTP_PASSWORD_PROPERTY = "httpPassword";
+    /**
+     * Cookie Specs
+     */
+    @AttributeDefinition(name = "Cookie Spec", description = "Standard cookie specification for HttpClient. "
+        + "See https://www.javadoc.io/static/org.apache.httpcomponents/httpclient/4.3.4/org/apache/http/client/config/CookieSpecs.html",
+        options = {
+            @Option(value = CookieSpecs.BROWSER_COMPATIBILITY, label = "BROWSER_COMPATIBILITY"),
+            @Option(value = CookieSpecs.NETSCAPE, label = "NETSCAPE"),
+            @Option(value = CookieSpecs.STANDARD, label = "STANDARD"),
+            @Option(value = CookieSpecs.BEST_MATCH, label = "BEST_MATCH"),
+            @Option(value = CookieSpecs.IGNORE_COOKIES, label = "IGNORE_COOKIES")
+        })
+    String cookieSpec() default HttpClientConfig.COOKIE_SPEC_DEFAULT;
 
-  /**
-   * Proxy host
-   */
-  @Property(label = "Proxy host", description = "Proxy hostname")
-  public static final String PROXY_HOST_PROPERTY = "proxyHost";
+    /**
+     * Http user
+     */
+    @AttributeDefinition(name = "Http user", description = "User name for basic HTTP authentication")
+    String httpUser();
 
-  /**
-   * Proxy port
-   */
-  @Property(label = "Proxy port", description = "Proxy port", intValue = 0)
-  public static final String PROXY_PORT_PROPERTY = "proxyPort";
+    /**
+     * Http password
+     */
+    @AttributeDefinition(name = "Http password", description = "Password for basic HTTP authentication")
+    String httpPassword();
 
-  /**
-   * Proxy user
-   */
-  @Property(label = "Proxy user", description = "Proxy user name")
-  public static final String PROXY_USER_PROPERTY = "proxyUser";
+    /**
+     * Proxy host
+     */
+    @AttributeDefinition(name = "Proxy host", description = "Proxy hostname")
+    String proxyHost();
 
-  /**
-   * Proxy password
-   */
-  @Property(label = "Proxy password", description = "Proxy password")
-  public static final String PROXY_PASSWORD_PROPERTY = "proxyPassword";
+    /**
+     * Proxy port
+     */
+    @AttributeDefinition(name = "Proxy port", description = "Proxy port")
+    int proxyPort();
 
-  /**
-   * SSL context type
-   */
-  @Property(label = "SSL context type", description = "SSL context type",
-      value = CertificateLoader.SSL_CONTEXT_TYPE_DEFAULT)
-  public static final String SSL_CONTEXT_TYPE_PROPERTY = "sslContextType";
+    /**
+     * Proxy user
+     */
+    @AttributeDefinition(name = "Proxy user", description = "Proxy user name")
+    String proxyUser();
 
-  /**
-   * KeyManager type
-   */
-  @Property(label = "KeyManager type", description = "KeyManager type",
-      value = CertificateLoader.KEY_MANAGER_TYPE_DEFAULT)
-  public static final String KEYMANAGER_TYPE_PROPERTY = "keyManagerType";
+    /**
+     * Proxy password
+     */
+    @AttributeDefinition(name = "Proxy password", description = "Proxy password")
+    String proxyPassword();
 
-  /**
-   * KeyStore type
-   */
-  @Property(label = "KeyStore type", description = "KeyStore type",
-      value = CertificateLoader.KEY_STORE_TYPE_DEFAULT)
-  public static final String KEYSTORE_TYPE_PROPERTY = "keyStoreType";
+    /**
+     * SSL context type
+     */
+    @AttributeDefinition(name = "SSL context type", description = "SSL context type")
+    String sslContextType() default CertificateLoader.SSL_CONTEXT_TYPE_DEFAULT;
 
-  /**
-   * KeyStore provider
-   */
-  @Property(label = "KeyStore provider", description = "KeyStore provider. If not set the first matching security provider is used.")
-  public static final String KEYSTORE_PROVIDER_PROPERTY = "keyStoreProvider";
+    /**
+     * KeyManager type
+     */
+    @AttributeDefinition(name = "KeyManager type", description = "KeyManager type")
+    String keyManagerType() default CertificateLoader.KEY_MANAGER_TYPE_DEFAULT;
 
-  /**
-   * KeyStore path
-   */
-  @Property(label = "KeyStore path", description = "KeyStore path")
-  public static final String KEYSTORE_PATH_PROPERTY = "keyStorePath";
+    /**
+     * KeyStore type
+     */
+    @AttributeDefinition(name = "KeyStore type", description = "KeyStore type")
+    String keyStoreType() default CertificateLoader.KEY_STORE_TYPE_DEFAULT;
 
-  /**
-   * KeyStore password
-   */
-  @Property(label = "KeyStore password", description = "KeyStore password")
-  public static final String KEYSTORE_PASSWORD_PROPERTY = "keyStorePassword";
+    /**
+     * KeyStore provider
+     */
+    @AttributeDefinition(name = "KeyStore provider", description = "KeyStore provider. If not set the first matching security provider is used.")
+    String keyStoreProvider();
 
-  /**
-   * TrustManager type
-   */
-  @Property(label = "TrustManager type", description = "TrustManager type",
-      value = CertificateLoader.TRUST_MANAGER_TYPE_DEFAULT)
-  public static final String TRUSTMANAGER_TYPE_PROPERTY = "trustManagerType";
+    /**
+     * KeyStore path
+     */
+    @AttributeDefinition(name = "KeyStore path", description = "KeyStore path")
+    String keyStorePath();
 
-  /**
-   * TrustStore type
-   */
-  @Property(label = "TrustStore type", description = "TrustStore type",
-      value = CertificateLoader.TRUST_STORE_TYPE_DEFAULT)
-  public static final String TRUSTSTORE_TYPE_PROPERTY = "trustStoreType";
+    /**
+     * KeyStore password
+     */
+    @AttributeDefinition(name = "KeyStore password", description = "KeyStore password")
+    String keyStorePassword();
 
-  /**
-   * TrustStore provider
-   */
-  @Property(label = "TrustStore provider", description = "TrustStore provider. If not set the first matching security provider is used.")
-  public static final String TRUSTSTORE_PROVIDER_PROPERTY = "trustStoreProvider";
+    /**
+     * TrustManager type
+     */
+    @AttributeDefinition(name = "TrustManager type", description = "TrustManager type")
+    String trustManagerType() default CertificateLoader.TRUST_MANAGER_TYPE_DEFAULT;
 
-  /**
-   * TrustStore path
-   */
-  @Property(label = "TrustStore path", description = "TrustStore path")
-  public static final String TRUSTSTORE_PATH_PROPERTY = "trustStorePath";
+    /**
+     * TrustStore type
+     */
+    @AttributeDefinition(name = "TrustStore type", description = "TrustStore type")
+    String trustStoreType() default CertificateLoader.TRUST_STORE_TYPE_DEFAULT;
 
-  /**
-   * TrustStore password
-   */
-  @Property(label = "TrustStore password", description = "TrustStore password")
-  public static final String TRUSTSTORE_PASSWORD_PROPERTY = "trustStorePassword";
+    /**
+     * TrustStore provider
+     */
+    @AttributeDefinition(name = "TrustStore provider", description = "TrustStore provider. If not set the first matching security provider is used.")
+    String trustStoreProvider();
 
-  /**
-   * Enabled
-   */
-  @Property(label = "Enabled", description = "Enable this HTTP client configuration",
-      boolValue = HttpClientConfigImpl.ENABLED_DEFAULT)
-  public static final String ENABLED_PROPERTY = "enabled";
-  static final boolean ENABLED_DEFAULT = true;
-  @Property(label = "Service Ranking", description = "Allows to define an order in which the HTTP client configurations are evaluated. Lower value = higher ranking.",
-      propertyPrivate = false)
-  private static final String SERVICE_RANKING = Constants.SERVICE_RANKING;
+    /**
+     * TrustStore path
+     */
+    @AttributeDefinition(name = "TrustStore path", description = "TrustStore path")
+    String trustStorePath();
+
+    /**
+     * TrustStore password
+     */
+    @AttributeDefinition(name = "TrustStore password", description = "TrustStore password")
+    String trustStorePassword();
+
+    /**
+     * Enabled
+     */
+    @AttributeDefinition(name = "Enabled", description = "Enable this HTTP client configuration")
+    boolean enabled() default true;
+
+    /**
+     * Service Ranking.
+     */
+    @AttributeDefinition(name = "Service Ranking",
+        description = "Allows to define an order in which the HTTP client configurations are evaluated. Lower value = higher ranking.")
+    @SuppressWarnings("java:S100") // property name is service.ranking
+    int service_ranking();
+
+  }
+
 
   private boolean enabled;
 
@@ -232,6 +242,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   private int socketTimeout;
   private int maxConnectionsPerHost;
   private int maxTotalConnections;
+  private String cookieSpec;
   private String httpUser;
   private String httpPassword;
   private String proxyHost;
@@ -257,23 +268,24 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   private static final Logger log = LoggerFactory.getLogger(HttpClientConfigImpl.class);
 
   @Activate
-  private void activate(Map<String, Object> config) {
-    enabled = PropertiesUtil.toBoolean(config.get(ENABLED_PROPERTY), ENABLED_DEFAULT);
+  private void activate(Config config) {
+    enabled = config.enabled();
 
-    connectionRequestTimeout = PropertiesUtil.toInteger(config.get(CONNECTION_REQUEST_TIMEOUT_PROPERTY), HttpClientConfig.CONNECTION_REQUEST_TIMEOUT_DEFAULT);
-    connectTimeout = PropertiesUtil.toInteger(config.get(CONNECT_TIMEOUT_PROPERTY), HttpClientConfig.CONNECT_TIMEOUT_DEFAULT);
-    socketTimeout = PropertiesUtil.toInteger(config.get(SOCKET_TIMEOUT_PROPERTY), HttpClientConfig.SOCKET_TIMEOUT_DEFAULT);
-    maxConnectionsPerHost = PropertiesUtil.toInteger(config.get(MAX_CONNECTIONS_PER_HOST_PROPERTY), HttpClientConfig.MAX_CONNECTIONS_PER_HOST_DEFAULT);
-    maxTotalConnections = PropertiesUtil.toInteger(config.get(MAX_TOTAL_CONNECTIONS_PROPERTY), HttpClientConfig.MAX_TOTAL_CONNECTIONS_DEFAULT);
-    httpUser = PropertiesUtil.toString(config.get(HTTP_USER_PROPERTY), null);
-    httpPassword = PropertiesUtil.toString(config.get(HTTP_PASSWORD_PROPERTY), null);
-    proxyHost = PropertiesUtil.toString(config.get(PROXY_HOST_PROPERTY), null);
-    proxyPort = PropertiesUtil.toInteger(config.get(PROXY_PORT_PROPERTY), 0);
-    proxyUser = PropertiesUtil.toString(config.get(PROXY_USER_PROPERTY), null);
-    proxyPassword = PropertiesUtil.toString(config.get(PROXY_PASSWORD_PROPERTY), null);
+    connectionRequestTimeout = config.connectionRequestTimeout();
+    connectTimeout = config.connectTimeout();
+    socketTimeout = config.socketTimeout();
+    maxConnectionsPerHost = config.maxConnectionsPerHost();
+    maxTotalConnections = config.maxTotalConnections();
+    cookieSpec = config.cookieSpec();
+    httpUser = config.httpUser();
+    httpPassword = config.httpPassword();
+    proxyHost = config.proxyHost();
+    proxyPort = config.proxyPort();
+    proxyUser = config.proxyUser();
+    proxyPassword = config.proxyPassword();
 
     hostPatterns = new HashSet<>();
-    String[] hostPatternsArray = PropertiesUtil.toStringArray(config.get(HOST_PATTERNS_PROPERTY), new String[0]);
+    String[] hostPatternsArray = config.hostPatterns();
     for (String hostPatternString : hostPatternsArray) {
       if (StringUtils.isNotBlank(hostPatternString)) {
         try {
@@ -287,7 +299,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
     }
 
     wsAddressingToUris = new HashSet<>();
-    String[] wsAddressingToUrisArray = PropertiesUtil.toStringArray(config.get(WS_ADDRESSINGTO_URIS_PROPERTY), new String[0]);
+    String[] wsAddressingToUrisArray = config.wsAddressingToUris();
     for (String wsAddressingToUriString : wsAddressingToUrisArray) {
       if (StringUtils.isNotBlank(wsAddressingToUriString)) {
         wsAddressingToUris.add(wsAddressingToUriString);
@@ -295,7 +307,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
     }
 
     pathPatterns = new HashSet<>();
-    String[] pathPatternsArray = PropertiesUtil.toStringArray(config.get(PATH_PATTERNS_PROPERTY), new String[0]);
+    String[] pathPatternsArray = config.pathPatterns();
     for (String pathPatternString : pathPatternsArray) {
       if (StringUtils.isNotBlank(pathPatternString)) {
         try {
@@ -308,17 +320,17 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
       }
     }
 
-    sslContextType = PropertiesUtil.toString(config.get(SSL_CONTEXT_TYPE_PROPERTY), CertificateLoader.SSL_CONTEXT_TYPE_DEFAULT);
-    keyManagerType = PropertiesUtil.toString(config.get(KEYMANAGER_TYPE_PROPERTY), CertificateLoader.KEY_MANAGER_TYPE_DEFAULT);
-    keyStoreType = PropertiesUtil.toString(config.get(KEYSTORE_TYPE_PROPERTY), CertificateLoader.KEY_STORE_TYPE_DEFAULT);
-    keyStoreProvider = PropertiesUtil.toString(config.get(KEYSTORE_PROVIDER_PROPERTY), null);
-    keyStorePath = PropertiesUtil.toString(config.get(KEYSTORE_PATH_PROPERTY), null);
-    keyStorePassword = PropertiesUtil.toString(config.get(KEYSTORE_PASSWORD_PROPERTY), null);
-    trustManagerType = PropertiesUtil.toString(config.get(TRUSTMANAGER_TYPE_PROPERTY), CertificateLoader.TRUST_MANAGER_TYPE_DEFAULT);
-    trustStoreType = PropertiesUtil.toString(config.get(TRUSTSTORE_TYPE_PROPERTY), CertificateLoader.TRUST_STORE_TYPE_DEFAULT);
-    trustStoreProvider = PropertiesUtil.toString(config.get(TRUSTSTORE_PROVIDER_PROPERTY), null);
-    trustStorePath = PropertiesUtil.toString(config.get(TRUSTSTORE_PATH_PROPERTY), null);
-    trustStorePassword = PropertiesUtil.toString(config.get(TRUSTSTORE_PASSWORD_PROPERTY), null);
+    sslContextType = config.sslContextType();
+    keyManagerType = config.keyManagerType();
+    keyStoreType = config.keyStoreType();
+    keyStoreProvider = config.keyStoreProvider();
+    keyStorePath = config.keyStorePath();
+    keyStorePassword = config.keyStorePassword();
+    trustManagerType = config.trustManagerType();
+    trustStoreType = config.trustStoreType();
+    trustStoreProvider = config.trustStoreProvider();
+    trustStorePath = config.trustStorePath();
+    trustStorePassword = config.trustStorePassword();
   }
 
   @Override
@@ -352,17 +364,22 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   }
 
   @Override
-  public String getHttpUser() {
+  public @NotNull String getCookieSpec() {
+    return cookieSpec;
+  }
+
+  @Override
+  public @Nullable String getHttpUser() {
     return httpUser;
   }
 
   @Override
-  public String getHttpPassword() {
+  public @Nullable String getHttpPassword() {
     return httpPassword;
   }
 
   @Override
-  public String getProxyHost() {
+  public @Nullable String getProxyHost() {
     return proxyHost;
   }
 
@@ -372,17 +389,17 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   }
 
   @Override
-  public String getProxyUser() {
+  public @Nullable String getProxyUser() {
     return proxyUser;
   }
 
   @Override
-  public String getProxyPassword() {
+  public @Nullable String getProxyPassword() {
     return proxyPassword;
   }
 
   @Override
-  public boolean matchesHost(String host) {
+  public boolean matchesHost(@Nullable String host) {
     if (hostPatterns.isEmpty()) {
       return true;
     }
@@ -398,7 +415,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   }
 
   @Override
-  public boolean matchesWsAddressingToUri(String addressingToUri) {
+  public boolean matchesWsAddressingToUri(@Nullable String addressingToUri) {
     if (wsAddressingToUris.isEmpty()) {
       return true;
     }
@@ -409,7 +426,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   }
 
   @Override
-  public boolean matchesPath(final String path) {
+  public boolean matchesPath(@Nullable String path) {
     if (pathPatterns.isEmpty()) {
       return true;
     }
@@ -425,57 +442,57 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
   }
 
   @Override
-  public String getSslContextType() {
+  public @NotNull String getSslContextType() {
     return sslContextType;
   }
 
   @Override
-  public String getKeyManagerType() {
+  public @NotNull String getKeyManagerType() {
     return keyManagerType;
   }
 
   @Override
-  public String getKeyStoreType() {
+  public @NotNull String getKeyStoreType() {
     return keyStoreType;
   }
 
   @Override
-  public String getKeyStoreProvider() {
+  public @Nullable String getKeyStoreProvider() {
     return keyStoreProvider;
   }
 
   @Override
-  public String getKeyStorePath() {
+  public @Nullable String getKeyStorePath() {
     return keyStorePath;
   }
 
   @Override
-  public String getKeyStorePassword() {
+  public @Nullable String getKeyStorePassword() {
     return keyStorePassword;
   }
 
   @Override
-  public String getTrustManagerType() {
+  public @NotNull String getTrustManagerType() {
     return trustManagerType;
   }
 
   @Override
-  public String getTrustStoreType() {
+  public @NotNull String getTrustStoreType() {
     return trustStoreType;
   }
 
   @Override
-  public String getTrustStoreProvider() {
+  public @Nullable String getTrustStoreProvider() {
     return trustStoreProvider;
   }
 
   @Override
-  public String getTrustStorePath() {
+  public @Nullable String getTrustStorePath() {
     return trustStorePath;
   }
 
   @Override
-  public String getTrustStorePassword() {
+  public @Nullable String getTrustStorePassword() {
     return trustStorePassword;
   }
 

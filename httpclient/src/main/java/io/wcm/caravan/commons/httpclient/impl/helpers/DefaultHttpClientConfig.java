@@ -19,6 +19,9 @@
  */
 package io.wcm.caravan.commons.httpclient.impl.helpers;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 
 /**
@@ -66,17 +69,22 @@ public final class DefaultHttpClientConfig extends AbstractHttpClientConfig {
   }
 
   @Override
-  public String getHttpUser() {
+  public @NotNull String getCookieSpec() {
+    return HttpClientConfig.COOKIE_SPEC_DEFAULT;
+  }
+
+  @Override
+  public @Nullable String getHttpUser() {
     return null;
   }
 
   @Override
-  public String getHttpPassword() {
+  public @Nullable String getHttpPassword() {
     return null;
   }
 
   @Override
-  public String getProxyHost() {
+  public @Nullable String getProxyHost() {
     return null;
   }
 
@@ -86,82 +94,82 @@ public final class DefaultHttpClientConfig extends AbstractHttpClientConfig {
   }
 
   @Override
-  public String getProxyUser() {
+  public @Nullable String getProxyUser() {
     return null;
   }
 
   @Override
-  public String getProxyPassword() {
+  public @Nullable String getProxyPassword() {
     return null;
   }
 
   @Override
-  public boolean matchesHost(String host) {
+  public boolean matchesHost(@Nullable String host) {
     return true;
   }
 
   @Override
-  public boolean matchesWsAddressingToUri(String addressingToUri) {
+  public boolean matchesWsAddressingToUri(@Nullable String addressingToUri) {
     return true;
   }
 
   @Override
-  public boolean matchesPath(final String path) {
+  public boolean matchesPath(@Nullable String path) {
     return true;
   }
 
   @Override
-  public String getSslContextType() {
+  public @NotNull String getSslContextType() {
     return CertificateLoader.SSL_CONTEXT_TYPE_DEFAULT;
   }
 
   @Override
-  public String getKeyManagerType() {
+  public @NotNull String getKeyManagerType() {
     return CertificateLoader.KEY_MANAGER_TYPE_DEFAULT;
   }
 
   @Override
-  public String getKeyStoreType() {
+  public @NotNull String getKeyStoreType() {
     return CertificateLoader.KEY_STORE_TYPE_DEFAULT;
   }
 
   @Override
-  public String getKeyStoreProvider() {
+  public @Nullable String getKeyStoreProvider() {
     return null;
   }
 
   @Override
-  public String getKeyStorePath() {
+  public @Nullable String getKeyStorePath() {
     return null;
   }
 
   @Override
-  public String getKeyStorePassword() {
+  public @Nullable String getKeyStorePassword() {
     return null;
   }
 
   @Override
-  public String getTrustManagerType() {
+  public @NotNull String getTrustManagerType() {
     return CertificateLoader.TRUST_MANAGER_TYPE_DEFAULT;
   }
 
   @Override
-  public String getTrustStoreType() {
+  public @NotNull String getTrustStoreType() {
     return CertificateLoader.TRUST_STORE_TYPE_DEFAULT;
   }
 
   @Override
-  public String getTrustStoreProvider() {
+  public @Nullable String getTrustStoreProvider() {
     return null;
   }
 
   @Override
-  public String getTrustStorePath() {
+  public @Nullable String getTrustStorePath() {
     return null;
   }
 
   @Override
-  public String getTrustStorePassword() {
+  public @Nullable String getTrustStorePassword() {
     return null;
   }
 

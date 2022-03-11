@@ -19,6 +19,9 @@
  */
 package io.wcm.caravan.commons.httpclient;
 
+import org.apache.http.client.config.CookieSpecs;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ConsumerType;
 
 /**
@@ -51,6 +54,11 @@ public interface HttpClientConfig {
    * Default value for maximum total connections
    */
   int MAX_TOTAL_CONNECTIONS_DEFAULT = 50;
+
+  /**
+   * Default value for cookie specs.
+   */
+  String COOKIE_SPEC_DEFAULT = CookieSpecs.STANDARD;
 
   /**
    * Configuration enabled.
@@ -91,21 +99,33 @@ public interface HttpClientConfig {
   int getMaxTotalConnections();
 
   /**
+   * Standard cookie specification for HttpClient.
+   * @return Cookie spec
+   */
+  @NotNull
+  default String getCookieSpec() {
+    return HttpClientConfig.COOKIE_SPEC_DEFAULT;
+  }
+
+  /**
    * Http basic authentication user (optional).
    * @return Http user or null.
    */
+  @Nullable
   String getHttpUser();
 
   /**
    * Http basic authentication password (optional).
    * @return Http password or null.
    */
+  @Nullable
   String getHttpPassword();
 
   /**
    * Proxy host (optional).
    * @return Proxy host or null.
    */
+  @Nullable
   String getProxyHost();
 
   /**
@@ -118,12 +138,14 @@ public interface HttpClientConfig {
    * Proxy user (optional).
    * @return Proxy user or null.
    */
+  @Nullable
   String getProxyUser();
 
   /**
    * Proxy password (optional).
    * @return Proxy password or null.
    */
+  @Nullable
   String getProxyPassword();
 
   /**
@@ -131,42 +153,46 @@ public interface HttpClientConfig {
    * @param host Host name
    * @return true if configuration matches.
    */
-  boolean matchesHost(String host);
+  boolean matchesHost(@Nullable String host);
 
   /**
    * Check if this configuration should be applied for a given WS addressing to URI.
    * @param addressingToUri Web service address
    * @return true if configuration matches.
    */
-  boolean matchesWsAddressingToUri(String addressingToUri);
+  boolean matchesWsAddressingToUri(@Nullable String addressingToUri);
 
   /**
    * Check if this configuration should be applied for a given path of the target URL
    * @param path Path part
    * @return true if configuration matches
    */
-  default boolean matchesPath(String path) {
+  default boolean matchesPath(@Nullable String path) {
     return true;
   }
 
   /**
    * @return SSL context type (default: TLS)
    */
+  @NotNull
   String getSslContextType();
 
   /**
    * @return Key manager type (default: SunX509)
    */
+  @NotNull
   String getKeyManagerType();
 
   /**
    * @return Key store type (default: PKCS12)
    */
+  @NotNull
   String getKeyStoreType();
 
   /**
    * @return Key store provider (default: null = use first matching security provider)
    */
+  @Nullable
   default String getKeyStoreProvider() {
     return null;
   }
@@ -174,26 +200,31 @@ public interface HttpClientConfig {
   /**
    * @return Key store file path
    */
+  @Nullable
   String getKeyStorePath();
 
   /**
    * @return Key store password
    */
+  @Nullable
   String getKeyStorePassword();
 
   /**
    * @return Trust manager type (default: SunX509)
    */
+  @NotNull
   String getTrustManagerType();
 
   /**
    * @return Trust store type (default: JKS)
    */
+  @NotNull
   String getTrustStoreType();
 
   /**
    * @return Trust store provider (default: null = use first matching security provider)
    */
+  @Nullable
   default String getTrustStoreProvider() {
     return null;
   }
@@ -201,11 +232,13 @@ public interface HttpClientConfig {
   /**
    * @return Trust store file path
    */
+  @Nullable
   String getTrustStorePath();
 
   /**
    * @return Trust store password
    */
+  @Nullable
   String getTrustStorePassword();
 
 }

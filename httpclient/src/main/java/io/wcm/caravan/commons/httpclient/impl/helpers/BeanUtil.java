@@ -24,6 +24,8 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Helper methods for managing java beans.
@@ -42,9 +44,9 @@ final class BeanUtil {
    * @param maskProperties List of property names
    * @return Map with masked key/value pairs
    */
-  public static SortedMap<String, Object> getMaskedBeanProperties(Object beanObject, String[] maskProperties) {
+  public static @NotNull SortedMap<String, Object> getMaskedBeanProperties(@NotNull Object beanObject, @NotNull String @Nullable [] maskProperties) {
     try {
-      SortedMap<String, Object> configProperties = new TreeMap<String, Object>(BeanUtils.describe(beanObject));
+      SortedMap<String, Object> configProperties = new TreeMap<>(BeanUtils.describe(beanObject));
 
       // always ignore "class" properties which is added by BeanUtils.describe by default
       configProperties.remove("class");

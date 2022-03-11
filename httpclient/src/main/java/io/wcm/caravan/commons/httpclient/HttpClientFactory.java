@@ -22,7 +22,10 @@ package io.wcm.caravan.commons.httpclient;
 import java.net.URI;
 
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
@@ -37,7 +40,8 @@ public interface HttpClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Http Client
    */
-  HttpClient get(String targetUrl);
+  @NotNull
+  HttpClient get(@Nullable String targetUrl);
 
   /**
    * Returns a configured synchronous Http Client for the given target URL. If a special configuration
@@ -45,7 +49,8 @@ public interface HttpClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Http Client
    */
-  CloseableHttpClient getCloseable(String targetUrl);
+  @NotNull
+  CloseableHttpClient getCloseable(@Nullable String targetUrl);
 
   /**
    * Returns a configured synchronous Http Client for the given target URL. If a special configuration
@@ -53,7 +58,8 @@ public interface HttpClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Http Client
    */
-  HttpClient get(URI targetUrl);
+  @NotNull
+  HttpClient get(@Nullable URI targetUrl);
 
   /**
    * Returns a configured synchronous Http Client for the given target URL. If a special configuration
@@ -61,7 +67,8 @@ public interface HttpClientFactory {
    * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
    * @return Http Client
    */
-  CloseableHttpClient getCloseable(URI targetUrl);
+  @NotNull
+  CloseableHttpClient getCloseable(@Nullable URI targetUrl);
 
   /**
    * Returns a configured synchronous Http Client for the given target URL. The Http Client is dedicated
@@ -72,7 +79,8 @@ public interface HttpClientFactory {
    * @param wsAddressingToUri WS Addressing "To" header
    * @return Http Client
    */
-  HttpClient getWs(String targetUrl, String wsAddressingToUri);
+  @NotNull
+  HttpClient getWs(@Nullable String targetUrl, @Nullable String wsAddressingToUri);
 
   /**
    * Returns a configured synchronous Http Client for the given target URL. The Http Client is dedicated
@@ -83,7 +91,8 @@ public interface HttpClientFactory {
    * @param wsAddressingToUri WS Addressing "To" header
    * @return Http Client
    */
-  CloseableHttpClient getCloseableWs(String targetUrl, String wsAddressingToUri);
+  @NotNull
+  CloseableHttpClient getCloseableWs(@Nullable String targetUrl, @Nullable String wsAddressingToUri);
 
   /**
    * Returns a configured synchronous Http Client for the given target URL. The Http Client is dedicated
@@ -94,7 +103,8 @@ public interface HttpClientFactory {
    * @param wsAddressingToUri WS Addressing "To" header
    * @return Http Client
    */
-  HttpClient getWs(URI targetUrl, URI wsAddressingToUri);
+  @NotNull
+  HttpClient getWs(@Nullable URI targetUrl, @Nullable URI wsAddressingToUri);
 
   /**
    * Returns a configured synchronous Http Client for the given target URL. The Http Client is dedicated
@@ -105,6 +115,25 @@ public interface HttpClientFactory {
    * @param wsAddressingToUri WS Addressing "To" header
    * @return Http Client
    */
-  CloseableHttpClient getCloseableWs(URI targetUrl, URI wsAddressingToUri);
+  @NotNull
+  CloseableHttpClient getCloseableWs(@Nullable URI targetUrl, @Nullable URI wsAddressingToUri);
+
+  /**
+   * Returns the default Request Configuration for the given target URL. If a special configuration
+   * (e.g. timeout setting, proxy server, authentication) is configured it is applied in the factory.
+   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
+   * @return Default Request Config
+   */
+  @NotNull
+  RequestConfig getDefaultRequestConfig(@Nullable String targetUrl);
+
+  /**
+   * Returns the default Request Configuration for the given target URL. If a special configuration
+   * (e.g. timeout setting, proxy server, authentication) is configured it is applied in the factory.
+   * @param targetUrl Target URL to call (this url is not called, but required to check for configuration)
+   * @return Default Request Config
+   */
+  @NotNull
+  RequestConfig getDefaultRequestConfig(@Nullable URI targetUrl);
 
 }

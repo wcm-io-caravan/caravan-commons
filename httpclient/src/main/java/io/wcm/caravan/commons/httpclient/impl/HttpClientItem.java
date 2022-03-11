@@ -29,7 +29,6 @@ import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
@@ -41,6 +40,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.ProxyAuthenticationStrategy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,15 +54,15 @@ import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
 class HttpClientItem {
 
   private final HttpClientConfig config;
-  private final PoolingHttpClientConnectionManager connectionManager;
   private final CloseableHttpClient httpClient;
+  private final RequestConfig defaultRequestConfig;
 
   private static final Logger log = LoggerFactory.getLogger(HttpClientItem.class);
 
   /**
    * @param config Http client configuration
    */
-  HttpClientItem(HttpClientConfig config) {
+  HttpClientItem(@NotNull HttpClientConfig config) {
     this.config = config;
 
     // optional SSL client certificate support
@@ -90,13 +91,26 @@ class HttpClientItem {
           new UsernamePasswordCredentials(config.getHttpUser(), config.getHttpPassword()));
     }
 
+    // build request config
+    defaultRequestConfig = buildDefaultRequestConfig(config);
+
     // build http clients
-    connectionManager = buildConnectionManager(config, sslContext);
-    httpClient = buildHttpClient(config, connectionManager, credentialsProvider);
+    PoolingHttpClientConnectionManager connectionManager = buildConnectionManager(config, sslContext);
+    httpClient = buildHttpClient(config, connectionManager, credentialsProvider, defaultRequestConfig);
   }
 
-  private static PoolingHttpClientConnectionManager buildConnectionManager(HttpClientConfig config,
-      SSLContext sslContext) {
+  private static @NotNull RequestConfig buildDefaultRequestConfig(@NotNull HttpClientConfig config) {
+    return RequestConfig.custom()
+        // timeout settings
+        .setConnectionRequestTimeout(config.getConnectionRequestTimeout())
+        .setConnectTimeout(config.getConnectTimeout())
+        .setSocketTimeout(config.getSocketTimeout())
+        .setCookieSpec(config.getCookieSpec())
+        .build();
+  }
+
+  private static @NotNull PoolingHttpClientConnectionManager buildConnectionManager(@NotNull HttpClientConfig config,
+      @NotNull SSLContext sslContext) {
     // scheme configuration
     ConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext);
     Registry<ConnectionSocketFactory> schemeRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
@@ -111,21 +125,15 @@ class HttpClientItem {
     return conmgr;
   }
 
-  private static CloseableHttpClient buildHttpClient(HttpClientConfig config,
-      PoolingHttpClientConnectionManager connectionManager, CredentialsProvider credentialsProvider) {
+  private static @NotNull CloseableHttpClient buildHttpClient(@NotNull HttpClientConfig config,
+      @NotNull PoolingHttpClientConnectionManager connectionManager, @NotNull CredentialsProvider credentialsProvider,
+      @NotNull RequestConfig defaultRequestConfig) {
 
     // prepare HTTPClient builder
     HttpClientBuilder httpClientBuilder = HttpClientBuilder.create()
         .setConnectionManager(connectionManager);
 
-    httpClientBuilder.setDefaultRequestConfig(RequestConfig.custom()
-        // timeout settings
-        .setConnectionRequestTimeout(config.getConnectionRequestTimeout())
-        .setConnectTimeout(config.getConnectTimeout())
-        .setSocketTimeout(config.getSocketTimeout())
-        // apply standard cookie policy to support all expire headers (see https://issues.apache.org/jira/browse/HTTPCLIENT-1763)
-        .setCookieSpec(CookieSpecs.STANDARD)
-        .build());
+    httpClientBuilder.setDefaultRequestConfig(defaultRequestConfig);
 
     httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
 
@@ -145,8 +153,15 @@ class HttpClientItem {
   /**
    * @return Http client instance (synchronous)
    */
-  public CloseableHttpClient getHttpClient() {
+  public @NotNull CloseableHttpClient getHttpClient() {
     return httpClient;
+  }
+
+  /**
+   * @return Default request config
+   */
+  public @NotNull RequestConfig getDefaultRequestConfig() {
+    return defaultRequestConfig;
   }
 
   /**
@@ -156,7 +171,7 @@ class HttpClientItem {
    * @param isWsCall indicates if the call is a soap webservice call
    * @return true if host name is associated with this http client config
    */
-  public boolean matches(String hostName, String wsAddressingToURI, String path, boolean isWsCall) {
+  public boolean matches(@Nullable String hostName, @Nullable String wsAddressingToURI, @Nullable String path, boolean isWsCall) {
     if (isWsCall) {
       return config.isEnabled()
           && config.matchesHost(hostName)
@@ -183,7 +198,7 @@ class HttpClientItem {
   }
 
   @Override
-  public String toString() {
+  public @NotNull String toString() {
     return "HttpClientItem[" + config.toString() + "]";
   }
 

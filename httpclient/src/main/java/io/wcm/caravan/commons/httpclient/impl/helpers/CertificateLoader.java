@@ -35,7 +35,10 @@ import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.conn.ssl.SSLInitializationException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 
 /**
@@ -80,7 +83,9 @@ public final class CertificateLoader {
    * @throws IOException I/O exception
    * @throws GeneralSecurityException General security exception
    */
-  public static SSLContext buildSSLContext(HttpClientConfig config) throws IOException, GeneralSecurityException {
+  @SuppressWarnings("null")
+  @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE") // null checks happen in separate methods
+  public static @NotNull SSLContext buildSSLContext(@NotNull HttpClientConfig config) throws IOException, GeneralSecurityException {
 
     KeyManagerFactory kmf = null;
     if (isSslKeyManagerEnabled(config)) {
@@ -110,7 +115,7 @@ public final class CertificateLoader {
    * @throws IOException I/O exception
    * @throws GeneralSecurityException General security exception
    */
-  public static KeyManagerFactory getKeyManagerFactory(String keyStoreFilename, StoreProperties storeProperties)
+  public static @NotNull KeyManagerFactory getKeyManagerFactory(@NotNull String keyStoreFilename, @NotNull StoreProperties storeProperties)
       throws IOException, GeneralSecurityException {
     InputStream is = getResourceAsStream(keyStoreFilename);
     if (is == null) {
@@ -137,7 +142,7 @@ public final class CertificateLoader {
    * @throws IOException I/O exception
    * @throws GeneralSecurityException General security exception
    */
-  private static KeyManagerFactory getKeyManagerFactory(InputStream keyStoreStream, StoreProperties storeProperties)
+  private static @NotNull KeyManagerFactory getKeyManagerFactory(@NotNull InputStream keyStoreStream, @NotNull StoreProperties storeProperties)
       throws IOException, GeneralSecurityException {
     // use provider if given, otherwise use the first matching security provider
     final KeyStore ks;
@@ -161,7 +166,7 @@ public final class CertificateLoader {
    * @throws IOException I/O exception
    * @throws GeneralSecurityException General security exception
    */
-  public static TrustManagerFactory getTrustManagerFactory(String trustStoreFilename, StoreProperties storeProperties)
+  public static @NotNull TrustManagerFactory getTrustManagerFactory(@NotNull String trustStoreFilename, @NotNull StoreProperties storeProperties)
       throws IOException, GeneralSecurityException {
     InputStream is = getResourceAsStream(trustStoreFilename);
     if (is == null) {
@@ -188,7 +193,7 @@ public final class CertificateLoader {
    * @throws IOException I/O exception
    * @throws GeneralSecurityException General security exception
    */
-  private static TrustManagerFactory getTrustManagerFactory(InputStream trustStoreStream, StoreProperties storeProperties)
+  private static @NotNull TrustManagerFactory getTrustManagerFactory(@NotNull InputStream trustStoreStream, @NotNull StoreProperties storeProperties)
       throws IOException, GeneralSecurityException {
 
     // use provider if given, otherwise use the first matching security provider
@@ -212,7 +217,7 @@ public final class CertificateLoader {
    * @return InputStream or null if neither file nor classpath resource is found
    * @throws IOException I/O exception
    */
-  private static InputStream getResourceAsStream(String path) throws IOException {
+  private static @Nullable InputStream getResourceAsStream(@NotNull String path) throws IOException {
     if (StringUtils.isEmpty(path)) {
       return null;
     }
@@ -232,7 +237,7 @@ public final class CertificateLoader {
    * @param path Path
    * @return Absolute path
    */
-  private static String getFilenameInfo(String path) {
+  private static @Nullable String getFilenameInfo(@Nullable String path) {
     if (StringUtils.isEmpty(path)) {
       return null;
     }
@@ -249,7 +254,7 @@ public final class CertificateLoader {
    * @param config Http client configuration
    * @return true if client certificates are enabled
    */
-  public static boolean isSslKeyManagerEnabled(HttpClientConfig config) {
+  public static boolean isSslKeyManagerEnabled(@NotNull HttpClientConfig config) {
     return StringUtils.isNotEmpty(config.getSslContextType())
         && StringUtils.isNotEmpty(config.getKeyManagerType())
         && StringUtils.isNotEmpty(config.getKeyStoreType())
@@ -261,7 +266,7 @@ public final class CertificateLoader {
    * @param config Http client configuration
    * @return true if client certificates are enabled
    */
-  public static boolean isSslTrustStoreEnbaled(HttpClientConfig config) {
+  public static boolean isSslTrustStoreEnbaled(@NotNull HttpClientConfig config) {
     return StringUtils.isNotEmpty(config.getSslContextType())
         && StringUtils.isNotEmpty(config.getTrustManagerType())
         && StringUtils.isNotEmpty(config.getTrustStoreType())
@@ -272,16 +277,13 @@ public final class CertificateLoader {
    * Creates default SSL context.
    * @return SSL context
    */
-  public static SSLContext createDefaultSSlContext() throws SSLInitializationException {
+  public static @NotNull SSLContext createDefaultSSlContext() throws SSLInitializationException {
     try {
       final SSLContext sslcontext = SSLContext.getInstance(SSL_CONTEXT_TYPE_DEFAULT);
       sslcontext.init(null, null, null);
       return sslcontext;
     }
-    catch (NoSuchAlgorithmException ex) {
-      throw new SSLInitializationException(ex.getMessage(), ex);
-    }
-    catch (KeyManagementException ex) {
+    catch (NoSuchAlgorithmException | KeyManagementException ex) {
       throw new SSLInitializationException(ex.getMessage(), ex);
     }
   }

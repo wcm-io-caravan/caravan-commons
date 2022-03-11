@@ -44,6 +44,8 @@ import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.nio.reactor.IOReactorException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,15 +58,15 @@ import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
 class HttpAsyncClientItem {
 
   private final HttpClientConfig config;
-  private final PoolingNHttpClientConnectionManager asyncConnectionManager;
   private final CloseableHttpAsyncClient httpAsyncClient;
+  private final RequestConfig defaultRequestConfig;
 
   private static final Logger log = LoggerFactory.getLogger(HttpAsyncClientItem.class);
 
   /**
    * @param config Http client configuration
    */
-  HttpAsyncClientItem(HttpClientConfig config) {
+  HttpAsyncClientItem(@NotNull HttpClientConfig config) {
     this.config = config;
 
     // optional SSL client certificate support
@@ -93,16 +95,28 @@ class HttpAsyncClientItem {
           new UsernamePasswordCredentials(config.getHttpUser(), config.getHttpPassword()));
     }
 
+    // build request config
+    defaultRequestConfig = buildDefaultRequestConfig(config);
+
     // build http clients
-    asyncConnectionManager = buildAsyncConnectionManager(config, sslContext);
-    httpAsyncClient = buildHttpAsyncClient(config, asyncConnectionManager, credentialsProvider);
+    PoolingNHttpClientConnectionManager asyncConnectionManager = buildAsyncConnectionManager(config, sslContext);
+    httpAsyncClient = buildHttpAsyncClient(config, asyncConnectionManager, credentialsProvider, defaultRequestConfig);
 
     // start async client
     httpAsyncClient.start();
   }
 
-  private static PoolingNHttpClientConnectionManager buildAsyncConnectionManager(HttpClientConfig config,
-      SSLContext sslContext) {
+  private static @NotNull RequestConfig buildDefaultRequestConfig(@NotNull HttpClientConfig config) {
+    return RequestConfig.custom()
+            .setConnectionRequestTimeout(config.getConnectionRequestTimeout())
+            .setConnectTimeout(config.getConnectTimeout())
+            .setSocketTimeout(config.getSocketTimeout())
+            .setCookieSpec(config.getCookieSpec())
+            .build();
+  }
+
+  private static @NotNull PoolingNHttpClientConnectionManager buildAsyncConnectionManager(@NotNull HttpClientConfig config,
+      @NotNull SSLContext sslContext) {
     // scheme configuration
     SchemeIOSessionStrategy sslSocketFactory = new SSLIOSessionStrategy(sslContext);
     Registry<SchemeIOSessionStrategy> asyncSchemeRegistry = RegistryBuilder.<SchemeIOSessionStrategy>create()
@@ -124,18 +138,16 @@ class HttpAsyncClientItem {
     return conmgr;
   }
 
-  private static CloseableHttpAsyncClient buildHttpAsyncClient(HttpClientConfig config,
-      PoolingNHttpClientConnectionManager connectionManager, CredentialsProvider credentialsProvider) {
+  private static @NotNull CloseableHttpAsyncClient buildHttpAsyncClient(@NotNull HttpClientConfig config,
+      @NotNull PoolingNHttpClientConnectionManager connectionManager, @NotNull CredentialsProvider credentialsProvider,
+      @NotNull RequestConfig defaultRequestConfig) {
 
     // prepare HTTPClient builder
     HttpAsyncClientBuilder httpClientAsyncBuilder = HttpAsyncClientBuilder.create()
         .setConnectionManager(connectionManager);
 
     // timeout settings
-    httpClientAsyncBuilder.setDefaultRequestConfig(RequestConfig.custom()
-        .setConnectionRequestTimeout(config.getConnectionRequestTimeout())
-        .setConnectTimeout(config.getConnectTimeout())
-        .setSocketTimeout(config.getSocketTimeout()).build());
+    httpClientAsyncBuilder.setDefaultRequestConfig(defaultRequestConfig);
 
     httpClientAsyncBuilder.setDefaultCredentialsProvider(credentialsProvider);
 
@@ -155,8 +167,15 @@ class HttpAsyncClientItem {
   /**
    * @return Http client instance (asynchronous)
    */
-  public CloseableHttpAsyncClient getHttpAsyncClient() {
+  public @NotNull CloseableHttpAsyncClient getHttpAsyncClient() {
     return httpAsyncClient;
+  }
+
+  /**
+   * @return Default request config
+   */
+  public @NotNull RequestConfig getDefaultRequestConfig() {
+    return defaultRequestConfig;
   }
 
   /**
@@ -166,7 +185,7 @@ class HttpAsyncClientItem {
    * @param isWsCall indicates if the call is a soap webservice call
    * @return true if host name is associated with this http client config
    */
-  public boolean matches(String hostName, String wsAddressingToURI, String path, boolean isWsCall) {
+  public boolean matches(@Nullable String hostName, @Nullable String wsAddressingToURI, @Nullable String path, boolean isWsCall) {
     if (isWsCall) {
       return config.isEnabled()
           && config.matchesHost(hostName)
@@ -193,7 +212,7 @@ class HttpAsyncClientItem {
   }
 
   @Override
-  public String toString() {
+  public @NotNull String toString() {
     return "HttpClientItem[" + config.toString() + "]";
   }
 
