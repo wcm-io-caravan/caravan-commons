@@ -27,6 +27,9 @@
       <action type="update" dev="sseifert">
         Eliminate dependency to commons-beanutils.
       </action>
+      <action type="update" dev="sseifert">
+        Add web console name hint for HTTP Client Configuration.
+      </action>
     </release>
 
     <release version="1.4.0" date="2022-03-11">

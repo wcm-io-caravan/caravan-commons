@@ -232,6 +232,9 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
     @SuppressWarnings("java:S100") // property name is service.ranking
     int service_ranking();
 
+    @SuppressWarnings("java:S100")
+    String webconsole_configurationFactory_nameHint() default "{hostPatterns} {wsAddressingToUris} {pathPatterns}";
+
   }
 
 
