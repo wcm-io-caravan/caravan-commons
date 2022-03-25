@@ -19,13 +19,17 @@
  */
 package io.wcm.caravan.commons.httpclient.impl.helpers;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Helper methods for managing java beans.
@@ -37,32 +41,37 @@ final class BeanUtil {
   }
 
   /**
-   * Get map with key/value pairs for properties of a java bean (using {@link BeanUtils#describe(Object)}).
+   * Get map with key/value pairs for properties of a java bean (using {@link Introspector#getBeanInfo(Class)}).
    * An array of property names can be passed that should be masked with "***" because they contain sensitive
    * information.
    * @param beanObject Bean object
    * @param maskProperties List of property names
    * @return Map with masked key/value pairs
    */
-  public static @NotNull SortedMap<String, Object> getMaskedBeanProperties(@NotNull Object beanObject, @NotNull String @Nullable [] maskProperties) {
+  public static @NotNull SortedMap<String, Object> getMaskedBeanProperties(@NotNull Object beanObject, @NotNull Set<String> maskProperties) {
     try {
-      SortedMap<String, Object> configProperties = new TreeMap<>(BeanUtils.describe(beanObject));
+      SortedMap<String, Object> configProperties = new TreeMap<>();
 
-      // always ignore "class" properties which is added by BeanUtils.describe by default
-      configProperties.remove("class");
+      BeanInfo beanInfo = Introspector.getBeanInfo(beanObject.getClass());
+      PropertyDescriptor[] props = beanInfo.getPropertyDescriptors();
 
-      // Mask some properties with confidential information (if set to any value)
-      if (maskProperties != null) {
-        for (String propertyName : maskProperties) {
-          if (configProperties.containsKey(propertyName) && configProperties.get(propertyName) != null) {
-            configProperties.put(propertyName, "***");
+      for (PropertyDescriptor prop : props) {
+        String property = prop.getName();
+        if (StringUtils.equals(property, "class")) {
+          continue;
+        }
+        Object value = prop.getReadMethod().invoke(beanObject);
+        if (value != null) {
+          if (maskProperties.contains(property)) {
+            value = "***";
           }
+          configProperties.put(property, value);
         }
       }
 
       return configProperties;
     }
-    catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException ex) {
+    catch (IntrospectionException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
       throw new IllegalArgumentException("Unable to get properties from: " + beanObject, ex);
     }
   }

@@ -19,7 +19,10 @@
  */
 package io.wcm.caravan.commons.httpclient.impl.helpers;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -35,12 +38,12 @@ public abstract class AbstractHttpClientConfig implements HttpClientConfig {
   /**
    * List of properties of this class that contain sensitive information which should not be logged.
    */
-  static final String[] SENSITIVE_PROPERTY_NAMES = new String[] {
+  static final Set<String> SENSITIVE_PROPERTY_NAMES = new HashSet<>(Arrays.asList(
     "httpPassword",
     "proxyPassword",
     "keyStorePassword",
     "trustStorePassword"
-  };
+  ));
 
   @Override
   public @NotNull String toString() {

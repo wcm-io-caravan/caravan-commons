@@ -21,6 +21,7 @@ package io.wcm.caravan.commons.httpclient.impl.helpers;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collections;
 import java.util.SortedMap;
 
 import org.junit.Test;
@@ -31,9 +32,7 @@ public class BeanUtilTest {
   public void testGetMaskedBeanProperties() {
 
     SampleBean sampleBean = new SampleBean("value1", "value2");
-    SortedMap<String, Object> properties = BeanUtil.getMaskedBeanProperties(sampleBean, new String[] {
-        "attribute2"
-    });
+    SortedMap<String, Object> properties = BeanUtil.getMaskedBeanProperties(sampleBean, Collections.singleton("attribute2"));
 
     assertEquals(2, properties.size());
     assertEquals("value1", properties.get("attribute1"));
@@ -42,20 +41,20 @@ public class BeanUtilTest {
 
   public static final class SampleBean {
 
-    private final String mAttribute1;
-    private final String mAttribute2;
+    private final String attribute1;
+    private final String attribute2;
 
-    public SampleBean(String pAttribute1, String pAttribute2) {
-      mAttribute1 = pAttribute1;
-      mAttribute2 = pAttribute2;
+    public SampleBean(String attribute1, String attribute2) {
+      this.attribute1 = attribute1;
+      this.attribute2 = attribute2;
     }
 
     public String getAttribute1() {
-      return mAttribute1;
+      return attribute1;
     }
 
     public String getAttribute2() {
-      return mAttribute2;
+      return attribute2;
     }
 
   }
