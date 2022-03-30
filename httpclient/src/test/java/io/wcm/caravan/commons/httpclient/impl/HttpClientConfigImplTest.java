@@ -145,7 +145,13 @@ public class HttpClientConfigImplTest {
     assertEquals("trustStorePath", "trustpath", config.getTrustStorePath());
     assertEquals("trustStorePassword", "trustpasswd", config.getTrustStorePassword());
 
-    assertNotNull(config.toString());
+    // toString should contain all configured props, sensitive ones have masked values
+    assertEquals("HttpClientConfigImpl[connectTimeout=1,connectionRequestTimeout=5,cookieSpec=ignoreCookies,enabled=true,"
+        + "httpPassword=***,httpUser=httpUsr,keyManagerType=keymantype,keyStorePassword=***,keyStorePath=keypath,"
+        + "keyStoreProvider=keystoreprvdr,keyStoreType=keystoretype,maxConnectionsPerHost=3,maxTotalConnections=4,"
+        + "proxyHost=abc,proxyPassword=***,proxyPort=5,proxyUser=def,socketTimeout=2,sslContextType=ssltype,"
+        + "trustManagerType=trustmantype,trustStorePassword=***,trustStorePath=trustpath,"
+        + "trustStoreProvider=truststoreprvdr,trustStoreType=truststoretype]", config.toString());
   }
 
 }

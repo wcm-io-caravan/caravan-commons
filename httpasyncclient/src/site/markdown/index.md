@@ -25,7 +25,6 @@ Provides preconfigured [Apache HTTP Async Client](http://hc.apache.org/) instanc
 
 This OSGi Bundle depends on further bundles (or higher versions):
 
-* https://repo1.maven.org/maven2/commons-beanutils/commons-beanutils/1.9.2/
 * https://repo1.maven.org/maven2/org/apache/httpcomponents/httpcore-osgi/4.3.2/
 * https://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient-osgi/4.3.4/
 * https://repo1.maven.org/maven2/org/apache/httpcomponents/httpasyncclient-osgi/4.0.2/
