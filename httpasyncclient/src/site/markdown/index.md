@@ -2,7 +2,7 @@
 
 Provides preconfigured [Apache HTTP Async Client](http://hc.apache.org/) instances.
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.wcm.caravan/io.wcm.caravan.commons.httpasyncclient/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.wcm.caravan/io.wcm.caravan.commons.httpasyncclient)
+[![Maven Central](https://img.shields.io/maven-central/v/io.wcm.caravan/io.wcm.caravan.commons.httpasyncclient)](https://repo1.maven.org/maven2/io/wcm/caravan/io.wcm.caravan.commons.httpasyncclient/)
 
 
 ### Documentation
