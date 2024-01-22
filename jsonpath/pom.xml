@@ -47,7 +47,7 @@
 
   <properties>
     <site.url.module.prefix>commons/jsonpath</site.url.module.prefix>
-    <jsonpath.version>2.6.0</jsonpath.version>
+    <jsonpath.version>2.9.0</jsonpath.version>
   </properties>
 
   <dependencies>
