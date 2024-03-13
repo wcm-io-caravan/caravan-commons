@@ -52,7 +52,7 @@ public class HttpClientConfigImpl extends AbstractHttpClientConfig {
 
   @ObjectClassDefinition(name = "wcm.io Caravan HTTP Client Configuration",
       description = "Allows to configure special HTTP client settings for target hosts.")
-  static @interface Config {
+  @interface Config {
 
     /**
      * Host pattern

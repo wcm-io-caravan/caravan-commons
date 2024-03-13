@@ -20,7 +20,6 @@
 package io.wcm.caravan.commons.httpasyncclient.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -30,7 +29,6 @@ import org.apache.http.auth.Credentials;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager;
 import org.apache.http.nio.client.HttpAsyncClient;
 import org.apache.http.nio.conn.SchemeIOSessionStrategy;
@@ -181,7 +179,7 @@ public class HttpClientItemAsyncTest {
     Registry<SchemeIOSessionStrategy> schemeRegistry = HttpClientTestUtils.getSchemeRegistry(client);
     SchemeIOSessionStrategy schemeSocketFactory = schemeRegistry.lookup("https");
 
-    assertNotEquals(schemeSocketFactory, SSLConnectionSocketFactory.getSocketFactory());
+    assertNotNull(schemeSocketFactory);
     item.close();
   }
 
