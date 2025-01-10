@@ -12,4 +12,4 @@ Metrics integration.
 
 
 [apidocs]: apidocs/
-[changelog]: changes-report.html
+[changelog]: changes.html

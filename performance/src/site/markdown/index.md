@@ -12,4 +12,4 @@ Performance Metrics Framework.
 
 
 [apidocs]: apidocs/
-[changelog]: changes-report.html
+[changelog]: changes.html

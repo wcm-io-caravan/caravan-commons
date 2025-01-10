@@ -12,7 +12,7 @@ Provides preconfigured [Apache HTTP Async Client](http://hc.apache.org/) instanc
 
 
 [apidocs]: apidocs/
-[changelog]: changes-report.html
+[changelog]: changes.html
 
 
 ### Overview
