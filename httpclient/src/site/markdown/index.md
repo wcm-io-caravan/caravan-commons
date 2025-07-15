@@ -12,7 +12,7 @@ Provides preconfigured [Apache HTTP Client](http://hc.apache.org/) instances.
 
 
 [apidocs]: apidocs/
-[changelog]: changes-report.html
+[changelog]: changes.html
 
 
 ### Overview

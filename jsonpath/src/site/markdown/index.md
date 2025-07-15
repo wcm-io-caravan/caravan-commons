@@ -11,7 +11,7 @@ Provides preconfigured [JsonPath][jsonpath] implementation based on [Jayway Json
 * [Changelog][changelog]
 
 
-[changelog]: changes-report.html
+[changelog]: changes.html
 
 
 ### Overview

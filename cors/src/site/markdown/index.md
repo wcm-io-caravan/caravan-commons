@@ -10,4 +10,4 @@ Servlet filter for managing CORS header in HTTP responses.
 * [Changelog][changelog]
 
 
-[changelog]: changes-report.html
+[changelog]: changes.html
