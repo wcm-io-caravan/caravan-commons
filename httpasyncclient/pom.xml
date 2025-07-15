@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm.caravan</groupId>
     <artifactId>io.wcm.caravan.commons.parent</artifactId>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.3.0</version>
     <relativePath>../parent/pom.xml</relativePath>
   </parent>
 
   <groupId>io.wcm.caravan</groupId>
   <artifactId>io.wcm.caravan.commons.httpasyncclient</artifactId>
-  <version>1.4.1-SNAPSHOT</version>
+  <version>1.4.2</version>
   <packaging>jar</packaging>
 
   <name>Commons HTTP Async Client</name>
@@ -49,7 +49,7 @@
     <site.url.module.prefix>commons/httpasyncclient</site.url.module.prefix>
 
     <!-- Enable reproducible builds -->
-    <project.build.outputTimestamp>2022-03-11T10:12:26Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2025-07-15T09:29:30Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
