@@ -43,8 +43,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.google.common.collect.ImmutableMap;
-
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class CorsServletFilterTest {
 
@@ -60,7 +58,7 @@ public class CorsServletFilterTest {
 
   @Test
   public void testDisabled() throws IOException, ServletException {
-    Filter underTest = setupFilter(ImmutableMap.of(PROPERTY_ENABLED, false));
+    Filter underTest = setupFilter(Map.of(PROPERTY_ENABLED, false));
 
     when(request.getHeader(HttpHeader.ORIGIN)).thenReturn("myhost");
 
@@ -71,7 +69,7 @@ public class CorsServletFilterTest {
 
   @Test
   public void testAllowAllHosts_WithoutOrigin() throws IOException, ServletException {
-    Filter underTest = setupFilter(ImmutableMap.of(PROPERTY_ALLOW_ALL_HOSTS, true));
+    Filter underTest = setupFilter(Map.of(PROPERTY_ALLOW_ALL_HOSTS, true));
 
     when(request.getHeader(HttpHeader.ORIGIN)).thenReturn(null);
 
@@ -82,7 +80,7 @@ public class CorsServletFilterTest {
 
   @Test
   public void testAllowAllHosts_WithOrigin() throws IOException, ServletException {
-    Filter underTest = setupFilter(ImmutableMap.of(PROPERTY_ALLOW_ALL_HOSTS, true));
+    Filter underTest = setupFilter(Map.of(PROPERTY_ALLOW_ALL_HOSTS, true));
 
     when(request.getHeader(HttpHeader.ORIGIN)).thenReturn("myhost");
 
@@ -94,7 +92,7 @@ public class CorsServletFilterTest {
 
   @Test
   public void testNotAllowAllHosts_WithoutOrigin() throws IOException, ServletException {
-    Filter underTest = setupFilter(ImmutableMap.of(PROPERTY_ALLOW_ALL_HOSTS, false));
+    Filter underTest = setupFilter(Map.of(PROPERTY_ALLOW_ALL_HOSTS, false));
 
     when(request.getHeader(HttpHeader.ORIGIN)).thenReturn(null);
 
@@ -105,7 +103,7 @@ public class CorsServletFilterTest {
 
   @Test
   public void testNotAllowAllHosts_WithOrigin() throws IOException, ServletException {
-    Filter underTest = setupFilter(ImmutableMap.of(PROPERTY_ALLOW_ALL_HOSTS, false));
+    Filter underTest = setupFilter(Map.of(PROPERTY_ALLOW_ALL_HOSTS, false));
 
     when(request.getHeader(HttpHeader.ORIGIN)).thenReturn("myhost");
 
@@ -118,7 +116,7 @@ public class CorsServletFilterTest {
 
   @Test
   public void testWhitelist_Allowed() throws IOException, ServletException {
-    Filter underTest = setupFilter(ImmutableMap.of(PROPERTY_ALLOW_ALL_HOSTS, false,
+    Filter underTest = setupFilter(Map.of(PROPERTY_ALLOW_ALL_HOSTS, false,
         PROPERTY_HOST_WHITELIST, new String[] {
         "host1", "host2"
     }));
@@ -134,7 +132,7 @@ public class CorsServletFilterTest {
 
   @Test
   public void testWhitelist_Disallowed() throws IOException, ServletException {
-    Filter underTest = setupFilter(ImmutableMap.of(PROPERTY_ALLOW_ALL_HOSTS, false,
+    Filter underTest = setupFilter(Map.of(PROPERTY_ALLOW_ALL_HOSTS, false,
         PROPERTY_HOST_WHITELIST, new String[] {
         "host1", "host2"
     }));
@@ -148,7 +146,7 @@ public class CorsServletFilterTest {
 
   @Test
   public void testBlacklist_Disallowed() throws IOException, ServletException {
-    Filter underTest = setupFilter(ImmutableMap.of(PROPERTY_ALLOW_ALL_HOSTS, false,
+    Filter underTest = setupFilter(Map.of(PROPERTY_ALLOW_ALL_HOSTS, false,
         PROPERTY_HOST_BLACKLIST, new String[] {
         "host1", "host2"
     }));
@@ -162,7 +160,7 @@ public class CorsServletFilterTest {
 
   @Test
   public void testBlacklist_Allowed() throws IOException, ServletException {
-    Filter underTest = setupFilter(ImmutableMap.of(PROPERTY_ALLOW_ALL_HOSTS, false,
+    Filter underTest = setupFilter(Map.of(PROPERTY_ALLOW_ALL_HOSTS, false,
         PROPERTY_HOST_BLACKLIST, new String[] {
         "host1", "host2"
     }));

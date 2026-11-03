@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.nio.client.HttpAsyncClient;
@@ -32,8 +33,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.osgi.framework.Constants;
-
-import com.google.common.collect.ImmutableMap;
 
 import io.wcm.caravan.commons.httpasyncclient.HttpAsyncClientFactory;
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
@@ -49,22 +48,16 @@ public class HttpClientFactoryImplAsyncTest {
   public void testClientSelection() {
 
     context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("connectTimeout", 55)
-            .put("hostPatterns", new String[] {
-                "host1"
-            })
-            .put(Constants.SERVICE_RANKING, 10)
-            .build());
+        Map.of(
+            "connectTimeout", 55,
+            "hostPatterns", new String[] { "host1" },
+            Constants.SERVICE_RANKING, 10));
 
     context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("connectTimeout", 66)
-            .put("hostPatterns", new String[] {
-                "host2"
-            })
-            .put(Constants.SERVICE_RANKING, 20)
-            .build());
+        Map.of(
+            "connectTimeout", 66,
+            "hostPatterns", new String[] { "host2" },
+            Constants.SERVICE_RANKING, 20));
 
     HttpAsyncClientFactory underTest = context.registerInjectActivateService(new HttpAsyncClientFactoryImpl());
 
@@ -89,19 +82,17 @@ public class HttpClientFactoryImplAsyncTest {
   public void testClientSelectionWithAllMatchesConfigIncluded() {
 
     context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("connectTimeout", 55)
-            .put("hostPatterns", new String[] {
+        Map.of(
+            "connectTimeout", 55,
+            "hostPatterns", new String[] {
                 "host1"
-            })
-            .put(Constants.SERVICE_RANKING, 10)
-            .build());
+            },
+            Constants.SERVICE_RANKING, 10));
 
     context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("connectTimeout", 66)
-            .put(Constants.SERVICE_RANKING, 20)
-            .build());
+        Map.of(
+            "connectTimeout", 66,
+            Constants.SERVICE_RANKING, 20));
 
     HttpAsyncClientFactory underTest = context.registerInjectActivateService(new HttpAsyncClientFactoryImpl());
 
@@ -126,25 +117,23 @@ public class HttpClientFactoryImplAsyncTest {
   public void testGetHttpClientConfigForWebservice() {
 
     context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("connectTimeout", 55)
-            .put("hostPatterns", new String[] {
+        Map.of(
+            "connectTimeout", 55,
+            "hostPatterns", new String[] {
                 "host1"
-            })
-            .put("wsAddressingToUris", new String[] {
+            },
+            "wsAddressingToUris", new String[] {
                 "http://uri1"
-            })
-            .put(Constants.SERVICE_RANKING, 10)
-            .build());
+            },
+            Constants.SERVICE_RANKING, 10));
 
     context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("connectTimeout", 66)
-            .put("hostPatterns", new String[] {
+        Map.of(
+            "connectTimeout", 66,
+            "hostPatterns", new String[] {
                 "host2"
-            })
-            .put(Constants.SERVICE_RANKING, 20)
-            .build());
+            },
+            Constants.SERVICE_RANKING, 20));
 
     HttpAsyncClientFactory underTest = context.registerInjectActivateService(new HttpAsyncClientFactoryImpl());
 
@@ -172,40 +161,37 @@ public class HttpClientFactoryImplAsyncTest {
   public void testGetConfigForConfiguredPath() throws URISyntaxException {
 
     context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("connectTimeout", 55)
-            .put("hostPatterns", new String[] {
+        Map.of(
+            "connectTimeout", 55,
+            "hostPatterns", new String[] {
                 "host1"
-            })
-            .put("pathPatterns", new String[] {
+            },
+            "pathPatterns", new String[] {
                 "/path1"
-            })
-            .put(Constants.SERVICE_RANKING, 10)
-            .build());
+            },
+            Constants.SERVICE_RANKING, 10));
 
     context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("connectTimeout", 66)
-            .put("hostPatterns", new String[] {
+        Map.of(
+            "connectTimeout", 66,
+            "hostPatterns", new String[] {
                 "host2"
-            })
-            .put(Constants.SERVICE_RANKING, 20)
-            .build());
+            },
+          Constants.SERVICE_RANKING, 20));
 
     context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("connectTimeout", 77)
-            .put("hostPatterns", new String[] {
+        Map.of(
+            "connectTimeout", 77,
+            "hostPatterns", new String[] {
                 "host3"
-            })
-            .put("wsAddressingToUris", new String[] {
+            },
+            "wsAddressingToUris", new String[] {
                 "http://uri3"
-            })
-            .put("pathPatterns", new String[] {
+            },
+            "pathPatterns", new String[] {
                 "/path1"
-            })
-            .put(Constants.SERVICE_RANKING, 30)
-            .build());
+            },
+            Constants.SERVICE_RANKING, 30));
 
     HttpAsyncClientFactory underTest = context.registerInjectActivateService(new HttpAsyncClientFactoryImpl());
 

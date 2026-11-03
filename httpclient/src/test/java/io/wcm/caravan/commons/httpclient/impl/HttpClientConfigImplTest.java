@@ -25,12 +25,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
 import org.junit.Rule;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableMap;
 
 import io.wcm.caravan.commons.httpclient.HttpClientConfig;
 import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoader;
@@ -76,41 +77,41 @@ public class HttpClientConfigImplTest {
 
   @Test
   public void testReadFromConfig() {
-    HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("connectionRequestTimeout", 5)
-            .put("connectTimeout", 1)
-            .put("socketTimeout", 2)
-            .put("maxConnectionsPerHost", 3)
-            .put("maxTotalConnections", 4)
-            .put("cookieSpec", CookieSpecs.IGNORE_COOKIES)
-            .put("httpUser", "httpUsr")
-            .put("httpPassword", "httpPwd")
-            .put("proxyHost", "abc")
-            .put("proxyPort", 5)
-            .put("proxyUser", "def")
-            .put("proxyPassword", "ghi")
-            .put("hostPatterns", new String[] {
-                "h1",
-                "h2",
-                "h3"
-            })
-            .put("wsAddressingToUris", new String[] {
-                "http://uri1",
-                "http://uri2"
-            })
-            .put("sslContextType", "ssltype")
-            .put("keyManagerType", "keymantype")
-            .put("keyStoreType", "keystoretype")
-            .put("keyStoreProvider", "keystoreprvdr")
-            .put("keyStorePath", "keypath")
-            .put("keyStorePassword", "keypasswd")
-            .put("trustManagerType", "trustmantype")
-            .put("trustStoreType", "truststoretype")
-            .put("trustStoreProvider", "truststoreprvdr")
-            .put("trustStorePath", "trustpath")
-            .put("trustStorePassword", "trustpasswd")
-            .build());
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put("connectionRequestTimeout", 5);
+    map.put("connectTimeout", 1);
+    map.put("socketTimeout", 2);
+    map.put("maxConnectionsPerHost", 3);
+    map.put("maxTotalConnections", 4);
+    map.put("cookieSpec", CookieSpecs.IGNORE_COOKIES);
+    map.put("httpUser", "httpUsr");
+    map.put("httpPassword", "httpPwd");
+    map.put("proxyHost", "abc");
+    map.put("proxyPort", 5);
+    map.put("proxyUser", "def");
+    map.put("proxyPassword", "ghi");
+    map.put("hostPatterns", new String[] {
+        "h1",
+        "h2",
+        "h3"
+    });
+    map.put("wsAddressingToUris", new String[] {
+        "http://uri1",
+        "http://uri2"
+    });
+    map.put("sslContextType", "ssltype");
+    map.put("keyManagerType", "keymantype");
+    map.put("keyStoreType", "keystoretype");
+    map.put("keyStoreProvider", "keystoreprvdr");
+    map.put("keyStorePath", "keypath");
+    map.put("keyStorePassword", "keypasswd");
+    map.put("trustManagerType", "trustmantype");
+    map.put("trustStoreType", "truststoretype");
+    map.put("trustStoreProvider", "truststoreprvdr");
+    map.put("trustStorePath", "trustpath");
+    map.put("trustStorePassword", "trustpasswd");
+
+    HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(), map);
 
     assertEquals("connectionRequestTimeout", 5, config.getConnectionRequestTimeout());
     assertEquals("connectTimeout", 1, config.getConnectTimeout());

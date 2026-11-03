@@ -23,6 +23,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.util.Map;
+
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -36,8 +38,6 @@ import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableMap;
-
 import io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl;
 
 public class HttpClientItemAsyncTest {
@@ -48,10 +48,9 @@ public class HttpClientItemAsyncTest {
   @Test
   public void testClientConnectionManager() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("maxConnectionsPerHost", 9)
-            .put("maxTotalConnections", 99)
-            .build());
+        Map.of(
+            "maxConnectionsPerHost", 9,
+            "maxTotalConnections", 99));
 
     HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
@@ -65,11 +64,10 @@ public class HttpClientItemAsyncTest {
   @Test
   public void testTimeoutSettings() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("connectionRequestTimeout", 5)
-            .put("connectTimeout", 9)
-            .put("socketTimeout", 99)
-            .build());
+        Map.of(
+            "connectionRequestTimeout", 5,
+            "connectTimeout", 9,
+            "socketTimeout", 99));
 
     HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
@@ -87,10 +85,9 @@ public class HttpClientItemAsyncTest {
   @Test
   public void testHttpAuthentication() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("httpUser", "httpUsr")
-            .put("httpPassword", "httpPasswd")
-            .build());
+        Map.of(
+            "httpUser", "httpUsr",
+            "httpPassword", "httpPasswd"));
 
     HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
@@ -120,10 +117,9 @@ public class HttpClientItemAsyncTest {
   @Test
   public void testProxySettingsProxy() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("proxyHost", "hostname")
-            .put("proxyPort", 123)
-            .build());
+        Map.of(
+            "proxyHost", "hostname",
+            "proxyPort", 123));
 
     HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
@@ -141,12 +137,11 @@ public class HttpClientItemAsyncTest {
   @Test
   public void testProxySettingsProxyWithAuthentication() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("proxyHost", "hostname")
-            .put("proxyPort", 123)
-            .put("proxyUser", "proxyuser")
-            .put("proxyPassword", "proxypassword")
-            .build());
+        Map.of(
+            "proxyHost", "hostname",
+            "proxyPort", 123,
+            "proxyUser", "proxyuser",
+            "proxyPassword", "proxypassword"));
 
     HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
@@ -166,12 +161,11 @@ public class HttpClientItemAsyncTest {
   @Test
   public void testWithClientCertificate() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("keyStorePath", CertificateLoaderTestProps.KEYSTORE_PATH)
-            .put("keyStorePassword", CertificateLoaderTestProps.KEYSTORE_PASSWORD)
-            .put("trustStorePath", CertificateLoaderTestProps.TRUSTSTORE_PATH)
-            .put("trustStorePassword", CertificateLoaderTestProps.TRUSTSTORE_PASSWORD)
-            .build());
+        Map.of(
+            "keyStorePath", CertificateLoaderTestProps.KEYSTORE_PATH,
+            "keyStorePassword", CertificateLoaderTestProps.KEYSTORE_PASSWORD,
+            "trustStorePath", CertificateLoaderTestProps.TRUSTSTORE_PATH,
+            "trustStorePassword", CertificateLoaderTestProps.TRUSTSTORE_PASSWORD));
 
     HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();
@@ -186,9 +180,8 @@ public class HttpClientItemAsyncTest {
   @Test
   public void testWithCookieSpec() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("cookieSpec", CookieSpecs.IGNORE_COOKIES)
-            .build());
+        Map.of(
+            "cookieSpec", CookieSpecs.IGNORE_COOKIES));
 
     HttpAsyncClientItem item = new HttpAsyncClientItem(config);
     HttpAsyncClient client = item.getHttpAsyncClient();

@@ -26,6 +26,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Map;
+
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -40,8 +42,6 @@ import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableMap;
-
 import io.wcm.caravan.commons.httpclient.impl.helpers.CertificateLoaderTest;
 
 public class HttpClientItemTest {
@@ -52,11 +52,10 @@ public class HttpClientItemTest {
   @Test
   public void testMatchesHostnames() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("hostPatterns", new String[] {
+        Map.of(
+            "hostPatterns", new String[] {
                 "h1", "h2"
-            })
-            .build());
+            }));
 
     HttpClientItem item = new HttpClientItem(config);
     assertTrue(item.matches("h1", null, null, false));
@@ -68,11 +67,10 @@ public class HttpClientItemTest {
   @Test
   public void testMatchesHostnamesRegExp() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("hostPatterns", new String[] {
+        Map.of(
+            "hostPatterns", new String[] {
                 "h(\\d*)"
-            })
-            .build());
+            }));
 
     HttpClientItem item = new HttpClientItem(config);
     assertTrue(item.matches("h1", null, null, false));
@@ -97,12 +95,11 @@ public class HttpClientItemTest {
   @Test
   public void testMatchesHostnamesWithInvalidPattern() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("hostPatterns", new String[] {
+        Map.of(
+            "hostPatterns", new String[] {
                 "h(\\d*)",
                 "(aaa"
-            })
-            .build());
+            }));
 
     HttpClientItem item = new HttpClientItem(config);
     assertFalse(item.matches("h1", null, null, false));
@@ -116,12 +113,11 @@ public class HttpClientItemTest {
   @Test
   public void testMatchesWSAddressingToUris() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("wsAddressingToUris", new String[] {
+        Map.of(
+            "wsAddressingToUris", new String[] {
                 "http://uri1",
                 "http://uri2"
-            })
-            .build());
+            }));
 
     HttpClientItem item = new HttpClientItem(config);
     assertTrue(item.matches("h1", "http://uri1", null, true));
@@ -146,16 +142,15 @@ public class HttpClientItemTest {
   @Test
   public void testMatchesHostnamesAndWSAddressintToUri() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("hostPatterns", new String[] {
+        Map.of(
+            "hostPatterns", new String[] {
                 "h1",
                 "h2"
-            })
-            .put("wsAddressingToUris", new String[] {
+            },
+            "wsAddressingToUris", new String[] {
                 "http://uri1",
                 "http://uri2"
-            })
-            .build());
+            }));
 
     HttpClientItem item = new HttpClientItem(config);
     assertTrue(item.matches("h1", "http://uri1", null, true));
@@ -174,12 +169,11 @@ public class HttpClientItemTest {
   @Test
   public void testMatchesPath() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("pathPatterns", new String[] {
+        Map.of(
+            "pathPatterns", new String[] {
                 "/path1",
                 "/path2"
-            })
-            .build());
+            }));
 
     HttpClientItem item = new HttpClientItem(config);
     assertTrue(item.matches("h1", null, "/path1", false));
@@ -204,16 +198,15 @@ public class HttpClientItemTest {
   @Test
   public void testMatchesHostnamesAndPath() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("hostPatterns", new String[] {
+        Map.of(
+            "hostPatterns", new String[] {
                 "h1",
                 "h2"
-            })
-            .put("pathPatterns", new String[] {
+            },
+            "pathPatterns", new String[] {
                 "/path1",
                 "/path2"
-            })
-            .build());
+            }));
 
     HttpClientItem item = new HttpClientItem(config);
     assertTrue(item.matches("h1", null, "/path1", false));
@@ -232,10 +225,9 @@ public class HttpClientItemTest {
   @Test
   public void testClientConnectionManager() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("maxConnectionsPerHost", 9)
-            .put("maxTotalConnections", 99)
-            .build());
+        Map.of(
+            "maxConnectionsPerHost", 9,
+            "maxTotalConnections", 99));
 
     HttpClientItem item = new HttpClientItem(config);
     HttpClient client = item.getHttpClient();
@@ -249,11 +241,10 @@ public class HttpClientItemTest {
   @Test
   public void testTimeoutSettings() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("connectionRequestTimeout", 5)
-            .put("connectTimeout", 9)
-            .put("socketTimeout", 99)
-            .build());
+        Map.of(
+            "connectionRequestTimeout", 5,
+            "connectTimeout", 9,
+            "socketTimeout", 99));
 
     HttpClientItem item = new HttpClientItem(config);
     HttpClient client = item.getHttpClient();
@@ -271,10 +262,9 @@ public class HttpClientItemTest {
   @Test
   public void testHttpAuthentication() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("httpUser", "httpUsr")
-            .put("httpPassword", "httpPasswd")
-            .build());
+        Map.of(
+            "httpUser", "httpUsr",
+            "httpPassword", "httpPasswd"));
 
     HttpClientItem item = new HttpClientItem(config);
     HttpClient client = item.getHttpClient();
@@ -304,10 +294,9 @@ public class HttpClientItemTest {
   @Test
   public void testProxySettingsProxy() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("proxyHost", "hostname")
-            .put("proxyPort", 123)
-            .build());
+        Map.of(
+            "proxyHost", "hostname",
+            "proxyPort", 123));
 
     HttpClientItem item = new HttpClientItem(config);
     HttpClient client = item.getHttpClient();
@@ -324,12 +313,11 @@ public class HttpClientItemTest {
 
   @Test
   public void testProxySettingsProxyWithAuthentication() {
-    HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(), ImmutableMap.<String, Object>builder()
-        .put("proxyHost", "hostname")
-        .put("proxyPort", 123)
-        .put("proxyUser", "proxyuser")
-        .put("proxyPassword", "proxypassword")
-        .build());
+    HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(), Map.of(
+        "proxyHost", "hostname",
+        "proxyPort", 123,
+        "proxyUser", "proxyuser",
+        "proxyPassword", "proxypassword"));
 
     HttpClientItem item = new HttpClientItem(config);
     HttpClient client = item.getHttpClient();
@@ -348,12 +336,11 @@ public class HttpClientItemTest {
 
   @Test
   public void testWithClientCertificate() {
-    HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(), ImmutableMap.<String, Object>builder()
-        .put("keyStorePath", CertificateLoaderTest.KEYSTORE_PATH)
-        .put("keyStorePassword", CertificateLoaderTest.KEYSTORE_PASSWORD)
-        .put("trustStorePath", CertificateLoaderTest.TRUSTSTORE_PATH)
-        .put("trustStorePassword", CertificateLoaderTest.TRUSTSTORE_PASSWORD)
-        .build());
+    HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(), Map.of(
+        "keyStorePath", CertificateLoaderTest.KEYSTORE_PATH,
+        "keyStorePassword", CertificateLoaderTest.KEYSTORE_PASSWORD,
+        "trustStorePath", CertificateLoaderTest.TRUSTSTORE_PATH,
+        "trustStorePassword", CertificateLoaderTest.TRUSTSTORE_PASSWORD));
 
     HttpClientItem item = new HttpClientItem(config);
     HttpClient client = item.getHttpClient();
@@ -368,9 +355,8 @@ public class HttpClientItemTest {
   @Test
   public void testWithCookieSpec() {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("cookieSpec", CookieSpecs.IGNORE_COOKIES)
-            .build());
+        Map.of(
+            "cookieSpec", CookieSpecs.IGNORE_COOKIES));
 
     HttpClientItem item = new HttpClientItem(config);
     HttpClient client = item.getHttpClient();
