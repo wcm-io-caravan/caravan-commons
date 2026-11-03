@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStoreException;
+import java.util.Map;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -34,8 +35,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.sling.testing.mock.osgi.junit.OsgiContext;
 import org.junit.Rule;
 import org.junit.Test;
-
-import com.google.common.collect.ImmutableMap;
 
 import io.wcm.caravan.commons.httpclient.impl.HttpClientConfigImpl;
 
@@ -96,12 +95,11 @@ public class CertificateLoaderTest {
   public void testBuildSSLContext() throws IOException, GeneralSecurityException {
 
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("keyStorePath", KEYSTORE_PATH)
-            .put("keyStorePassword", KEYSTORE_PASSWORD)
-            .put("trustStorePath", TRUSTSTORE_PATH)
-            .put("trustStorePassword", TRUSTSTORE_PASSWORD)
-            .build());
+        Map.of(
+            "keyStorePath", KEYSTORE_PATH,
+            "keyStorePassword", KEYSTORE_PASSWORD,
+            "trustStorePath", TRUSTSTORE_PATH,
+            "trustStorePassword", TRUSTSTORE_PASSWORD));
 
     SSLContext sslContext = CertificateLoader.buildSSLContext(config);
     assertNotNull(sslContext);
@@ -111,10 +109,9 @@ public class CertificateLoaderTest {
   public void testBuildSSLContextWithoutKeyStore() throws IOException, GeneralSecurityException {
 
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("trustStorePath", TRUSTSTORE_PATH)
-            .put("trustStorePassword", TRUSTSTORE_PASSWORD)
-            .build());
+        Map.of(
+            "trustStorePath", TRUSTSTORE_PATH,
+            "trustStorePassword", TRUSTSTORE_PASSWORD));
 
     SSLContext sslContext = CertificateLoader.buildSSLContext(config);
     assertNotNull(sslContext);
@@ -124,10 +121,9 @@ public class CertificateLoaderTest {
   public void testBuildSSLContextWithoutTrustSTore() throws IOException, GeneralSecurityException {
 
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("keyStorePath", KEYSTORE_PATH)
-            .put("keyStorePassword", KEYSTORE_PASSWORD)
-            .build());
+        Map.of(
+            "keyStorePath", KEYSTORE_PATH,
+            "keyStorePassword", KEYSTORE_PASSWORD));
 
     SSLContext sslContext = CertificateLoader.buildSSLContext(config);
     assertNotNull(sslContext);
@@ -136,12 +132,11 @@ public class CertificateLoaderTest {
   @Test
   public void testBuildSSLContextWithKeyStoreForPFXNoProviderSet() throws Exception {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("keyStorePath", KEYSTORE_PFX_PATH)
-            .put("keyStorePassword", KEYSTORE_PFX_PASSWORD)
-            .put("keyStoreType", "PKCS12")
-            .put("keyStoreProvider", StringUtils.EMPTY)
-            .build());
+        Map.of(
+            "keyStorePath", KEYSTORE_PFX_PATH,
+            "keyStorePassword", KEYSTORE_PFX_PASSWORD,
+            "keyStoreType", "PKCS12",
+            "keyStoreProvider", StringUtils.EMPTY));
 
     SSLContext sslContext = CertificateLoader.buildSSLContext(config);
     assertNotNull(sslContext);
@@ -150,12 +145,11 @@ public class CertificateLoaderTest {
   @Test
   public void testBuildSSLContextWithKeyStoreForPFX() throws Exception {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("keyStorePath", KEYSTORE_PFX_PATH)
-            .put("keyStorePassword", KEYSTORE_PFX_PASSWORD)
-            .put("keyStoreType", "PKCS12")
-            .put("keyStoreProvider", "SunJSSE")
-            .build());
+        Map.of(
+            "keyStorePath", KEYSTORE_PFX_PATH,
+            "keyStorePassword", KEYSTORE_PFX_PASSWORD,
+            "keyStoreType", "PKCS12",
+            "keyStoreProvider", "SunJSSE"));
 
     SSLContext sslContext = CertificateLoader.buildSSLContext(config);
     assertNotNull(sslContext);
@@ -164,15 +158,14 @@ public class CertificateLoaderTest {
   @Test
   public void testBuildSSLContextWithKeyStoreForPFXAndTrustStore() throws Exception {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("keyStorePath", KEYSTORE_PFX_PATH)
-            .put("keyStorePassword", KEYSTORE_PFX_PASSWORD)
-            .put("keyStoreType", "PKCS12")
-            .put("keyStoreProvider", "SunJSSE")
-            .put("trustStorePath", TRUSTSTORE_PATH)
-            .put("trustStorePassword", TRUSTSTORE_PASSWORD)
-            .put("trustStoreProvider", "SUN")
-            .build());
+        Map.of(
+            "keyStorePath", KEYSTORE_PFX_PATH,
+            "keyStorePassword", KEYSTORE_PFX_PASSWORD,
+            "keyStoreType", "PKCS12",
+            "keyStoreProvider", "SunJSSE",
+            "trustStorePath", TRUSTSTORE_PATH,
+            "trustStorePassword", TRUSTSTORE_PASSWORD,
+            "trustStoreProvider", "SUN"));
 
     SSLContext sslContext = CertificateLoader.buildSSLContext(config);
     assertNotNull(sslContext);
@@ -181,12 +174,11 @@ public class CertificateLoaderTest {
   @Test(expected = KeyStoreException.class)
   public void testBuildSSLContextWithKeyStoreForPFXWrongProvider() throws Exception {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("keyStorePath", KEYSTORE_PFX_PATH)
-            .put("keyStorePassword", KEYSTORE_PFX_PASSWORD)
-            .put("keyStoreType", "PKCS12")
-            .put("keyStoreProvider", "SunPCSC") // wrong provider for keystore
-            .build());
+        Map.of(
+            "keyStorePath", KEYSTORE_PFX_PATH,
+            "keyStorePassword", KEYSTORE_PFX_PASSWORD,
+            "keyStoreType", "PKCS12",
+            "keyStoreProvider", "SunPCSC")); // wrong provider for keystore
 
     SSLContext sslContext = CertificateLoader.buildSSLContext(config);
     assertNotNull(sslContext);
@@ -195,15 +187,14 @@ public class CertificateLoaderTest {
   @Test(expected = KeyStoreException.class)
   public void testBuildSSLContextWithKeyStoreForPFXAndTrustStoreWrongProvider() throws Exception {
     HttpClientConfigImpl config = context.registerInjectActivateService(new HttpClientConfigImpl(),
-        ImmutableMap.<String, Object>builder()
-            .put("keyStorePath", KEYSTORE_PFX_PATH)
-            .put("keyStorePassword", KEYSTORE_PFX_PASSWORD)
-            .put("keyStoreType", "PKCS12")
-            .put("keyStoreProvider", "SunJSSE")
-            .put("trustStorePath", TRUSTSTORE_PATH)
-            .put("trustStorePassword", TRUSTSTORE_PASSWORD)
-            .put("trustStoreProvider", "SunJSSE") // wrong provider for truststore
-            .build());
+        Map.of(
+            "keyStorePath", KEYSTORE_PFX_PATH,
+            "keyStorePassword", KEYSTORE_PFX_PASSWORD,
+            "keyStoreType", "PKCS12",
+            "keyStoreProvider", "SunJSSE",
+            "trustStorePath", TRUSTSTORE_PATH,
+            "trustStorePassword", TRUSTSTORE_PASSWORD,
+            "trustStoreProvider", "SunJSSE")); // wrong provider for truststore
 
     SSLContext sslContext = CertificateLoader.buildSSLContext(config);
     assertNotNull(sslContext);
